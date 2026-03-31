@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 # Firstapp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.1.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/home`. The application will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
@@ -28,4 +27,3 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 =======
 # Angular
->>>>>>> e178f0ea5ba6b1a7a59726025a30b563b518d75c
