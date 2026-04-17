@@ -35,13 +35,22 @@
       <label for="date-limit" class="form-label">
         {{ 'HISTOGRAM.DATE_CENTRAL_LABEL' | translate }}
       </label>
-      <input type="date" 
-             class="form-control" 
-             id="date-limit"
-             [(ngModel)]="dateLimit"
-             (ngModelChange)="onDateChange()"
-             [min]="minDate"
-             [max]="maxDate">
+      <div class="d-flex gap-2 align-items-center">
+        <input type="date"
+               class="form-control"
+               id="date-limit"
+               [(ngModel)]="dateLimit"
+               (ngModelChange)="onDateChange()"
+               [min]="minDate"
+               [max]="maxDate"
+               [disabled]="fullPeriod">
+        <button class="btn btn-sm text-nowrap"
+                [class.btn-primary]="fullPeriod"
+                [class.btn-outline-secondary]="!fullPeriod"
+                (click)="toggleFullPeriod()">
+          {{ fullPeriod ? 'Toute la période' : '± 50 jours' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

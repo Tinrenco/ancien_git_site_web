@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Dispo } from '../app.component.models';
 import { CommonModule } from '@angular/common';
 import { DatasetService } from '../srvices/dataset.service';
@@ -14,25 +15,34 @@ registerLocaleData(localeEn, 'en');
 @Component({
   selector: 'app-centrale',
   standalone: true,
-  imports: [CommonModule,TranslateModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './centrale.component.html',
   styleUrl: './centrale.component.scss'
 })
-export class CentraleComponent implements OnInit {
+export class CentraleComponent implements OnInit, OnDestroy {
   @Input() selectedHour!: number;
   @Input() selectedDate!: string;
   @Output() closePanel = new EventEmitter<void>();
-  @Input() centralesData: Dispo[] = []; // Nouvelle input property
-  centraleName: string = ''; // Nouvelle propriété pour stocker le nom de la centrale
-
+  @Input() centralesData: Dispo[] = []; 
+  centraleName: string = ''; 
 
   additionalData: Dispo[] | null = null;
   isVisible: boolean = false;
+  private subs = new Subscription();
 
-  constructor(private datasetService: DatasetService, private router: Router, public  translate: TranslateService,    private route: ActivatedRoute) {}
+  constructor(
+    private datasetService: DatasetService, 
+    private router: Router, 
+    public translate: TranslateService,    
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
   ngOnInit() {
-    // Surveiller les paramètres d'URL
-    this.route.queryParams.subscribe(params => {
+    this.subs.add(this.route.queryParams.subscribe(params => {
       this.centraleName = params['centrale'] || '';
       this.selectedDate = params['date'] || '';
       this.selectedHour = parseInt(params['hour'] || '12', 10);
@@ -41,8 +51,7 @@ export class CentraleComponent implements OnInit {
         this.isVisible = true;
         this.fetchAdditionalData();
       }
-    });
-    console.log(this.centraleName)
+    }));
   }
 
   private getRefinements(): Record<string, string[]> {
@@ -53,51 +62,57 @@ export class CentraleComponent implements OnInit {
     };
   }
 
-goToHistogram(tranche: string): void {
-  if (this.additionalData) {
-    this.router.navigate(['/histogram'], {
-      queryParams: { 
-        centrale: this.centraleName,
-        tranche: tranche,
-        date: this.selectedDate
-      },
-      state: { 
-        selectedCentraleData: {
+  goToHistogram(tranche: string): void {
+    if (this.additionalData) {
+      this.router.navigate(['/histogram'], {
+        queryParams: { 
           centrale: this.centraleName,
-          tranches: this.additionalData
+          tranche: tranche,
+          date: this.selectedDate
         },
-        centralesData: this.centralesData
+        state: { 
+          selectedCentraleData: {
+            centrale: this.centraleName,
+            tranches: this.additionalData
+          },
+          centralesData: this.centralesData
+        }
+      });
+    }
+  }
+
+  fetchAdditionalData(): void {
+    if (!this.centraleName) return;
+
+    const refinements = this.getRefinements();
+    
+    // On utilise "as any" ici pour éviter les erreurs de compilation sur le nombre d'arguments
+    // car on a simplifié le service pour utiliser le fichier JSON local
+    (this.datasetService as any).getDatasetAllRecords(
+      refinements,
+      ['centrale', 'tranche', 'point_gps_modifie_pour_afficher_la_carte_opendata', 'puissance_disponible'],
+      `centrale = '${this.centraleName}'`,
+      "tranche ASC"
+    ).subscribe({
+      // 1ère MODIFICATION ICI : On précise (data: any)
+      next: (data: any) => {
+        // 2ème MODIFICATION ICI : Si data.results n'existe pas, on prend data directement
+        this.additionalData = data.results || data; 
+        this.isVisible = true;
+      },
+      // 3ème MODIFICATION ICI : On précise (error: any)
+      error: (error: any) => {
+        console.error('Erreur lors de la récupération des données :', error);
+        this.additionalData = null;
       }
     });
   }
-}
 
-fetchAdditionalData(): void {
-  if (!this.centraleName) return;
-
-  const refinements = this.getRefinements();
-  this.datasetService.getDatasetAllRecords(
-    refinements,
-    ['centrale', 'tranche', 'point_gps_modifie_pour_afficher_la_carte_opendata', 'puissance_disponible'],
-    `centrale = '${this.centraleName}'`,
-    "tranche ASC"
-  ).subscribe({
-    next: (data) => {
-      this.additionalData = data.results;
-      this.isVisible = true;
-    },
-    error: (error) => {
-      console.error('Erreur lors de la récupération des données :', error);
-      this.additionalData = null;
-    }
-  });
-}
   close(): void {
     this.isVisible = false;
-    // Attendre la fin de l'animation avant d'émettre l'événement
     setTimeout(() => {
       this.closePanel.emit();
-    }, 300); // 300ms correspond à la durée de l'animation CSS
+    }, 300);
   }
 
   calculateTotalPower(): number {
@@ -111,7 +126,6 @@ fetchAdditionalData(): void {
     return maxPower === 0 ? 0 : (power / maxPower) * 100;
   }
 
-  // Helpers pour le formatage
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString('fr-FR', {
       day: '2-digit',

@@ -168,7 +168,7 @@
 
       .nav-group {
         width: auto;
-        
+
         .language-selector {
           padding: 2px;
           
@@ -212,4 +212,13 @@
       }
     }
   }
+}
+
+.app-footer {
+  background: #0d2856;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  padding: 14px 24px;
+  font-size: 0.82rem;
+  letter-spacing: 0.3px;
 }
