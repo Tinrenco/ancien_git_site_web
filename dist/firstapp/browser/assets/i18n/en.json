@@ -1,0 +1,75 @@
+{
+  "TITLE":"Availability of EDF SA's nuclear fleet (Present, past and forecast)",
+    "NAV": {
+      "HOME": "Home",
+      "MAP": "Map",
+      "DATA": "Data"
+    },
+    "MAP": {
+      "DATE_LABEL": "Date",
+      "TIME_LABEL": "Time",
+      "LOADING_MESSAGE": "Loading data...",
+      "HOUR_LABEL": "Hour"
+    },
+    "HISTOGRAM": {
+      "CENTRALE_LABEL": "Power Plant",
+      "CENTRALE_PLACEHOLDER": "Select a power plant",
+      "TRANCHE_LABEL": "Unit",
+      "TRANCHE_PLACEHOLDER": "Select a unit",
+      "DATE_CENTRAL_LABEL": "Central Date",
+      "LOADING_MESSAGE": "Loading data...",
+      "CHART_TITLE": "Temporal evolution of the unit's availability",
+      "CHART_SUBTITLE": "Click and drag to zoom",
+      "CHART_SUBTITLE_TOUCH": "Pinch to zoom",
+      "Y_AXIS_TITLE": "Available Power (MW)"
+    },
+    "INFORMATION": {
+      "TITLE": "Data Information",
+      "ABSTRACT": {
+        "TITLE": "Abstract",
+        "CONTENT": "These data show the current, past and forecast availability of EDF SA's nuclear fleet over a sliding year. You will find, plant by plant, and for each unit, their available power in MW. This data is updated at the beginning of each hour."
+      },
+      "DESCRIPTION": {
+        "TITLE": "Detailed Description",
+        "CONTENT": "The data are public data from the RTE website. This is the unavailability data by unit, accessible via the API at the following address:",
+        "MAP_INFO": "The map is based on publications made by EDF under the REMIT regulation, but does not take into account any additional information associated with certain publications, nor any future unavailability due to new fortuitous events.",
+        "DISCLAIMER": "The map is a visualization tool provided for information purposes only. It does not replace the official publications produced by EDF under the REMIT regulation, available at:"
+      },
+      "ADDITIONAL": {
+        "TITLE": "Additional Information",
+        "GPS_INFO": "The geographical positioning of the nuclear units is adapted here to make the map of France easier to read.",
+        "TIMEZONE": "The reference time zone is Europe/Paris."
+      },
+      "LIABILITY": {
+        "TITLE": "EDF's Liability",
+        "CONTENT": "As a reminder, pursuant to clause 3.2 of the general conditions of use of the opendata.edf.fr portal, the information provided is for information purposes only...",
+        "DISCLAIMER": "Consequently, Users acknowledge that they use this information under their sole responsibility..."
+      }
+    },
+    "HOME": {
+      "CARDS": {
+        "MAP": {
+          "TITLE": "Interactive Map",
+          "DESCRIPTION": "Visualize the location and availability of EDF nuclear power plants in France",
+          "ACTION": "Explore the map"
+        },
+        "DATA": {
+          "TITLE": "Data & Analysis",
+          "DESCRIPTION": "Access detailed power data and historical analysis",
+          "ACTION": "View data"
+        }
+      }
+    },
+    "CENTRALE": {
+      "CLOSE": "Close",
+      "AVAILABILITY_TITLE": "Unit Availability",
+      "MW": "MW",
+      "CLICK_FOR_DETAILS": "Click to see details",
+      "LOADING": "Loading data..."
+    },
+    "ERROR": {
+      "PAGE_NOT_FOUND": "Page Not Found",
+      "PAGE_NOT_FOUND_DESC": "The page you are looking for doesn't exist or has been moved.",
+      "BACK_HOME": "Back to Home"
+    }
+  }
