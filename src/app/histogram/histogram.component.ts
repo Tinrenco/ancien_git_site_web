@@ -24,11 +24,13 @@ export class HistogramComponent implements OnInit, OnDestroy {
   isChartLoading: boolean = false;
   selectedCentrale: string = '';
   dateLimit: string = '';
-  fullPeriod: boolean = false;
+  fullPeriod: boolean = true;   // toujours "Toute la période" par défaut
+  isTotalMode: boolean = false; // true quand on affiche la prod totale France
+
   private subs = new Subscription();
   private chartSub?: Subscription;
-  centralesData: Dispo[] = []; 
-  
+  centralesData: Dispo[] = [];
+
   selectedCentraleData: {
     centrale: string;
     tranches: Dispo[];
@@ -44,16 +46,18 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private datasetService: DatasetService,
     private router: Router,
     private translate: TranslateService
   ) {
-        this.subs.add(this.translate.onLangChange.subscribe(() => {
-          if (this.datasets.results?.length > 0) {
-            this.afficherDonnees(this.datasets);
-          }
-        }));
+    this.subs.add(this.translate.onLangChange.subscribe(() => {
+      if (this.isTotalMode) {
+        this.chargerProductionTotale();
+      } else if (this.datasets.results?.length > 0) {
+        this.afficherDonnees(this.datasets);
+      }
+    }));
   }
 
   Highcharts: typeof Highcharts = Highcharts;
@@ -67,73 +71,140 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const queryParams = this.route.snapshot.queryParams;
-    const state = history.state;
-    
-    this.selectedCentrale = queryParams['centrale'] || '';
-    this.tranche = queryParams['tranche'] || '';
-    this.dateLimit = queryParams['date'] || new Date().toISOString().split('T')[0];
 
-    if (state.centralesData) {
-      this.centralesData = state.centralesData;
-    } else {
-      this.chargerCentrales();
-    }
+    this.selectedCentrale = queryParams['centrale'] || '';
+    this.tranche          = queryParams['tranche']  || '';
+    this.dateLimit        = queryParams['date']     || new Date().toISOString().split('T')[0];
+
+    // Charge toujours la liste des centrales depuis les données daily
+    this.chargerCentrales();
 
     if (this.selectedCentrale) {
       this.chargerTranchesPourCentrale(this.selectedCentrale);
     }
 
-    // loadDateLimits corrige dateLimit si hors-plage, puis appelle chargerDonneesTranche
     this.loadDateLimits();
   }
+
+  // ─── Date limits ──────────────────────────────────────────────────────────────
 
   private loadDateLimits(): void {
     this.isLoading = true;
     (this.datasetService as any).getDailyDateLimits().subscribe({
-      next: (data: any) => { // MODIFICATION ICI
-        const results = data.results || data; // MODIFICATION ICI
-        
-        // Sécurité : si le JSON local ne contient pas les min/max pré-calculés, on met des dates par défaut
+      next: (data: any) => {
+        const results = data.results || data;
         try {
           const absoluteMinDate = new Date(results[0]['min(date_et_heure_fuseau_horaire_europe_paris)']);
           const absoluteMaxDate = new Date(results[0]['max(date_et_heure_fuseau_horaire_europe_paris)']);
-    
-          const adjustedMinDate = new Date(absoluteMinDate);
-          adjustedMinDate.setDate(adjustedMinDate.getDate() + 50);
-          
-          const adjustedMaxDate = new Date(absoluteMaxDate);
-          adjustedMaxDate.setDate(adjustedMaxDate.getDate() - 50);
-    
-          this.minDate = adjustedMinDate.toISOString().split('T')[0];
-          this.maxDate = adjustedMaxDate.toISOString().split('T')[0];
-        } catch (e) {
-          // Fallback de sécurité si le JSON local n'a pas la bonne forme
+
+          const adjustedMin = new Date(absoluteMinDate);
+          adjustedMin.setDate(adjustedMin.getDate() + 50);
+          const adjustedMax = new Date(absoluteMaxDate);
+          adjustedMax.setDate(adjustedMax.getDate() - 50);
+
+          this.minDate = adjustedMin.toISOString().split('T')[0];
+          this.maxDate = adjustedMax.toISOString().split('T')[0];
+        } catch {
           this.minDate = '2020-01-01';
           this.maxDate = '2030-12-31';
         }
-        
-        const currentDate = new Date(this.dateLimit);
-        const minDateTime = new Date(this.minDate);
-        const maxDateTime = new Date(this.maxDate);
-        
-        if (currentDate < minDateTime) {
-          this.dateLimit = this.minDate;
-        } else if (currentDate > maxDateTime) {
-          this.dateLimit = this.maxDate;
-        }
-        
+
+        const current = new Date(this.dateLimit);
+        if (current < new Date(this.minDate)) this.dateLimit = this.minDate;
+        else if (current > new Date(this.maxDate)) this.dateLimit = this.maxDate;
+
         this.isLoading = false;
-        
+
+        // Lance le bon graphique selon l'état
         if (this.tranche) {
           this.chargerDonneesTranche(this.tranche);
+        } else {
+          this.chargerProductionTotale();
         }
       },
-      error: (error: any) => { // MODIFICATION ICI
-        console.error('Erreur lors du chargement des dates limites:', error);
-        this.isLoading = false;
-      }
+      error: () => { this.isLoading = false; }
     });
   }
+
+  // ─── Production totale France ─────────────────────────────────────────────────
+
+  chargerProductionTotale(): void {
+    this.isTotalMode    = true;
+    this.isChartLoading = true;
+    this.chartSub?.unsubscribe();
+
+    this.chartSub = (this.datasetService as any).getDailyRecords({}).subscribe({
+      next: (data: any) => {
+        const records: any[] = data.results || data;
+
+        // Agrège la puissance disponible par date
+        const byDate = new Map<number, number>();
+        for (const r of records) {
+          const t = new Date(r.date_et_heure_fuseau_horaire_europe_paris).getTime();
+          byDate.set(t, (byDate.get(t) || 0) + (r.puissance_disponible || 0));
+        }
+
+        const series: [number, number][] = [...byDate.entries()]
+          .sort((a, b) => a[0] - b[0]);
+
+        this.afficherProductionTotale(series);
+        this.isChartLoading = false;
+      },
+      error: () => { this.isChartLoading = false; }
+    });
+  }
+
+  private afficherProductionTotale(series: [number, number][]): void {
+    this.chartOptions = {
+      chart: { zooming: { type: 'x' }, backgroundColor: '#FFFFFF' },
+      title: {
+        text: 'Production nucléaire totale — France',
+        style: { color: '#003366', fontWeight: 'bold' }
+      },
+      subtitle: {
+        text: 'Puissance disponible cumulée de toutes les tranches (MW)',
+        style: { color: '#003366' }
+      },
+      xAxis: {
+        type: 'datetime',
+        labels: { style: { color: '#003366' } }
+      },
+      yAxis: {
+        title: { text: 'Puissance disponible (MW)', style: { color: '#003366' } },
+        labels: { style: { color: '#003366' } }
+      },
+      legend: { enabled: false },
+      plotOptions: {
+        area: {
+          marker: { radius: 2 },
+          lineWidth: 2,
+          color: '#FF7300',
+          fillColor: {
+            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+            stops: [
+              [0, 'rgba(255, 115, 0, 0.5)'],
+              [1, 'rgba(255, 115, 0, 0.05)']
+            ]
+          },
+          threshold: null
+        }
+      },
+      series: [{
+        type: 'area',
+        name: 'Puissance totale (MW)',
+        data: series
+      }],
+      tooltip: {
+        xDateFormat: '%e %B %Y',
+        shared: true,
+        useHTML: true,
+        headerFormat: '<small>{point.key}</small><br/>',
+        pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y:.0f} MW</b><br/>'
+      }
+    };
+  }
+
+  // ─── Données par tranche ──────────────────────────────────────────────────────
 
   toggleFullPeriod(): void {
     this.fullPeriod = !this.fullPeriod;
@@ -144,32 +215,17 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   chargerDonneesTranche(tranche: string): void {
+    this.isTotalMode    = false;
     this.isChartLoading = true;
-    let whereCondition = '';
-
-    if (!this.fullPeriod && this.dateLimit) {
-      const dateLimite = new Date(this.dateLimit);
-      dateLimite.setHours(23, 59, 59);
-
-      const dateDebut = new Date(dateLimite);
-      dateDebut.setDate(dateDebut.getDate() - 50);
-      dateDebut.setHours(0, 0, 0);
-
-      const dateFin = new Date(dateLimite);
-      dateFin.setDate(dateFin.getDate() + 50);
-      dateFin.setHours(23, 59, 59);
-
-      whereCondition = `date_et_heure_fuseau_horaire_europe_paris>"${dateDebut.toISOString()}" AND date_et_heure_fuseau_horaire_europe_paris<"${dateFin.toISOString()}"`;
-    }
-
     this.chartSub?.unsubscribe();
 
+    // En mode fullPeriod, on utilise donnees_daily.json (toujours disponible)
     const source$ = this.fullPeriod
       ? (this.datasetService as any).getDailyRecords({ tranche: [tranche] })
       : (this.datasetService as any).getDatasetAllRecords(
           { tranche: [tranche], heure_fuseau_horaire_europe_paris: ['12'] },
           ['date_et_heure_fuseau_horaire_europe_paris', 'puissance_disponible', 'heure_fuseau_horaire_europe_paris'],
-          whereCondition,
+          this.buildWhereCondition(),
           'date_et_heure_fuseau_horaire_europe_paris'
         );
 
@@ -179,72 +235,71 @@ export class HistogramComponent implements OnInit, OnDestroy {
         this.afficherDonnees(this.datasets);
         this.isChartLoading = false;
       },
-      error: (error: any) => {
-        console.error('Erreur lors de la récupération des données :', error);
-        this.isChartLoading = false;
-      }
+      error: () => { this.isChartLoading = false; }
+    });
+  }
+
+  private buildWhereCondition(): string {
+    if (!this.dateLimit) return '';
+    const center = new Date(this.dateLimit);
+    const debut  = new Date(center); debut.setDate(debut.getDate() - 50);
+    const fin    = new Date(center); fin.setDate(fin.getDate() + 50);
+    return `date_et_heure_fuseau_horaire_europe_paris>"${debut.toISOString()}" AND date_et_heure_fuseau_horaire_europe_paris<"${fin.toISOString()}"`;
+  }
+
+  // ─── Centrales & tranches ─────────────────────────────────────────────────────
+
+  private chargerCentrales(): void {
+    // Utilise donnees_daily.json — toujours disponible, indépendant de la date
+    (this.datasetService as any).getDailyRecords({}).subscribe({
+      next: (data: any) => {
+        const records: any[] = data.results || data;
+        const seen = new Set<string>();
+        this.centralesData = records.filter((r: any) => {
+          if (!r.centrale || seen.has(r.centrale)) return false;
+          seen.add(r.centrale);
+          return true;
+        });
+      },
+      error: () => {}
     });
   }
 
   private chargerTranchesPourCentrale(centrale: string): void {
-    const hour = '12'; 
     this.isChartLoading = true;
-    const refinements = {
-      date_et_heure_fuseau_horaire_europe_paris: [this.dateLimit || new Date().toISOString().split('T')[0]],
-      heure_fuseau_horaire_europe_paris: [hour],
-    };
-    (this.datasetService as any).getDatasetAllRecords( // MODIFICATION ICI
-      refinements,
-      ['centrale', 'tranche', 'puissance_disponible'],
-      `centrale = '${centrale}'`,
-      "tranche ASC"
-    ).subscribe({
-      next: (data: any) => { // MODIFICATION ICI
-        this.selectedCentraleData = {
-          centrale: centrale,
-          tranches: data.results || data // MODIFICATION ICI
-        };
+    (this.datasetService as any).getDailyRecords({ centrale: [centrale] }).subscribe({
+      next: (data: any) => {
+        const records: any[] = data.results || data;
+        const seen = new Set<string>();
+        const tranches = records.filter((r: any) => {
+          if (!r.tranche || seen.has(r.tranche)) return false;
+          seen.add(r.tranche);
+          return true;
+        });
+        this.selectedCentraleData = { centrale, tranches };
+        this.isChartLoading = false;
       },
-      error: (error: any) => { // MODIFICATION ICI
-        console.error('Erreur lors du chargement des tranches:', error);
-        this.selectedCentraleData = null;
-      }
+      error: () => { this.isChartLoading = false; }
     });
   }
 
-  private chargerCentrales(): void {
-    const hour = '12';
-    const refinements = {
-      date_et_heure_fuseau_horaire_europe_paris: [this.dateLimit],
-      heure_fuseau_horaire_europe_paris: [hour],
-    };
-
-    (this.datasetService as any).getDatasetAllRecords( // MODIFICATION ICI
-      refinements,
-      ['centrale', 'tranche'],
-      "tranche like '%1'", 
-      "centrale ASC"
-    ).subscribe({
-      next: (data: any) => { // MODIFICATION ICI
-        this.centralesData = data.results || data; // MODIFICATION ICI
-      },
-      error: (error: any) => { // MODIFICATION ICI
-        console.error('Erreur lors du chargement des centrales:', error);
-      }
-    });
-  }
+  // ─── Events ──────────────────────────────────────────────────────────────────
 
   onCentraleChange(): void {
     this.tranche = '';
+    this.selectedCentraleData = null;
     if (this.selectedCentrale) {
       this.chargerTranchesPourCentrale(this.selectedCentrale);
+    } else {
+      // Retour à la prod totale si désélection
+      this.chargerProductionTotale();
     }
     this.updateUrlParams();
   }
 
   onTrancheChange(): void {
     if (this.tranche) {
-      this.chartOptions = {}; 
+      this.chartOptions = {};
       this.chargerDonneesTranche(this.tranche);
       this.updateUrlParams();
     }
@@ -252,7 +307,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   onDateChange(): void {
     if (this.tranche) {
-      this.chartOptions = {}; 
+      this.chartOptions = {};
       this.chargerDonneesTranche(this.tranche);
       this.updateUrlParams();
     }
@@ -261,120 +316,63 @@ export class HistogramComponent implements OnInit, OnDestroy {
   private updateUrlParams(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        centrale: this.selectedCentrale,
-        tranche: this.tranche,
-        date: this.dateLimit
-      },
+      queryParams: { centrale: this.selectedCentrale, tranche: this.tranche, date: this.dateLimit },
       queryParamsHandling: 'merge'
     });
   }
 
-  afficherDonnees(data: DataSets): void {
-    // Sécurité au cas où il n'y a pas de données
+  // ─── Affichage graphique (par tranche) ────────────────────────────────────────
+
+  afficherDonnees(_data: DataSets): void {
     if (!this.datasets.results) return;
 
-    const dataStructure: [number, number][] = this.datasets.results.map((item) => {
-      const baseDate = new Date(item.date_et_heure_fuseau_horaire_europe_paris);
-      baseDate.setUTCHours(item.heure_fuseau_horaire_europe_paris);
-      return [
-        baseDate.getTime(),
-        item.puissance_disponible,
-      ];
+    const series: [number, number][] = this.datasets.results.map((item) => {
+      const d = new Date(item.date_et_heure_fuseau_horaire_europe_paris);
+      d.setUTCHours(item.heure_fuseau_horaire_europe_paris);
+      return [d.getTime(), item.puissance_disponible];
     });
-  
-    const chartTitle = this.translate.instant('HISTOGRAM.CHART_TITLE');
+
+    const chartTitle    = this.translate.instant('HISTOGRAM.CHART_TITLE');
     const chartSubtitle = document.ontouchstart === undefined
       ? this.translate.instant('HISTOGRAM.CHART_SUBTITLE')
       : this.translate.instant('HISTOGRAM.CHART_SUBTITLE_TOUCH');
     const yAxisTitle = this.translate.instant('HISTOGRAM.Y_AXIS_TITLE');
-  
+
     this.chartOptions = {
-      chart: {
-        zooming: {
-          type: 'x',
-        },
-        backgroundColor: '#FFFFFF',
-      },
-      title: {
-        text: chartTitle,
-        style: {
-          color: '#003366',
-          fontWeight: 'bold',
-        },
-      },
-      subtitle: {
-        text: chartSubtitle,
-        style: {
-          color: '#003366',
-        },
-      },
-      xAxis: {
-        type: 'datetime',
-        labels: {
-          style: {
-            color: '#003366',
-          },
-        },
-      },
+      chart: { zooming: { type: 'x' }, backgroundColor: '#FFFFFF' },
+      title:    { text: chartTitle,    style: { color: '#003366', fontWeight: 'bold' } },
+      subtitle: { text: chartSubtitle, style: { color: '#003366' } },
+      xAxis: { type: 'datetime', labels: { style: { color: '#003366' } } },
       yAxis: {
-        title: {
-          text: yAxisTitle,
-          style: {
-            color: '#003366',
-          },
-        },
-        labels: {
-          style: {
-            color: '#003366',
-          },
-        },
+        title:  { text: yAxisTitle, style: { color: '#003366' } },
+        labels: { style: { color: '#003366' } }
       },
-      legend: {
-        enabled: false,
-      },
+      legend: { enabled: false },
       plotOptions: {
         area: {
-          marker: {
-            radius: 4,
-            fillColor: '#003366',
-            lineWidth: 2,
-            lineColor: '#003366',
-          },
+          marker: { radius: 4, fillColor: '#003366', lineWidth: 2, lineColor: '#003366' },
           lineWidth: 2,
           color: '#FF7300',
           fillColor: {
-            linearGradient: {
-              x1: 0,
-              y1: 0,
-              x2: 0,
-              y2: 1,
-            },
+            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
             stops: [
               [0, 'rgba(255, 115, 0, 0.5)'],
-              [1, 'rgba(255, 115, 0, 0.1)'],
-            ],
+              [1, 'rgba(255, 115, 0, 0.1)']
+            ]
           },
-          threshold: null,
-        },
+          threshold: null
+        }
       },
-      series: [
-        {
-          type: 'area',
-          name: yAxisTitle,
-          data: dataStructure,
-          lineColor: '#FF7300',
-        },
-      ],
+      series: [{ type: 'area', name: yAxisTitle, data: series, lineColor: '#FF7300' }],
       tooltip: {
-        xDateFormat: '%e %B %Y %H:%M', 
+        xDateFormat: '%e %B %Y %H:%M',
         shared: true,
         useHTML: true,
         headerFormat: '<small>{point.key}</small><br/>',
-        pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y} MW</b><br/>'
-      },
+        pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y} MW</b><br/>'
+      }
     };
-  
+
     Highcharts.chart('container', this.chartOptions);
   }
 }

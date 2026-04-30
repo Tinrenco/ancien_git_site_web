@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HighchartsChartModule } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
 import HC_map from 'highcharts/modules/map';
@@ -19,7 +20,8 @@ HC_map(Highcharts);
     RouterLink,
     RouterLinkActive,
     HighchartsChartModule,
-    TranslateModule  // Assurez-vous que TranslateModule est importé
+    TranslateModule,
+    FormsModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -30,6 +32,10 @@ export class AppComponent {
   chartOptions: any;
   topology: typeof topology = topology;
   isDropdownOpen = false;
+  showAbout   = false;
+  showContact = false;
+  contactSent = false;
+  contact = { nom: '', email: '', sujet: '', message: '' };
 
   constructor(private translate: TranslateService, private titleService: Title) {
     // Langues supportées
@@ -59,6 +65,16 @@ export class AppComponent {
   @HostListener('document:click')
   closeDropdown() {
     this.isDropdownOpen = false;
+  }
+
+  sendContact() {
+    const subject = encodeURIComponent(this.contact.sujet || 'Contact depuis le site EDF');
+    const body = encodeURIComponent(
+      `Nom : ${this.contact.nom}\nEmail : ${this.contact.email}\n\n${this.contact.message}`
+    );
+    window.open(`mailto:oamadou095@gmail.com?subject=${subject}&body=${body}`);
+    this.contactSent = true;
+    this.contact = { nom: '', email: '', sujet: '', message: '' };
   }
 
   ngOnInit() {
