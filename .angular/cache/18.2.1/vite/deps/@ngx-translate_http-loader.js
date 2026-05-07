@@ -1,17 +1,17 @@
 import {
   HttpClient
-} from "./chunk-U7H4WDZW.js";
-import "./chunk-TQ7YL6JX.js";
+} from "./chunk-7PVVLIJ7.js";
+import "./chunk-F66LLGBB.js";
 import {
   Inject,
   Injectable,
   setClassMetadata,
   ɵɵdefineInjectable,
   ɵɵinject
-} from "./chunk-R4XXWR6O.js";
-import "./chunk-R2TKW2H5.js";
-import "./chunk-77BMCLWT.js";
-import "./chunk-VIVROHZ5.js";
+} from "./chunk-5ZBZTOXX.js";
+import "./chunk-TFMRLFGK.js";
+import "./chunk-5X3OOUUX.js";
+import "./chunk-KQP4K3F6.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/@ngx-translate/http-loader/fesm2022/ngx-translate-http-loader.mjs

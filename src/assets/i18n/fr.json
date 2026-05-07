@@ -13,10 +13,10 @@
       "HOUR_LABEL": "Heure"
     },
     "HISTOGRAM": {
-      "CENTRALE_LABEL": "Centrale",
-      "CENTRALE_PLACEHOLDER": "Sélectionner une centrale",
-      "TRANCHE_LABEL": "Tranche",
-      "TRANCHE_PLACEHOLDER": "Sélectionner une tranche",
+      "CENTRALE_LABEL": "Site nucléaire",
+      "CENTRALE_PLACEHOLDER": "Sélectionner un site nucléaire",
+      "TRANCHE_LABEL": "Réacteur",
+      "TRANCHE_PLACEHOLDER": "Sélectionner un réacteur",
       "DATE_CENTRAL_LABEL": "Date centrale",
       "LOADING_MESSAGE": "Chargement des données...",
       "CHART_TITLE": "Evolution temporelle de la disponibilité de la tranche",
