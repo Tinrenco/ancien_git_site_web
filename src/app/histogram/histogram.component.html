@@ -32,54 +32,29 @@
     </div>
 
     <div class="col-md-4">
-      <label class="form-label">Période</label>
-      <div class="date-range-wrapper">
-        <div class="date-range-inputs">
-          <div class="date-range-field">
-            <span class="date-range-label">Du</span>
-            <input type="date"
-                   class="form-control"
-                   [(ngModel)]="dateFrom"
-                   (ngModelChange)="onDateChange()"
-                   [min]="minDate"
-                   [max]="dateTo || maxDate">
-          </div>
-          <span class="date-range-sep">→</span>
-          <div class="date-range-field">
-            <span class="date-range-label">Au</span>
-            <input type="date"
-                   class="form-control"
-                   [(ngModel)]="dateTo"
-                   (ngModelChange)="onDateChange()"
-                   [min]="dateFrom || minDate"
-                   [max]="maxDate">
-          </div>
-        </div>
-        <button class="btn btn-sm text-nowrap"
-                [class.btn-primary]="isFullPeriod"
-                [class.btn-outline-secondary]="!isFullPeriod"
-                (click)="resetToFullPeriod()">
-          Toute la période
-        </button>
-      </div>
+      <label for="date-limit" class="form-label">
+        {{ 'HISTOGRAM.DATE_CENTRAL_LABEL' | translate }}
+      </label>
+      <input type="date" 
+             class="form-control" 
+             id="date-limit"
+             [(ngModel)]="dateLimit"
+             (ngModelChange)="onDateChange()"
+             [min]="minDate"
+             [max]="maxDate">
     </div>
   </div>
 </div>
 
-<div class="chart-container mt-4" *ngIf="tranche || isTotalMode">
-  <div *ngIf="isTotalMode && !tranche" class="total-mode-banner">
-    Production nucléaire totale &mdash; France
-    <span>Sélectionnez une centrale et une tranche pour afficher les données détaillées</span>
-  </div>
+<div class="chart-container mt-4" *ngIf="tranche">
   <div id="container" style="width: 100%; height: 400px; position: relative;">
-    <highcharts-chart
-      *ngIf="!isChartLoading"
+    <highcharts-chart 
+      *ngIf="!isChartLoading"  
       [Highcharts]="Highcharts"
       [options]="chartOptions"
-      [(update)]="updateChart"
       style="width: 100%; height: 400px; display: block;"
     ></highcharts-chart>
-
+    
     <div *ngIf="isChartLoading" class="loading-overlay">
       <div class="loading-spinner">
         <div class="spinner"></div>
