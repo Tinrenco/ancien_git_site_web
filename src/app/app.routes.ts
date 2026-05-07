@@ -12,6 +12,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { EdfComponent } from './edf/edf.component';
 import { HistogramComponent } from './histogram/histogram.component';
 import { InformationComponent } from './information/information.component';
+import { NucleaireInfoComponent } from './nucleaire-info/nucleaire-info.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,10 @@ export const routes: Routes = [
   {
     path: 'edf',
     component: EdfComponent
+  },
+  {
+    path: 'nucleaire-info',
+    component: NucleaireInfoComponent
   },
   {
     path: '',
