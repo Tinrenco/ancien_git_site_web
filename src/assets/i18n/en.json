@@ -28,7 +28,10 @@
       "DATE_TO": "To",
       "FULL_PERIOD": "Full period",
       "TOTAL_MODE_TITLE": "Total nuclear output — France",
-      "TOTAL_MODE_SUBTITLE": "Select a plant and a unit to display detailed data"
+      "TOTAL_MODE_SUBTITLE": "Select a plant and a unit to display detailed data",
+      "TOTAL_CHART_TITLE": "Total nuclear availability — France",
+      "TOTAL_CHART_SUBTITLE": "Cumulative available power of all units (MW)",
+      "TOTAL_SERIES_NAME": "Total power (MW)"
     },
     "EDF": {
       "SEARCH_PLACEHOLDER": "Search EDF group data",

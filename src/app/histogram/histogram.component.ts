@@ -150,19 +150,18 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   private afficherProductionTotale(series: [number, number][]): void {
+    const chartTitle    = this.translate.instant('HISTOGRAM.TOTAL_CHART_TITLE');
+    const chartSubtitle = this.translate.instant('HISTOGRAM.TOTAL_CHART_SUBTITLE');
+    const yAxisTitle    = this.translate.instant('HISTOGRAM.Y_AXIS_TITLE');
+    const seriesName    = this.translate.instant('HISTOGRAM.TOTAL_SERIES_NAME');
+
     this.chartOptions = {
       chart: { zooming: { type: 'x' }, backgroundColor: '#FFFFFF' },
-      title: {
-        text: 'Disponibilité nucléaire totale — France',
-        style: { color: '#003366', fontWeight: 'bold' }
-      },
-      subtitle: {
-        text: 'Puissance disponible cumulée de toutes les tranches (MW)',
-        style: { color: '#003366' }
-      },
+      title:    { text: chartTitle,    style: { color: '#003366', fontWeight: 'bold' } },
+      subtitle: { text: chartSubtitle, style: { color: '#003366' } },
       xAxis: { type: 'datetime', labels: { style: { color: '#003366' } } },
       yAxis: {
-        title: { text: 'Puissance disponible (MW)', style: { color: '#003366' } },
+        title: { text: yAxisTitle, style: { color: '#003366' } },
         labels: { style: { color: '#003366' } },
         min: 0
       },
@@ -179,7 +178,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
           threshold: 0
         }
       },
-      series: [{ type: 'area', name: 'Puissance totale (MW)', data: series }],
+      series: [{ type: 'area', name: seriesName, data: series }],
       tooltip: {
         xDateFormat: '%e %B %Y',
         shared: true, useHTML: true,

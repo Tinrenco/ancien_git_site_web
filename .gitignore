@@ -6,8 +6,9 @@ tmp/
 # Dependencies
 node_modules/
 
-# Large data files (partagés via Drive)
+# Large data files (partagés via Drive, générés par convert.py)
 export_ods.csv
+indisponibilites_nucleaire_final.csv
 src/assets/donnees.json
 src/assets/donnees_daily.json
 
