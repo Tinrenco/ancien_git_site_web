@@ -36,8 +36,9 @@ export class HistogramComponent implements OnInit, OnDestroy {
   selectedCentraleData: { centrale: string; tranches: Dispo[] } | null = null;
   centralesData: Dispo[] = [];
 
-  private subs     = new Subscription();
+  private subs       = new Subscription();
   private chartSub?: Subscription;
+  private totalSeries: [number, number][] = [];
 
   Highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options = {};
@@ -150,6 +151,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   private afficherProductionTotale(series: [number, number][]): void {
+    this.totalSeries = series;
     const chartTitle    = this.translate.instant('HISTOGRAM.TOTAL_CHART_TITLE');
     const chartSubtitle = this.translate.instant('HISTOGRAM.TOTAL_CHART_SUBTITLE');
     const yAxisTitle    = this.translate.instant('HISTOGRAM.Y_AXIS_TITLE');
@@ -298,6 +300,35 @@ export class HistogramComponent implements OnInit, OnDestroy {
   }
 
   // ─── Affichage graphique par tranche ─────────────────────────────────────────
+
+  // ─── Export CSV ──────────────────────────────────────────────────────────────
+
+  exportCSV(): void {
+    if (this.isTotalMode) {
+      const lines = ['Date,Puissance disponible (MW)'];
+      for (const [ts, mw] of this.totalSeries) {
+        lines.push(`${new Date(ts).toISOString().split('T')[0]},${mw}`);
+      }
+      this.downloadCSV(lines.join('\n'), 'disponibilite_totale_france.csv');
+    } else if (this.datasets.results?.length > 0) {
+      const lines = ['Date,Heure,Centrale,Tranche,Puissance disponible (MW)'];
+      for (const r of this.datasets.results) {
+        const date = (r.date_et_heure_fuseau_horaire_europe_paris ?? '').split('T')[0];
+        lines.push(`${date},${r.heure_fuseau_horaire_europe_paris ?? ''},${r.centrale ?? ''},${r.tranche ?? ''},${r.puissance_disponible ?? ''}`);
+      }
+      this.downloadCSV(lines.join('\n'), `disponibilite_${this.tranche || 'data'}.csv`);
+    }
+  }
+
+  private downloadCSV(content: string, filename: string): void {
+    const blob = new Blob(['﻿' + content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   afficherDonnees(): void {
     if (!this.datasets.results) return;

@@ -39,8 +39,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initMap();
-    this.setCurrentDate();
-    this.setCurrentHour();
+
+    const qp = this.activatedRoute.snapshot.queryParams;
+    this.selectedDate = qp['date'] || new Date().toISOString().split('T')[0];
+    this.selectedHour = qp['hour'] !== undefined ? parseInt(qp['hour'], 10) : new Date().getHours();
+
     this.loadCentralesOnMap();
     this.loadDateLimits();
   }
