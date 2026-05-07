@@ -3,8 +3,8 @@
   <!-- HERO SECTION -->
   <div class="hero-section">
     <div class="hero-content">
-      <h1 class="hero-title">Tableau de bord du parc nucléaire français</h1>
-      <p class="hero-subtitle">Disponibilité en temps réel des centrales EDF</p>
+      <h1 class="hero-title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
+      <p class="hero-subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
       <app-search-bar></app-search-bar>
     </div>
   </div>
@@ -14,19 +14,19 @@
     <div class="stat-item">
       <span class="stat-icon">⚡</span>
       <span class="stat-value">{{ totalPower | number:'1.0-0' }} MW</span>
-      <span class="stat-label">Puissance disponible</span>
+      <span class="stat-label">{{ 'HOME.STAT_POWER' | translate }}</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
       <span class="stat-icon">🟢</span>
       <span class="stat-value">{{ activeReactors }} / {{ totalReactors }}</span>
-      <span class="stat-label">Réacteurs en fonctionnement</span>
+      <span class="stat-label">{{ 'HOME.STAT_REACTORS' | translate }}</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
       <span class="stat-icon">📅</span>
       <span class="stat-value stat-value--date">{{ latestDate }}</span>
-      <span class="stat-label">Dernière donnée disponible</span>
+      <span class="stat-label">{{ 'HOME.STAT_DATE' | translate }}</span>
     </div>
   </div>
 

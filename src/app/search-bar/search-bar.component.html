@@ -9,7 +9,7 @@
     <input
       type="text"
       class="search-input"
-      placeholder="Rechercher une centrale... (ex : Dampierre, Tricastin, Flamanville)"
+      [placeholder]="'SEARCH.PLACEHOLDER' | translate"
       autocomplete="off"
       [(ngModel)]="query"
       (input)="onInput()"
@@ -19,7 +19,7 @@
       (keydown.arrowup)="moveSelection(-1)"
     >
 
-    <button class="search-button" (click)="onSubmit()">Rechercher</button>
+    <button class="search-button" (click)="onSubmit()">{{ 'SEARCH.BUTTON' | translate }}</button>
 
     <div class="suggestions-dropdown" *ngIf="showDropdown">
       <div

@@ -3,9 +3,9 @@
   <!-- HERO -->
   <div class="hero-section">
     <div class="hero-content">
-      <div class="hero-badge">Guide pédagogique</div>
-      <h1 class="hero-title">Comment fonctionne le nucléaire ?</h1>
-      <p class="hero-subtitle">Du combustible uranium à votre prise électrique,<br>tout comprendre en quelques minutes.</p>
+      <div class="hero-badge">{{ 'NUCLEAIRE_INFO.HERO.BADGE' | translate }}</div>
+      <h1 class="hero-title">{{ 'NUCLEAIRE_INFO.HERO.TITLE' | translate }}</h1>
+      <p class="hero-subtitle">{{ 'NUCLEAIRE_INFO.HERO.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
@@ -13,15 +13,15 @@
   <section class="info-section section--white">
     <div class="section-inner">
       <div class="section-header">
-        <h2>La fission nucléaire : l'étincelle de tout</h2>
+        <h2>{{ 'NUCLEAIRE_INFO.FISSION.TITLE' | translate }}</h2>
       </div>
       <div class="two-col-layout">
         <div class="text-content">
-          <p class="lead">Une centrale nucléaire fonctionne comme une <strong>bouilloire géante</strong>. Mais au lieu d'un brûleur à gaz, elle utilise la <strong>chaleur libérée par la fission de l'uranium</strong>.</p>
-          <p>La fission, c'est la division d'un atome lourd (uranium-235) en deux atomes plus petits, provoquée par l'impact d'un neutron. Cette réaction libère <strong>une énergie colossale</strong> sous forme de chaleur, ainsi que 2 à 3 nouveaux neutrons qui vont à leur tour provoquer d'autres fissions : c'est la <strong>réaction en chaîne</strong>.</p>
+          <p class="lead" [innerHTML]="'NUCLEAIRE_INFO.FISSION.LEAD' | translate"></p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.FISSION.TEXT' | translate"></p>
           <div class="info-box">
-            <span class="info-box-icon">💡</span>
-            <div><strong>En chiffre :</strong> 1 kg d'uranium fissionné libère autant d'énergie que la combustion de <strong>2 700 tonnes de charbon</strong>.</div>
+            <span class="info-box-icon">&#x1F4A1;</span>
+            <div [innerHTML]="'NUCLEAIRE_INFO.FISSION.INFO_BOX' | translate"></div>
           </div>
         </div>
         <div class="visual-content">
@@ -35,48 +35,33 @@
                   <path d="M0,0 L0,6 L8,3 z" fill="#12356D"/>
                 </marker>
               </defs>
-
-              <!-- Uranium atom -->
               <circle cx="125" cy="130" r="42" fill="#12356D" fill-opacity="0.08" stroke="#12356D" stroke-width="2"/>
               <circle cx="125" cy="130" r="26" fill="#12356D" fill-opacity="0.25"/>
               <text x="125" y="125" text-anchor="middle" fill="#12356D" font-size="11" font-weight="bold">U-235</text>
-              <text x="125" y="140" text-anchor="middle" fill="#12356D" font-size="9">atome lourd</text>
-
-              <!-- Neutron entrant -->
+              <text x="125" y="140" text-anchor="middle" fill="#12356D" font-size="9">{{ 'NUCLEAIRE_INFO.FISSION.SVG_ATOM' | translate }}</text>
               <circle cx="38" cy="130" r="9" fill="#F1471C"/>
-              <text x="38" y="148" text-anchor="middle" fill="#F1471C" font-size="8">neutron</text>
+              <text x="38" y="148" text-anchor="middle" fill="#F1471C" font-size="8">{{ 'NUCLEAIRE_INFO.FISSION.SVG_NEUTRON' | translate }}</text>
               <line x1="49" y1="130" x2="82" y2="130" stroke="#F1471C" stroke-width="2" marker-end="url(#arr-red)"/>
-
-              <!-- Éclat central -->
               <circle cx="172" cy="130" r="13" fill="#fbbf24" fill-opacity="0.9"/>
-              <text x="172" y="134" text-anchor="middle" fill="white" font-size="9" font-weight="bold">⚡</text>
-
-              <!-- Fragment 1 -->
+              <text x="172" y="134" text-anchor="middle" fill="white" font-size="9" font-weight="bold">&#x26A1;</text>
               <circle cx="250" cy="82" r="20" fill="#22c55e" fill-opacity="0.75"/>
               <text x="250" y="79" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Kr-92</text>
-              <text x="250" y="92" text-anchor="middle" fill="white" font-size="7">fragment</text>
+              <text x="250" y="92" text-anchor="middle" fill="white" font-size="7">{{ 'NUCLEAIRE_INFO.FISSION.SVG_FRAGMENT' | translate }}</text>
               <line x1="163" y1="120" x2="233" y2="90" stroke="#12356D" stroke-width="1.5" marker-end="url(#arr-blue)"/>
-
-              <!-- Fragment 2 -->
               <circle cx="250" cy="178" r="22" fill="#22c55e" fill-opacity="0.75"/>
               <text x="250" y="175" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Ba-141</text>
               <text x="250" y="187" text-anchor="middle" fill="white" font-size="7">fragment</text>
               <line x1="163" y1="140" x2="233" y2="168" stroke="#12356D" stroke-width="1.5" marker-end="url(#arr-blue)"/>
-
-              <!-- Nouveaux neutrons -->
               <circle cx="305" cy="55" r="7" fill="#F1471C" fill-opacity="0.85"/>
               <circle cx="315" cy="88" r="7" fill="#F1471C" fill-opacity="0.85"/>
               <circle cx="308" cy="200" r="7" fill="#F1471C" fill-opacity="0.85"/>
               <line x1="265" y1="74" x2="298" y2="58" stroke="#F1471C" stroke-width="1.2" marker-end="url(#arr-red)"/>
               <line x1="268" y1="86" x2="307" y2="86" stroke="#F1471C" stroke-width="1.2" marker-end="url(#arr-red)"/>
               <line x1="266" y1="188" x2="300" y2="198" stroke="#F1471C" stroke-width="1.2" marker-end="url(#arr-red)"/>
-              <text x="322" y="48" text-anchor="middle" fill="#F1471C" font-size="7">nouveaux</text>
-              <text x="322" y="58" text-anchor="middle" fill="#F1471C" font-size="7">neutrons</text>
-
-              <!-- Chaleur -->
-              <text x="170" y="240" text-anchor="middle" fill="#64748b" font-size="9">→ énergie libérée sous forme de chaleur intense</text>
+              <text x="322" y="53" text-anchor="middle" fill="#F1471C" font-size="7">{{ 'NUCLEAIRE_INFO.FISSION.SVG_NEW_NEUTRONS' | translate }}</text>
+              <text x="170" y="240" text-anchor="middle" fill="#64748b" font-size="9">{{ 'NUCLEAIRE_INFO.FISSION.SVG_HEAT' | translate }}</text>
             </svg>
-            <p class="diagram-caption">Schéma simplifié de la fission de l'uranium-235</p>
+            <p class="diagram-caption">{{ 'NUCLEAIRE_INFO.FISSION.DIAGRAM_CAPTION' | translate }}</p>
           </div>
         </div>
       </div>
@@ -87,59 +72,25 @@
   <section class="info-section section--light">
     <div class="section-inner">
       <div class="section-header">
-        <h2>Le fonctionnement d'une centrale nucléaire</h2>
-        <p class="section-subtitle">Les centrales françaises sont des <strong>réacteurs à eau pressurisée (REP)</strong>. Voici comment elles convertissent la chaleur en électricité.</p>
+        <h2>{{ 'NUCLEAIRE_INFO.FONCTIONNEMENT.TITLE' | translate }}</h2>
+        <p class="section-subtitle" [innerHTML]="'NUCLEAIRE_INFO.FONCTIONNEMENT.SUBTITLE' | translate"></p>
       </div>
 
       <div class="steps-container">
-        <div class="step-card">
-          <div class="step-number">1</div>
-          <div class="step-emoji">&#x2622;&#xFE0F;</div>
-          <h3>Combustible uranium</h3>
-          <p>Des assemblages de crayons en uranium enrichi forment le <strong>cœur du réacteur</strong>.</p>
-        </div>
-        <div class="step-arrow">&#8594;</div>
-        <div class="step-card">
-          <div class="step-number">2</div>
-          <div class="step-emoji">&#x1F525;</div>
-          <h3>Réacteur</h3>
-          <p>La fission chauffe l'eau du <strong>circuit primaire</strong> à ~320°C sous 155 bars. L'eau reste liquide.</p>
-        </div>
-        <div class="step-arrow">&#8594;</div>
-        <div class="step-card">
-          <div class="step-number">3</div>
-          <div class="step-emoji">&#x2668;&#xFE0F;</div>
-          <h3>Générateur de vapeur</h3>
-          <p>La chaleur est transmise à un <strong>circuit secondaire</strong> (non radioactif) qui se transforme en vapeur.</p>
-        </div>
-        <div class="step-arrow">&#8594;</div>
-        <div class="step-card">
-          <div class="step-number">4</div>
-          <div class="step-emoji">&#x2699;&#xFE0F;</div>
-          <h3>Turbine</h3>
-          <p>La vapeur fait tourner une <strong>turbine</strong> à grande vitesse — chaleur → énergie mécanique.</p>
-        </div>
-        <div class="step-arrow">&#8594;</div>
-        <div class="step-card">
-          <div class="step-number">5</div>
-          <div class="step-emoji">&#x26A1;</div>
-          <h3>Alternateur</h3>
-          <p>La turbine entraîne un <strong>alternateur</strong> — énergie mécanique → électricité.</p>
-        </div>
-        <div class="step-arrow">&#8594;</div>
-        <div class="step-card">
-          <div class="step-number">6</div>
-          <div class="step-emoji">&#x1F50C;</div>
-          <h3>Transformateur</h3>
-          <p>La tension est élevée à <strong>400 000 V</strong> pour un transport sur de longues distances avec peu de pertes.</p>
-        </div>
+        <ng-container *ngFor="let step of steps; let last = last">
+          <div class="step-card">
+            <div class="step-number">{{ step.number }}</div>
+            <div class="step-emoji">{{ step.emoji }}</div>
+            <h3>{{ step.titleKey | translate }}</h3>
+            <p [innerHTML]="step.descKey | translate"></p>
+          </div>
+          <div class="step-arrow" *ngIf="!last">&#8594;</div>
+        </ng-container>
       </div>
 
       <div class="cooling-note">
         <span class="cooling-icon">&#x1F4A7;</span>
-        <div>
-          <strong>Et les tours de refroidissement ?</strong> La vapeur qui a fait tourner la turbine est refroidie dans un condenseur. La vapeur blanche visible au-dessus des tours n'est pas de la fumée : c'est de la <strong>vapeur d'eau purifiée, totalement inoffensive</strong>.
-        </div>
+        <div [innerHTML]="'NUCLEAIRE_INFO.FONCTIONNEMENT.COOLING' | translate"></div>
       </div>
     </div>
   </section>
@@ -148,27 +99,27 @@
   <section class="info-section section--white">
     <div class="section-inner">
       <div class="section-header">
-        <h2>Les 3 circuits d'une centrale REP</h2>
-        <p class="section-subtitle">Trois boucles d'eau <strong>séparées et hermétiques</strong> garantissent qu'aucune radioactivité ne quitte le réacteur.</p>
+        <h2>{{ 'NUCLEAIRE_INFO.CIRCUITS.TITLE' | translate }}</h2>
+        <p class="section-subtitle" [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.SUBTITLE' | translate"></p>
       </div>
       <div class="circuits-grid">
         <div class="circuit-card circuit--primary">
-          <div class="circuit-badge">Circuit 1</div>
-          <h3>Circuit primaire</h3>
-          <p class="circuit-status status--warning">Radioactif</p>
-          <p>Eau sous pression en contact direct avec le cœur du réacteur. Enfermé dans une enceinte de confinement en béton armé de 1,2 m d'épaisseur. <strong>Ne sort jamais</strong> du bâtiment réacteur.</p>
+          <div class="circuit-badge">{{ 'NUCLEAIRE_INFO.CIRCUITS.C1_BADGE' | translate }}</div>
+          <h3>{{ 'NUCLEAIRE_INFO.CIRCUITS.C1_TITLE' | translate }}</h3>
+          <p class="circuit-status status--warning">{{ 'NUCLEAIRE_INFO.CIRCUITS.C1_STATUS' | translate }}</p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.C1_DESC' | translate"></p>
         </div>
         <div class="circuit-card circuit--secondary">
-          <div class="circuit-badge">Circuit 2</div>
-          <h3>Circuit secondaire</h3>
-          <p class="circuit-status status--ok">Non radioactif</p>
-          <p>Reçoit la chaleur via un échangeur. Se vaporise et actionne la turbine. L'eau est ensuite refroidie et <strong>recyclée en boucle fermée</strong>.</p>
+          <div class="circuit-badge">{{ 'NUCLEAIRE_INFO.CIRCUITS.C2_BADGE' | translate }}</div>
+          <h3>{{ 'NUCLEAIRE_INFO.CIRCUITS.C2_TITLE' | translate }}</h3>
+          <p class="circuit-status status--ok">{{ 'NUCLEAIRE_INFO.CIRCUITS.C2_STATUS' | translate }}</p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.C2_DESC' | translate"></p>
         </div>
         <div class="circuit-card circuit--tertiary">
-          <div class="circuit-badge">Circuit 3</div>
-          <h3>Circuit de refroidissement</h3>
-          <p class="circuit-status status--ok">Non radioactif</p>
-          <p>Refroidit la vapeur du circuit 2 pour la recondenser. Peut utiliser de l'eau de fleuve, de mer, ou des <strong>tours de refroidissement</strong>.</p>
+          <div class="circuit-badge">{{ 'NUCLEAIRE_INFO.CIRCUITS.C3_BADGE' | translate }}</div>
+          <h3>{{ 'NUCLEAIRE_INFO.CIRCUITS.C3_TITLE' | translate }}</h3>
+          <p class="circuit-status status--ok">{{ 'NUCLEAIRE_INFO.CIRCUITS.C3_STATUS' | translate }}</p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.C3_DESC' | translate"></p>
         </div>
       </div>
     </div>
@@ -178,52 +129,52 @@
   <section class="info-section section--light">
     <div class="section-inner">
       <div class="section-header">
-        <h2>De la centrale à votre prise</h2>
-        <p class="section-subtitle">L'électricité produite parcourt des milliers de kilomètres et subit plusieurs transformations de tension avant d'arriver chez vous.</p>
+        <h2>{{ 'NUCLEAIRE_INFO.RESEAU.TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'NUCLEAIRE_INFO.RESEAU.SUBTITLE' | translate }}</p>
       </div>
 
       <div class="network-chain">
         <div class="network-node">
           <div class="network-emoji">&#x1F3ED;</div>
-          <div class="network-label">Centrale</div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE1_LABEL' | translate }}</div>
           <div class="network-voltage">~20 kV</div>
-          <div class="network-actor">EDF</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE1_ACTOR' | translate }}</div>
         </div>
         <div class="network-connector">
           <div class="connector-line"></div>
-          <div class="connector-label">Transformateur<br>élévateur</div>
+          <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN1' | translate }}</div>
         </div>
         <div class="network-node">
           <div class="network-emoji">&#x1F5FC;</div>
-          <div class="network-label">Réseau THT</div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE2_LABEL' | translate }}</div>
           <div class="network-voltage">400 kV</div>
-          <div class="network-actor">RTE</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE2_ACTOR' | translate }}</div>
         </div>
         <div class="network-connector">
           <div class="connector-line"></div>
-          <div class="connector-label">Poste source<br>abaisseur</div>
+          <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN2' | translate }}</div>
         </div>
         <div class="network-node">
           <div class="network-emoji">&#x1F527;</div>
-          <div class="network-label">Réseau HTA</div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE3_LABEL' | translate }}</div>
           <div class="network-voltage">63 / 20 kV</div>
-          <div class="network-actor">Enedis</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE3_ACTOR' | translate }}</div>
         </div>
         <div class="network-connector">
           <div class="connector-line"></div>
-          <div class="connector-label">Transformateur<br>de quartier</div>
+          <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN3' | translate }}</div>
         </div>
         <div class="network-node network-node--end">
           <div class="network-emoji">&#x1F3E0;</div>
-          <div class="network-label">Chez vous</div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE4_LABEL' | translate }}</div>
           <div class="network-voltage">230 V</div>
-          <div class="network-actor">Consommateur</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE4_ACTOR' | translate }}</div>
         </div>
       </div>
 
       <div class="info-box info-box--centered">
         <span class="info-box-icon">&#x1F4A1;</span>
-        <div><strong>Pourquoi monter à 400 000 V ?</strong> Plus la tension est haute, plus les pertes dans les câbles sont faibles. Transporter de l'électricité à très haute tension permet de <strong>diviser les pertes par des milliers</strong> sur de longues distances — indispensable pour relier les centrales aux villes éloignées.</div>
+        <div [innerHTML]="'NUCLEAIRE_INFO.RESEAU.INFO_BOX' | translate"></div>
       </div>
     </div>
   </section>
@@ -232,33 +183,33 @@
   <section class="info-section section--dark">
     <div class="section-inner">
       <div class="section-header section-header--light">
-        <h2>Le nucléaire en France en chiffres</h2>
-        <p class="section-subtitle section-subtitle--light">La France est le pays qui dépend le plus du nucléaire pour son électricité dans le monde.</p>
+        <h2>{{ 'NUCLEAIRE_INFO.CHIFFRES.TITLE' | translate }}</h2>
+        <p class="section-subtitle section-subtitle--light">{{ 'NUCLEAIRE_INFO.CHIFFRES.SUBTITLE' | translate }}</p>
       </div>
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-number">57</div>
-          <div class="stat-label">réacteurs en service</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT1_LABEL' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">18</div>
-          <div class="stat-label">centrales nucléaires</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT2_LABEL' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">~70%</div>
-          <div class="stat-label">de l'électricité française</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT3_LABEL' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">63 GW</div>
-          <div class="stat-label">de puissance installée</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT4_LABEL' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">N°1</div>
-          <div class="stat-label">pays le plus nucléarisé au monde (en %)</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT5_LABEL' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">~50 g</div>
-          <div class="stat-label">de CO₂/kWh (vs 820 g pour le charbon)</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT6_LABEL' | translate }}</div>
         </div>
       </div>
     </div>

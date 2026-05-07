@@ -22,7 +22,28 @@
       "CHART_TITLE": "Temporal evolution of the unit's availability",
       "CHART_SUBTITLE": "Click and drag to zoom",
       "CHART_SUBTITLE_TOUCH": "Pinch to zoom",
-      "Y_AXIS_TITLE": "Available Power (MW)"
+      "Y_AXIS_TITLE": "Available Power (MW)",
+      "PERIODE_LABEL": "Period",
+      "DATE_FROM": "From",
+      "DATE_TO": "To",
+      "FULL_PERIOD": "Full period",
+      "TOTAL_MODE_TITLE": "Total nuclear output — France",
+      "TOTAL_MODE_SUBTITLE": "Select a plant and a unit to display detailed data"
+    },
+    "EDF": {
+      "SEARCH_PLACEHOLDER": "Search EDF group data",
+      "RECORDS": "records",
+      "FILTER_DATETIME": "Date and Time (Europe/Paris timezone)",
+      "FILTER_HOUR": "Hour (Europe/Paris timezone)",
+      "FILTER_CENTRALE": "Plant",
+      "MAIN_TITLE": "Availability of EDF SA's nuclear fleet (Present, past and forecast)",
+      "NAV_INFO": "Information",
+      "NAV_TABLE": "Table",
+      "NAV_MAP": "Nuclear Fleet Availability Map",
+      "NAV_EXPORT": "Export",
+      "NAV_API": "API",
+      "INFO_TITLE": "How this map works:",
+      "INFO_TEXT": "This map displays the availability of the nuclear fleet at a specific date and time. By default, it shows today's date and current time (Europe/Paris timezone). To view past or forecast fleet availability, select a date/time pair using the filters on the left. Units with 0 MW available power are displayed in orange; otherwise they are displayed in green. The geographical positioning of nuclear units has been adjusted for better readability on the map of France."
     },
     "INFORMATION": {
       "TITLE": "Data Information",
@@ -48,6 +69,11 @@
       }
     },
     "HOME": {
+      "HERO_TITLE": "French nuclear fleet dashboard",
+      "HERO_SUBTITLE": "Real-time availability of EDF power plants",
+      "STAT_POWER": "Available power",
+      "STAT_REACTORS": "Reactors in operation",
+      "STAT_DATE": "Latest data available",
       "CARDS": {
         "MAP": {
           "TITLE": "Interactive Map",
@@ -61,6 +87,41 @@
         }
       }
     },
+    "SEARCH": {
+      "BUTTON": "Search",
+      "PLACEHOLDER": "Search for a plant... (e.g.: Dampierre, Tricastin, Flamanville)"
+    },
+    "APP": {
+      "FOOTER_ABOUT_BTN": "About the project",
+      "FOOTER_CONTACT_BTN": "Contact us",
+      "FOOTER_BOTTOM": "CentraleSupélec Web Project — 2026",
+      "ABOUT_TITLE": "About the project",
+      "ABOUT_S1_TITLE": "The project",
+      "ABOUT_S1_P1": "As part of the <strong>\"New Energy Concepts\"</strong> project at <strong>CentraleSupélec (class of 2028)</strong>, 4 students continued the development of a site started by the previous group, in collaboration with the EDF Open Data team.",
+      "ABOUT_S1_P2": "The goal: to make data on the availability of France's nuclear fleet accessible and readable for everyone, through a modern and interactive web interface.",
+      "ABOUT_S2_TITLE": "The team",
+      "ABOUT_TEAM_ROLE": "CentraleSupélec · Class of 2028",
+      "ABOUT_S3_TITLE": "Data collection and processing",
+      "ABOUT_S3_P1": "A pair of students retrieved raw data from official sources <strong>ENTSO-E</strong> and <strong>RTE</strong>. This data was then cleaned, formatted and published on EDF's Open Data platform.",
+      "ABOUT_S3_P2": "The data visible on this site comes directly from <a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">EDF Open Data</a>, accessed via an API key provided by the EDF team as part of this partnership.",
+      "ABOUT_S4_TITLE": "Technical source",
+      "ABOUT_S4_P1": "Unit unavailability data is accessible via: <a href=\"https://data.rte-france.com/catalog/-/api/generation/Unavailability-Additional-Information/v4.1\" target=\"_blank\" class=\"modal-link\">RTE Data API</a>. It is updated at the beginning of each hour.",
+      "ABOUT_S4_P2": "Official EDF publications (REMIT regulation): <a href=\"https://doaat.edf.fr/indisponibilites/list\" target=\"_blank\" class=\"modal-link\">EDF REMIT</a>.",
+      "ABOUT_NOTE": "The information provided is for informational purposes only. This site cannot replace EDF's official publications.",
+      "CONTACT_TITLE": "Contact us",
+      "CONTACT_SUBTITLE": "A question or a problem? The development team will get back to you.",
+      "CONTACT_NAME": "Full name",
+      "CONTACT_EMAIL": "Email",
+      "CONTACT_SUBJECT": "Subject",
+      "CONTACT_MESSAGE": "Message",
+      "CONTACT_NAME_PH": "Your name",
+      "CONTACT_EMAIL_PH": "your@email.com",
+      "CONTACT_SUBJECT_PH": "E.g.: Display issue, suggestion...",
+      "CONTACT_MSG_PH": "Describe your request...",
+      "CONTACT_SEND": "Send message",
+      "CONTACT_SUCCESS": "Message sent! We will get back to you as soon as possible.",
+      "CONTACT_CLOSE": "Close"
+    },
     "CENTRALE": {
       "CLOSE": "Close",
       "AVAILABILITY_TITLE": "Unit Availability",
@@ -72,5 +133,83 @@
       "PAGE_NOT_FOUND": "Page Not Found",
       "PAGE_NOT_FOUND_DESC": "The page you are looking for doesn't exist or has been moved.",
       "BACK_HOME": "Back to Home"
+    },
+    "NUCLEAIRE_INFO": {
+      "HERO": {
+        "BADGE": "Educational guide",
+        "TITLE": "How does nuclear energy work?",
+        "SUBTITLE": "From uranium fuel to your power outlet, understand everything in a few minutes."
+      },
+      "FISSION": {
+        "TITLE": "Nuclear fission: the spark behind it all",
+        "LEAD": "A nuclear power plant works like a <strong>giant kettle</strong>. But instead of a gas burner, it uses the <strong>heat released by uranium fission</strong>.",
+        "TEXT": "Fission is the splitting of a heavy atom (uranium-235) into two smaller atoms, triggered by a neutron impact. This reaction releases <strong>a colossal amount of energy</strong> as heat, along with 2 to 3 new neutrons that in turn trigger more fissions — this is the <strong>chain reaction</strong>.",
+        "INFO_BOX": "<strong>By the numbers:</strong> 1 kg of fissioned uranium releases as much energy as burning <strong>2,700 tonnes of coal</strong>.",
+        "DIAGRAM_CAPTION": "Simplified diagram of uranium-235 fission",
+        "SVG_ATOM": "heavy atom",
+        "SVG_NEUTRON": "neutron",
+        "SVG_FRAGMENT": "fragment",
+        "SVG_NEW_NEUTRONS": "new neutrons",
+        "SVG_HEAT": "→ energy released as intense heat"
+      },
+      "FONCTIONNEMENT": {
+        "TITLE": "How a nuclear power plant works",
+        "SUBTITLE": "French plants are <strong>Pressurized Water Reactors (PWR)</strong>. Here is how they convert heat into electricity, step by step.",
+        "STEP1_TITLE": "Uranium fuel",
+        "STEP1_DESC": "Assemblies of enriched uranium rods form the <strong>reactor core</strong>.",
+        "STEP2_TITLE": "Reactor",
+        "STEP2_DESC": "Fission heats the water in the <strong>primary circuit</strong> to ~320°C at 155 bars. The water stays liquid.",
+        "STEP3_TITLE": "Steam generator",
+        "STEP3_DESC": "The heat is transferred to a <strong>secondary circuit</strong> (non-radioactive) which turns into steam.",
+        "STEP4_TITLE": "Turbine",
+        "STEP4_DESC": "The steam spins a <strong>turbine</strong> at high speed — heat → mechanical energy.",
+        "STEP5_TITLE": "Generator",
+        "STEP5_DESC": "The turbine drives an <strong>alternator</strong> — mechanical energy → electricity.",
+        "STEP6_TITLE": "Transformer",
+        "STEP6_DESC": "The voltage is raised to <strong>400,000 V</strong> for long-distance transmission with minimal losses.",
+        "COOLING": "<strong>What about the cooling towers?</strong> The steam that drove the turbine is cooled in a condenser. The white vapour visible above the towers is not smoke — it is <strong>purified water vapour, completely harmless</strong>."
+      },
+      "CIRCUITS": {
+        "TITLE": "The 3 circuits of a PWR plant",
+        "SUBTITLE": "Three <strong>separate and sealed</strong> water loops ensure that no radioactivity ever leaves the reactor.",
+        "C1_BADGE": "Circuit 1",
+        "C1_TITLE": "Primary circuit",
+        "C1_STATUS": "Radioactive",
+        "C1_DESC": "Pressurized water in direct contact with the reactor core. Sealed inside a reinforced-concrete containment building 1.2 m thick. <strong>Never leaves</strong> the reactor building.",
+        "C2_BADGE": "Circuit 2",
+        "C2_TITLE": "Secondary circuit",
+        "C2_STATUS": "Non-radioactive",
+        "C2_DESC": "Receives heat via a heat exchanger. Turns to steam and drives the turbine. The water is then cooled and <strong>recycled in a closed loop</strong>.",
+        "C3_BADGE": "Circuit 3",
+        "C3_TITLE": "Cooling circuit",
+        "C3_STATUS": "Non-radioactive",
+        "C3_DESC": "Cools the steam from circuit 2 to condense it back to water. Can use river water, seawater, or <strong>cooling towers</strong>."
+      },
+      "RESEAU": {
+        "TITLE": "From the plant to your socket",
+        "SUBTITLE": "The electricity produced travels thousands of kilometres and undergoes several voltage transformations before reaching you.",
+        "NODE1_LABEL": "Power plant",
+        "NODE1_ACTOR": "EDF",
+        "CONN1": "Step-up\ntransformer",
+        "NODE2_LABEL": "HV grid",
+        "NODE2_ACTOR": "RTE",
+        "CONN2": "Step-down\nsubstation",
+        "NODE3_LABEL": "MV grid",
+        "NODE3_ACTOR": "Enedis",
+        "CONN3": "Local\ntransformer",
+        "NODE4_LABEL": "Your home",
+        "NODE4_ACTOR": "Consumer",
+        "INFO_BOX": "<strong>Why step up to 400,000 V?</strong> The higher the voltage, the lower the losses in the cables. Transmitting electricity at very high voltage <strong>divides losses by thousands</strong> over long distances — essential for connecting plants to distant cities."
+      },
+      "CHIFFRES": {
+        "TITLE": "Nuclear energy in France by the numbers",
+        "SUBTITLE": "France is the most nuclear-dependent country in the world for its electricity supply.",
+        "STAT1_LABEL": "reactors in service",
+        "STAT2_LABEL": "nuclear power plants",
+        "STAT3_LABEL": "of French electricity",
+        "STAT4_LABEL": "of installed capacity",
+        "STAT5_LABEL": "most nuclear country in the world (by %)",
+        "STAT6_LABEL": "of CO₂/kWh (vs 820 g for coal)"
+      }
     }
   }
