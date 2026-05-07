@@ -67,10 +67,6 @@
 </div>
 
 <div class="chart-container mt-4" *ngIf="tranche || isTotalMode">
-  <div *ngIf="isTotalMode && !tranche" class="total-mode-banner">
-    {{ 'HISTOGRAM.TOTAL_MODE_TITLE' | translate }}
-    <span>{{ 'HISTOGRAM.TOTAL_MODE_SUBTITLE' | translate }}</span>
-  </div>
   <div id="container" style="width: 100%; height: 400px; position: relative;">
     <highcharts-chart
       *ngIf="!isChartLoading"
