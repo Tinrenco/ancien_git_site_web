@@ -196,6 +196,28 @@ export class DatasetService {
       return new RegExp(regexStr, 'i').test(value);
     }
 
+    // Supérieur ou égal : field>="valeur"
+    const gteMatch = condition.match(/^(\w+)>="(.+)"$/);
+    if (gteMatch) {
+      const [, field, threshold] = gteMatch;
+      const recDate = new Date(record[field]);
+      const thrDate = new Date(threshold);
+      return !isNaN(recDate.getTime()) && !isNaN(thrDate.getTime())
+        ? recDate >= thrDate
+        : String(record[field] ?? '') >= threshold;
+    }
+
+    // Inférieur ou égal : field<="valeur"
+    const lteMatch = condition.match(/^(\w+)<="(.+)"$/);
+    if (lteMatch) {
+      const [, field, threshold] = lteMatch;
+      const recDate = new Date(record[field]);
+      const thrDate = new Date(threshold);
+      return !isNaN(recDate.getTime()) && !isNaN(thrDate.getTime())
+        ? recDate <= thrDate
+        : String(record[field] ?? '') <= threshold;
+    }
+
     // Supérieur à : field>"valeur"
     const gtMatch = condition.match(/^(\w+)>"(.+)"$/);
     if (gtMatch) {
