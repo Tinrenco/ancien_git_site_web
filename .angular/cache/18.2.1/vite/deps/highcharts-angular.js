@@ -12,10 +12,7 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵdirectiveInject
-} from "./chunk-5ZBZTOXX.js";
-import "./chunk-5X3OOUUX.js";
-import "./chunk-TFMRLFGK.js";
-import "./chunk-KQP4K3F6.js";
+} from "./chunk-ELKGSSLN.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/highcharts-angular/fesm2022/highcharts-angular.mjs

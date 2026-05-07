@@ -1,45 +1,13 @@
 <div class="home-container">
-
-  <!-- HERO SECTION -->
-  <div class="hero-section">
-    <div class="hero-content">
-      <h1 class="hero-title">Tableau de bord du parc nucléaire français</h1>
-      <p class="hero-subtitle">Disponibilité en temps réel des centrales EDF</p>
-      <app-search-bar></app-search-bar>
-    </div>
-  </div>
-
-  <!-- BANDEAU CHIFFRES CLÉS -->
-  <div class="stats-banner" *ngIf="statsLoaded">
-    <div class="stat-item">
-      <span class="stat-icon">⚡</span>
-      <span class="stat-value">{{ totalPower | number:'1.0-0' }} MW</span>
-      <span class="stat-label">Puissance disponible</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-icon">🟢</span>
-      <span class="stat-value">{{ activeReactors }} / {{ totalReactors }}</span>
-      <span class="stat-label">Réacteurs en fonctionnement</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-icon">📅</span>
-      <span class="stat-value stat-value--date">{{ latestDate }}</span>
-      <span class="stat-label">Dernière donnée disponible</span>
-    </div>
-  </div>
-
-  <!-- CARTES DE NAVIGATION -->
   <div class="cards-wrapper">
-
+    <!-- Carte Component Card -->
     <div class="card" routerLink="/carte">
       <div class="card-content">
         <div class="icon-wrapper map-icon">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
         </div>
@@ -54,11 +22,12 @@
       </div>
     </div>
 
+    <!-- Histogram Component Card -->
     <div class="card" routerLink="/histogram">
       <div class="card-content">
         <div class="icon-wrapper data-icon">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
           </svg>
         </div>
@@ -72,6 +41,5 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>

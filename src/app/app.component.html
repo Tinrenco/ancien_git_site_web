@@ -15,6 +15,14 @@
             </svg>
             <span>{{ 'NAV.HOME' | translate }}</span>
           </a>
+  <!-- Dans app.component.html, ajouter après les autres liens de navigation -->
+          <a routerLink="/information" routerLinkActive="active" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Information</span>
+          </a>
           <a routerLink="/carte" routerLinkActive="active" class="nav-link">
             <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -62,6 +70,14 @@
               <span>{{ 'NAV.HOME' | translate }}</span>
             </a>
    
+            <a routerLink="/information" routerLinkActive="active" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>Information</span>
+            </a>
+   
             <a routerLink="/carte" routerLinkActive="active" class="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -90,187 +106,3 @@
    </div>
 </div>
  <router-outlet></router-outlet>
-
-<footer class="app-footer">
-
-  <!-- Boutons d'action bien visibles -->
-  <div class="footer-actions">
-    <button class="footer-btn" (click)="showAbout = true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/>
-        <line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-      À propos du projet
-    </button>
-    <button class="footer-btn footer-btn--outline" (click)="showContact = true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-        <polyline points="22,6 12,13 2,6"/>
-      </svg>
-      Nous contacter
-    </button>
-  </div>
-
-  <!-- 3 colonnes -->
-  <div class="footer-content">
-    <div class="footer-col">
-      <h4 class="footer-heading">{{ 'INFORMATION.ABSTRACT.TITLE' | translate }}</h4>
-      <p>{{ 'INFORMATION.ABSTRACT.CONTENT' | translate }}</p>
-    </div>
-
-    <div class="footer-divider"></div>
-
-    <div class="footer-col">
-      <h4 class="footer-heading">{{ 'INFORMATION.ADDITIONAL.TITLE' | translate }}</h4>
-      <ul class="footer-list">
-        <li>{{ 'INFORMATION.ADDITIONAL.GPS_INFO' | translate }}</li>
-        <li>{{ 'INFORMATION.ADDITIONAL.TIMEZONE' | translate }}</li>
-      </ul>
-    </div>
-
-    <div class="footer-divider"></div>
-
-    <div class="footer-col">
-      <h4 class="footer-heading">{{ 'INFORMATION.LIABILITY.TITLE' | translate }}</h4>
-      <p>{{ 'INFORMATION.LIABILITY.CONTENT' | translate }}</p>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    Projet Web CentraleSupélec &mdash; 2026
-  </div>
-</footer>
-
-<!-- Modale À propos -->
-<div class="modal-overlay" *ngIf="showAbout" (click)="showAbout = false">
-  <div class="modal-box" (click)="$event.stopPropagation()">
-    <button class="modal-close" (click)="showAbout = false">&times;</button>
-    <h2 class="modal-title">À propos du projet</h2>
-
-    <section class="modal-section">
-      <h3>Le projet</h3>
-      <p>
-        Dans le cadre du pôle projet <strong>« Nouveaux concepts énergétiques »</strong> de
-        <strong>CentraleSupélec (promotion 2028)</strong>, 4 étudiants ont repris et continué
-        le développement d'un site initié par le groupe précédent, en collaboration avec
-        l'équipe EDF en charge de l'Open Data.
-      </p>
-      <p>
-        L'objectif : rendre les données de disponibilité du parc nucléaire français accessibles
-        et lisibles pour tous, à travers une interface web moderne et interactive.
-      </p>
-    </section>
-
-    <section class="modal-section">
-      <h3>L'équipe</h3>
-      <div class="team-grid">
-        <div class="team-card">
-          <div class="team-avatar">VL</div>
-          <div class="team-info">
-            <span class="team-name">Valentin LAVIGNE</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
-          </div>
-        </div>
-        <div class="team-card">
-          <div class="team-avatar">BB</div>
-          <div class="team-info">
-            <span class="team-name">Bechir BECHIR</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
-          </div>
-        </div>
-        <div class="team-card">
-          <div class="team-avatar">EO</div>
-          <div class="team-info">
-            <span class="team-name">El-Hadj Amadou OUMAR</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
-          </div>
-        </div>
-        <div class="team-card">
-          <div class="team-avatar">CP</div>
-          <div class="team-info">
-            <span class="team-name">Corentin PRIZZON</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="modal-section">
-      <h3>Collecte et traitement des données</h3>
-      <p>
-        Un binôme d'étudiants s'est chargé de récupérer les données brutes auprès des sources
-        officielles <strong>ENTSO-E</strong> et <strong>RTE</strong>. Ces données ont ensuite
-        été nettoyées, formatées puis publiées sur la plateforme Open Data d'EDF.
-      </p>
-      <p>
-        Les données visibles sur ce site proviennent directement de l'
-        <a href="https://opendata.edf.fr" target="_blank" class="modal-link">Open Data EDF</a>,
-        interrogé via une clé API mise à disposition par l'équipe EDF dans le cadre de ce partenariat.
-      </p>
-    </section>
-
-    <section class="modal-section">
-      <h3>Source technique</h3>
-      <p>
-        Les données d'indisponibilités par tranche sont accessibles via :
-        <a href="https://data.rte-france.com/catalog/-/api/generation/Unavailability-Additional-Information/v4.1"
-           target="_blank" class="modal-link">RTE Data API</a>.
-        Elles sont actualisées au début de chaque heure.
-      </p>
-      <p>
-        Publications officielles EDF (règlement REMIT) :
-        <a href="https://doaat.edf.fr/indisponibilites/list" target="_blank" class="modal-link">EDF REMIT</a>.
-      </p>
-    </section>
-
-    <section class="modal-note">
-      <p>Les informations fournies le sont à titre informatif et indicatif.
-         Ce site ne saurait remplacer les publications officielles d'EDF.</p>
-    </section>
-  </div>
-</div>
-
-<!-- Modale Contact -->
-<div class="modal-overlay" *ngIf="showContact" (click)="showContact = false">
-  <div class="modal-box" (click)="$event.stopPropagation()">
-    <button class="modal-close" (click)="showContact = false">&times;</button>
-    <h2 class="modal-title">Nous contacter</h2>
-    <p class="modal-subtitle">Une question ou un problème ? L'équipe de développement vous répondra.</p>
-
-    <div *ngIf="!contactSent">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Nom complet</label>
-          <input type="text" [(ngModel)]="contact.nom" placeholder="Votre nom" class="form-input">
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" [(ngModel)]="contact.email" placeholder="votre@email.fr" class="form-input">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Sujet</label>
-        <input type="text" [(ngModel)]="contact.sujet" placeholder="Ex : Problème d'affichage, suggestion..." class="form-input">
-      </div>
-      <div class="form-group">
-        <label>Message</label>
-        <textarea [(ngModel)]="contact.message" placeholder="Décrivez votre demande..." rows="5" class="form-input form-textarea"></textarea>
-      </div>
-      <button class="form-submit" (click)="sendContact()"
-              [disabled]="!contact.nom || !contact.email || !contact.message">
-        Envoyer le message
-      </button>
-    </div>
-
-    <div *ngIf="contactSent" class="contact-success">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
-           fill="none" stroke="#22c55e" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      <p>Message envoyé ! Nous vous répondrons dans les meilleurs délais.</p>
-      <button class="footer-btn" (click)="showContact = false; contactSent = false">Fermer</button>
-    </div>
-  </div>
-</div>

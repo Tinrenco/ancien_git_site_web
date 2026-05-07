@@ -137,61 +137,6 @@ input[type="date"].form-control {
     padding: 16px;
   }
 }
-.date-range-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.date-range-inputs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.date-range-field {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex: 1;
-
-  .form-control {
-    padding: 6px 8px;
-    font-size: 0.85rem;
-  }
-}
-
-.date-range-label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #64748b;
-  white-space: nowrap;
-}
-
-.date-range-sep {
-  color: #94a3b8;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-.total-mode-banner {
-  background: linear-gradient(135deg, #12356D, #1a4590);
-  color: #fff;
-  border-radius: 8px 8px 0 0;
-  padding: 12px 20px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  span {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.7);
-  }
-}
-
 .chart-container {
   position: relative;
   background: white;
