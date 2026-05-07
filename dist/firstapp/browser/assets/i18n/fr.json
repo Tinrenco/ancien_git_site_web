@@ -1,0 +1,75 @@
+{
+  "TITLE":"Disponibilité du parc nucléaire d'EDF SA (Présent, passé et prévisionnel)",
+    "NAV": {
+      "HOME": "Accueil",
+      "MAP": "Carte",
+      "DATA": "Données"
+    },
+    "MAP": {
+      "DATE_LABEL": "Date",
+      "TIME_LABEL": "Heure",
+      "LOADING_MESSAGE": "Chargement des données...",
+      "HOUR_LABEL": "Heure"
+    },
+    "HISTOGRAM": {
+      "CENTRALE_LABEL": "Centrale",
+      "CENTRALE_PLACEHOLDER": "Sélectionner une centrale",
+      "TRANCHE_LABEL": "Tranche",
+      "TRANCHE_PLACEHOLDER": "Sélectionner une tranche",
+      "DATE_CENTRAL_LABEL": "Date centrale",
+      "LOADING_MESSAGE": "Chargement des données...",
+      "CHART_TITLE": "Evolution temporelle de la disponibilité de la tranche",
+      "CHART_SUBTITLE": "Cliquez et glissez pour zoomer",
+      "CHART_SUBTITLE_TOUCH": "Pincez pour zoomer",
+      "Y_AXIS_TITLE": "Puissance Disponible (MW)"
+    },
+    "INFORMATION": {
+      "TITLE": "Informations sur les données",
+      "ABSTRACT": {
+        "TITLE": "Résumé",
+        "CONTENT": "Ces données présentent l'état de disponibilité du parc nucléaire d'EDF SA présent, passé et prévisionnel sur une année glissante. Vous y retrouverez, centrale par centrale, et pour chacune des tranches, leur puissance disponible en MW. Ces données sont actualisées au début de chaque heure."
+      },
+      "DESCRIPTION": {
+        "TITLE": "Description détaillée",
+        "CONTENT": "Les données sont des données publiques issues du site RTE. Il s'agit des données d'indisponibilités par tranche, accessibles via l'API à l'adresse suivante :",
+        "MAP_INFO": "La carte est basée sur les publications faites par EDF au titre du règlement REMIT mais ne prend pas en compte les éventuelles informations complémentaires associées à certaines publications, ni les éventuelles indisponibilités futures dues à de nouveaux événements fortuits.",
+        "DISCLAIMER": "La carte est un outil de visualisation mis à disposition à titre informatif et indicatif. Elle ne saurait remplacer les publications officielles réalisées par EDF au titre du règlement REMIT, disponible à l'adresse :"
+      },
+      "ADDITIONAL": {
+        "TITLE": "Informations complémentaires",
+        "GPS_INFO": "Le positionnement géographique des tranches nucléaires est adapté pour offrir une meilleure lisibilité de la carte de France.",
+        "TIMEZONE": "Le fuseau horaire de référence utilisé est Europe/Paris."
+      },
+      "LIABILITY": {
+        "TITLE": "Responsabilité d'EDF",
+        "CONTENT": "Pour rappel, en application de la clause 3.2 des conditions générales d'utilisation du portail opendata.edf.fr, les informations fournies le sont à titre informatif et indicatif...",
+        "DISCLAIMER": "En conséquence, l'Utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive..."
+      }
+    },
+    "HOME": {
+      "CARDS": {
+        "MAP": {
+          "TITLE": "Carte Interactive",
+          "DESCRIPTION": "Visualisez la localisation et la disponibilité des centrales nucléaires EDF en France",
+          "ACTION": "Explorer la carte"
+        },
+        "DATA": {
+          "TITLE": "Données & Analyses",
+          "DESCRIPTION": "Accédez aux données détaillées de puissance et aux analyses historiques",
+          "ACTION": "Voir les données"
+        }
+      }
+    },
+    "CENTRALE": {
+      "CLOSE": "Fermer",
+      "AVAILABILITY_TITLE": "Disponibilité des tranches",
+      "MW": "MW",
+      "CLICK_FOR_DETAILS": "Cliquer pour voir les détails",
+      "LOADING": "Chargement des données..."
+    },
+    "ERROR": {
+      "PAGE_NOT_FOUND": "Page introuvable",
+      "PAGE_NOT_FOUND_DESC": "La page que vous recherchez n'existe pas ou a été déplacée.",
+      "BACK_HOME": "Retour à l'accueil"
+    }
+  }

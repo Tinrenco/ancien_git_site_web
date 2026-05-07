@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DataSets } from '../app.component.models';
 
-const baseUrl = 'https://opendata.edf.fr/api/explore/v2.1/catalog';
+const baseUrl = 'assets/donnees.json';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +22,8 @@ export class CatalogService {
   getExportCatalogByFormat(format: string): Observable<any> {
     return this.http.get<any>(`${baseUrl}/${format}`);
   }
+  
   getDatasetInformation(dataset_id: string): Observable<any>{
-    return this.http.get<any>(`${baseUrl}/datasets/${dataset_id}`)
+    return this.http.get<any>(`${baseUrl}/datasets/${dataset_id}`);
   }
 }
