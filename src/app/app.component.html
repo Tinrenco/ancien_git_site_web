@@ -29,8 +29,16 @@
             </svg>
             <span>{{ 'NAV.DATA' | translate }}</span>
           </a>
+
+          <a routerLink="/nucleaire-info" routerLinkActive="active" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+              <circle cx="12" cy="12" r="3" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+            </svg>
+            <span>{{ 'NAV.NUCLEAIRE' | translate }}</span>
+          </a>
         </div>
-  
+
         <div class="nav-group">
           <div class="language-selector">
             <button class="lang-btn" [class.active]="currentLang === 'fr'" (click)="switchLanguage('fr')">FR</button>
@@ -76,8 +84,16 @@
               </svg>
               <span>{{ 'NAV.DATA' | translate }}</span>
             </a>
+
+            <a routerLink="/nucleaire-info" routerLinkActive="active" class="nav-link">
+              <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                <circle cx="12" cy="12" r="3" stroke-width="2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+              </svg>
+              <span>{{ 'NAV.NUCLEAIRE' | translate }}</span>
+            </a>
           </div>
-   
+
           <div class="nav-group">
             <div class="language-selector">
               <button class="lang-btn" [class.active]="currentLang === 'fr'" (click)="switchLanguage('fr')">FR</button>

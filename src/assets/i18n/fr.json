@@ -3,7 +3,8 @@
     "NAV": {
       "HOME": "Accueil",
       "MAP": "Carte",
-      "DATA": "Données"
+      "DATA": "Données",
+      "NUCLEAIRE": "Le nucléaire"
     },
     "MAP": {
       "DATE_LABEL": "Date",
