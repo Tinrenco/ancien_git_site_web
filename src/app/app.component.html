@@ -117,7 +117,7 @@
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/>
         <line x1="12" y1="8" x2="12.01" y2="8"/>
       </svg>
-      À propos du projet
+      {{ 'APP.FOOTER_ABOUT_BTN' | translate }}
     </button>
     <button class="footer-btn footer-btn--outline" (click)="showContact = true">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -125,7 +125,7 @@
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
         <polyline points="22,6 12,13 2,6"/>
       </svg>
-      Nous contacter
+      {{ 'APP.FOOTER_CONTACT_BTN' | translate }}
     </button>
   </div>
 
@@ -155,7 +155,7 @@
   </div>
 
   <div class="footer-bottom">
-    Projet Web CentraleSupélec &mdash; 2026
+    {{ 'APP.FOOTER_BOTTOM' | translate }}
   </div>
 </footer>
 
@@ -163,87 +163,62 @@
 <div class="modal-overlay" *ngIf="showAbout" (click)="showAbout = false">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <button class="modal-close" (click)="showAbout = false">&times;</button>
-    <h2 class="modal-title">À propos du projet</h2>
+    <h2 class="modal-title">{{ 'APP.ABOUT_TITLE' | translate }}</h2>
 
     <section class="modal-section">
-      <h3>Le projet</h3>
-      <p>
-        Dans le cadre du pôle projet <strong>« Nouveaux concepts énergétiques »</strong> de
-        <strong>CentraleSupélec (promotion 2028)</strong>, 4 étudiants ont repris et continué
-        le développement d'un site initié par le groupe précédent, en collaboration avec
-        l'équipe EDF en charge de l'Open Data.
-      </p>
-      <p>
-        L'objectif : rendre les données de disponibilité du parc nucléaire français accessibles
-        et lisibles pour tous, à travers une interface web moderne et interactive.
-      </p>
+      <h3>{{ 'APP.ABOUT_S1_TITLE' | translate }}</h3>
+      <p [innerHTML]="'APP.ABOUT_S1_P1' | translate"></p>
+      <p>{{ 'APP.ABOUT_S1_P2' | translate }}</p>
     </section>
 
     <section class="modal-section">
-      <h3>L'équipe</h3>
+      <h3>{{ 'APP.ABOUT_S2_TITLE' | translate }}</h3>
       <div class="team-grid">
         <div class="team-card">
           <div class="team-avatar">VL</div>
           <div class="team-info">
             <span class="team-name">Valentin LAVIGNE</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
+            <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
         <div class="team-card">
           <div class="team-avatar">BB</div>
           <div class="team-info">
             <span class="team-name">Bechir BECHIR</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
+            <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
         <div class="team-card">
           <div class="team-avatar">EO</div>
           <div class="team-info">
             <span class="team-name">El-Hadj Amadou OUMAR</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
+            <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
         <div class="team-card">
           <div class="team-avatar">CP</div>
           <div class="team-info">
             <span class="team-name">Corentin PRIZZON</span>
-            <span class="team-role">CentraleSupélec · Promo 2028</span>
+            <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
       </div>
     </section>
 
     <section class="modal-section">
-      <h3>Collecte et traitement des données</h3>
-      <p>
-        Un binôme d'étudiants s'est chargé de récupérer les données brutes auprès des sources
-        officielles <strong>ENTSO-E</strong> et <strong>RTE</strong>. Ces données ont ensuite
-        été nettoyées, formatées puis publiées sur la plateforme Open Data d'EDF.
-      </p>
-      <p>
-        Les données visibles sur ce site proviennent directement de l'
-        <a href="https://opendata.edf.fr" target="_blank" class="modal-link">Open Data EDF</a>,
-        interrogé via une clé API mise à disposition par l'équipe EDF dans le cadre de ce partenariat.
-      </p>
+      <h3>{{ 'APP.ABOUT_S3_TITLE' | translate }}</h3>
+      <p [innerHTML]="'APP.ABOUT_S3_P1' | translate"></p>
+      <p [innerHTML]="'APP.ABOUT_S3_P2' | translate"></p>
     </section>
 
     <section class="modal-section">
-      <h3>Source technique</h3>
-      <p>
-        Les données d'indisponibilités par tranche sont accessibles via :
-        <a href="https://data.rte-france.com/catalog/-/api/generation/Unavailability-Additional-Information/v4.1"
-           target="_blank" class="modal-link">RTE Data API</a>.
-        Elles sont actualisées au début de chaque heure.
-      </p>
-      <p>
-        Publications officielles EDF (règlement REMIT) :
-        <a href="https://doaat.edf.fr/indisponibilites/list" target="_blank" class="modal-link">EDF REMIT</a>.
-      </p>
+      <h3>{{ 'APP.ABOUT_S4_TITLE' | translate }}</h3>
+      <p [innerHTML]="'APP.ABOUT_S4_P1' | translate"></p>
+      <p [innerHTML]="'APP.ABOUT_S4_P2' | translate"></p>
     </section>
 
     <section class="modal-note">
-      <p>Les informations fournies le sont à titre informatif et indicatif.
-         Ce site ne saurait remplacer les publications officielles d'EDF.</p>
+      <p>{{ 'APP.ABOUT_NOTE' | translate }}</p>
     </section>
   </div>
 </div>
@@ -252,31 +227,31 @@
 <div class="modal-overlay" *ngIf="showContact" (click)="showContact = false">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <button class="modal-close" (click)="showContact = false">&times;</button>
-    <h2 class="modal-title">Nous contacter</h2>
-    <p class="modal-subtitle">Une question ou un problème ? L'équipe de développement vous répondra.</p>
+    <h2 class="modal-title">{{ 'APP.CONTACT_TITLE' | translate }}</h2>
+    <p class="modal-subtitle">{{ 'APP.CONTACT_SUBTITLE' | translate }}</p>
 
     <div *ngIf="!contactSent">
       <div class="form-row">
         <div class="form-group">
-          <label>Nom complet</label>
-          <input type="text" [(ngModel)]="contact.nom" placeholder="Votre nom" class="form-input">
+          <label>{{ 'APP.CONTACT_NAME' | translate }}</label>
+          <input type="text" [(ngModel)]="contact.nom" [placeholder]="'APP.CONTACT_NAME_PH' | translate" class="form-input">
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" [(ngModel)]="contact.email" placeholder="votre@email.fr" class="form-input">
+          <label>{{ 'APP.CONTACT_EMAIL' | translate }}</label>
+          <input type="email" [(ngModel)]="contact.email" [placeholder]="'APP.CONTACT_EMAIL_PH' | translate" class="form-input">
         </div>
       </div>
       <div class="form-group">
-        <label>Sujet</label>
-        <input type="text" [(ngModel)]="contact.sujet" placeholder="Ex : Problème d'affichage, suggestion..." class="form-input">
+        <label>{{ 'APP.CONTACT_SUBJECT' | translate }}</label>
+        <input type="text" [(ngModel)]="contact.sujet" [placeholder]="'APP.CONTACT_SUBJECT_PH' | translate" class="form-input">
       </div>
       <div class="form-group">
-        <label>Message</label>
-        <textarea [(ngModel)]="contact.message" placeholder="Décrivez votre demande..." rows="5" class="form-input form-textarea"></textarea>
+        <label>{{ 'APP.CONTACT_MESSAGE' | translate }}</label>
+        <textarea [(ngModel)]="contact.message" [placeholder]="'APP.CONTACT_MSG_PH' | translate" rows="5" class="form-input form-textarea"></textarea>
       </div>
       <button class="form-submit" (click)="sendContact()"
               [disabled]="!contact.nom || !contact.email || !contact.message">
-        Envoyer le message
+        {{ 'APP.CONTACT_SEND' | translate }}
       </button>
     </div>
 
@@ -285,8 +260,8 @@
            fill="none" stroke="#22c55e" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
-      <p>Message envoyé ! Nous vous répondrons dans les meilleurs délais.</p>
-      <button class="footer-btn" (click)="showContact = false; contactSent = false">Fermer</button>
+      <p>{{ 'APP.CONTACT_SUCCESS' | translate }}</p>
+      <button class="footer-btn" (click)="showContact = false; contactSent = false">{{ 'APP.CONTACT_CLOSE' | translate }}</button>
     </div>
   </div>
 </div>

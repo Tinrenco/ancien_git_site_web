@@ -32,11 +32,11 @@
     </div>
 
     <div class="col-md-4">
-      <label class="form-label">Période</label>
+      <label class="form-label">{{ 'HISTOGRAM.PERIODE_LABEL' | translate }}</label>
       <div class="date-range-wrapper">
         <div class="date-range-inputs">
           <div class="date-range-field">
-            <span class="date-range-label">Du</span>
+            <span class="date-range-label">{{ 'HISTOGRAM.DATE_FROM' | translate }}</span>
             <input type="date"
                    class="form-control"
                    [(ngModel)]="dateFrom"
@@ -46,7 +46,7 @@
           </div>
           <span class="date-range-sep">→</span>
           <div class="date-range-field">
-            <span class="date-range-label">Au</span>
+            <span class="date-range-label">{{ 'HISTOGRAM.DATE_TO' | translate }}</span>
             <input type="date"
                    class="form-control"
                    [(ngModel)]="dateTo"
@@ -59,7 +59,7 @@
                 [class.btn-primary]="isFullPeriod"
                 [class.btn-outline-secondary]="!isFullPeriod"
                 (click)="resetToFullPeriod()">
-          Toute la période
+          {{ 'HISTOGRAM.FULL_PERIOD' | translate }}
         </button>
       </div>
     </div>
