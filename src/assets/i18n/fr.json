@@ -32,7 +32,9 @@
       "TOTAL_CHART_TITLE": "Disponibilité nucléaire totale — France",
       "TOTAL_CHART_SUBTITLE": "Puissance disponible cumulée de toutes les tranches (MW)",
       "TOTAL_SERIES_NAME": "Puissance totale (MW)",
-      "EXPORT_CSV": "Exporter en CSV"
+      "EXPORT_CSV": "Exporter en CSV",
+      "COMPARE_TITLE": "Comparaison des tranches sélectionnées",
+      "TRANCHES_SELECTED": "tranches sélectionnées"
     },
     "EDF": {
       "SEARCH_PLACEHOLDER": "Rechercher les données du groupe EDF",

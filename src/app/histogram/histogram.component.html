@@ -1,11 +1,13 @@
 <div class="filters-container">
   <div class="row g-3">
+
+    <!-- Sélection de la centrale -->
     <div class="col-md-4">
       <label for="centrale-select" class="form-label">
         {{ 'HISTOGRAM.CENTRALE_LABEL' | translate }}
       </label>
-      <select class="form-select" 
-              [(ngModel)]="selectedCentrale" 
+      <select class="form-select"
+              [(ngModel)]="selectedCentrale"
               (ngModelChange)="onCentraleChange()"
               id="centrale-select">
         <option value="">{{ 'HISTOGRAM.CENTRALE_PLACEHOLDER' | translate }}</option>
@@ -15,22 +17,35 @@
       </select>
     </div>
 
+    <!-- Sélection des tranches (checkboxes multi-sélection) -->
     <div class="col-md-4">
-      <label for="tranche-select" class="form-label">
-        {{ 'HISTOGRAM.TRANCHE_LABEL' | translate }}
-      </label>
-      <select class="form-select" 
-              [(ngModel)]="tranche"
-              (ngModelChange)="onTrancheChange()"
-              id="tranche-select"
-              [disabled]="!selectedCentrale">
-        <option value="">{{ 'HISTOGRAM.TRANCHE_PLACEHOLDER' | translate }}</option>
-        <option *ngFor="let tranche of getTranches()" [value]="tranche">
-          {{ tranche }}
-        </option>
-      </select>
+      <label class="form-label">{{ 'HISTOGRAM.TRANCHE_LABEL' | translate }}</label>
+
+      <div class="tranche-list" [class.tranche-list--disabled]="!selectedCentrale">
+        <p *ngIf="!selectedCentrale" class="tranche-placeholder">
+          {{ 'HISTOGRAM.TRANCHE_PLACEHOLDER' | translate }}
+        </p>
+        <p *ngIf="selectedCentrale && getTranches().length === 0" class="tranche-placeholder">
+          {{ 'HISTOGRAM.LOADING_MESSAGE' | translate }}
+        </p>
+
+        <label *ngFor="let t of getTranches(); let i = index" class="tranche-checkbox-label">
+          <input type="checkbox"
+                 [value]="t"
+                 [checked]="selectedTranches.includes(t)"
+                 [disabled]="!selectedCentrale"
+                 (change)="onTrancheToggle(t, $event)">
+          <span class="tranche-color-dot" [style.background]="getTrancheColor(i)"></span>
+          <span>{{ t }}</span>
+        </label>
+      </div>
+
+      <p *ngIf="selectedTranches.length > 1" class="compare-badge">
+        {{ selectedTranches.length }} {{ 'HISTOGRAM.TRANCHES_SELECTED' | translate }}
+      </p>
     </div>
 
+    <!-- Période -->
     <div class="col-md-4">
       <label class="form-label">{{ 'HISTOGRAM.PERIODE_LABEL' | translate }}</label>
       <div class="date-range-wrapper">
@@ -63,10 +78,11 @@
         </button>
       </div>
     </div>
+
   </div>
 </div>
 
-<div class="chart-container mt-4" *ngIf="tranche || isTotalMode">
+<div class="chart-container mt-4" *ngIf="selectedTranches.length > 0 || isTotalMode">
   <div class="chart-toolbar">
     <button class="btn-export" (click)="exportCSV()" [disabled]="isChartLoading">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"

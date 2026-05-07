@@ -32,7 +32,9 @@
       "TOTAL_CHART_TITLE": "Total nuclear availability — France",
       "TOTAL_CHART_SUBTITLE": "Cumulative available power of all units (MW)",
       "TOTAL_SERIES_NAME": "Total power (MW)",
-      "EXPORT_CSV": "Export as CSV"
+      "EXPORT_CSV": "Export as CSV",
+      "COMPARE_TITLE": "Comparison of selected units",
+      "TRANCHES_SELECTED": "units selected"
     },
     "EDF": {
       "SEARCH_PLACEHOLDER": "Search EDF group data",
