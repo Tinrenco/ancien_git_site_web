@@ -67,10 +67,6 @@
 </div>
 
 <div class="chart-container mt-4" *ngIf="tranche || isTotalMode">
-  <div *ngIf="isTotalMode && !tranche" class="total-mode-banner">
-    Production nucléaire totale &mdash; France
-    <span>Sélectionnez une centrale et une tranche pour afficher les données détaillées</span>
-  </div>
   <div id="container" style="width: 100%; height: 400px; position: relative;">
     <highcharts-chart
       *ngIf="!isChartLoading"
