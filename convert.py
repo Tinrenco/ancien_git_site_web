@@ -24,10 +24,10 @@ output_main  = 'src/assets/donnees.json'        # map  (hourly, shorter range)
 output_daily = 'src/assets/donnees_daily.json'  # graphs (daily noon, long range)
 
 # Date ranges
-DATE_FROM_DAILY = date(2022, 1, 1)
+DATE_FROM_DAILY = date(2025, 6, 1)
 DATE_TO_DAILY   = date(2025, 9, 30)
 
-DATE_FROM_MAIN  = date(2025, 7, 1)
+DATE_FROM_MAIN  = date(2025, 8, 1)
 DATE_TO_MAIN    = date(2025, 9, 30)
 
 # ─── GPS dict (centrale name → lat/lon) ──────────────────────────────────────

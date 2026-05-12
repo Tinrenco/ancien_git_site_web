@@ -113,7 +113,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   private loadDateLimits(): void {
     this.isLoading = true;
-    (this.datasetService as any).getDailyDateLimits().subscribe({
+    (this.datasetService as any).getDateLimits().subscribe({
       next: (data: any) => {
         const results = data.results || data;
         try {
@@ -142,7 +142,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.chartSub?.unsubscribe();
 
     this.chartSub = (this.datasetService as any)
-      .getDailyRecords({}, this.buildWhereCondition())
+      .getDatasetAllRecords({}, [], this.buildWhereCondition())
       .subscribe({
         next: (data: any) => {
           const records: any[] = data.results || data;
@@ -208,7 +208,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.chartSub?.unsubscribe();
 
     this.chartSub = (this.datasetService as any)
-      .getDailyRecords({ tranche: this.selectedTranches }, this.buildWhereCondition())
+      .getDatasetAllRecords({ tranche: this.selectedTranches }, [], this.buildWhereCondition())
       .subscribe({
         next: (data: any) => {
           const records: any[] = data.results || data;
