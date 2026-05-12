@@ -80,7 +80,6 @@
         <ng-container *ngFor="let step of steps; let last = last">
           <div class="step-card">
             <div class="step-number">{{ step.number }}</div>
-            <div class="step-emoji">{{ step.emoji }}</div>
             <h3>{{ step.titleKey | translate }}</h3>
             <p [innerHTML]="step.descKey | translate"></p>
           </div>
@@ -89,7 +88,6 @@
       </div>
 
       <div class="cooling-note">
-        <span class="cooling-icon">&#x1F4A7;</span>
         <div [innerHTML]="'NUCLEAIRE_INFO.FONCTIONNEMENT.COOLING' | translate"></div>
       </div>
     </div>
@@ -135,7 +133,11 @@
 
       <div class="network-chain">
         <div class="network-node">
-          <div class="network-emoji">&#x1F3ED;</div>
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18M6 21V7l6-4 6 4v14M9 21v-4h6v4"/>
+            </svg>
+          </div>
           <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE1_LABEL' | translate }}</div>
           <div class="network-voltage">~20 kV</div>
           <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE1_ACTOR' | translate }}</div>
@@ -145,7 +147,11 @@
           <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN1' | translate }}</div>
         </div>
         <div class="network-node">
-          <div class="network-emoji">&#x1F5FC;</div>
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/>
+            </svg>
+          </div>
           <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE2_LABEL' | translate }}</div>
           <div class="network-voltage">400 kV</div>
           <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE2_ACTOR' | translate }}</div>
@@ -155,7 +161,12 @@
           <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN2' | translate }}</div>
         </div>
         <div class="network-node">
-          <div class="network-emoji">&#x1F527;</div>
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
+          </div>
           <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE3_LABEL' | translate }}</div>
           <div class="network-voltage">63 / 20 kV</div>
           <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE3_ACTOR' | translate }}</div>
@@ -165,7 +176,11 @@
           <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN3' | translate }}</div>
         </div>
         <div class="network-node network-node--end">
-          <div class="network-emoji">&#x1F3E0;</div>
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
           <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE4_LABEL' | translate }}</div>
           <div class="network-voltage">230 V</div>
           <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE4_ACTOR' | translate }}</div>
@@ -173,7 +188,6 @@
       </div>
 
       <div class="info-box info-box--centered">
-        <span class="info-box-icon">&#x1F4A1;</span>
         <div [innerHTML]="'NUCLEAIRE_INFO.RESEAU.INFO_BOX' | translate"></div>
       </div>
     </div>

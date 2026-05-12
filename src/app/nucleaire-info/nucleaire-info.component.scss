@@ -153,11 +153,6 @@ $border:  #e2e8f0;
     border-left-width: 4px;
   }
 
-  .info-box-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
 }
 
 // ─── SVG Diagram ──────────────────────────────────────────────────────────────
@@ -248,10 +243,6 @@ $border:  #e2e8f0;
   flex-shrink: 0;
 }
 
-.step-emoji {
-  font-size: 1.8rem;
-  line-height: 1;
-}
 
 .step-arrow {
   display: flex;
@@ -276,11 +267,6 @@ $border:  #e2e8f0;
   color: #334155;
   line-height: 1.6;
 
-  .cooling-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
 }
 
 // ─── Circuits ─────────────────────────────────────────────────────────────────
@@ -375,7 +361,16 @@ $border:  #e2e8f0;
     background: #fff7f5;
   }
 
-  .network-emoji { font-size: 2rem; }
+  .network-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1348d0;
+
+    svg { width: 32px; height: 32px; }
+  }
 
   .network-label {
     font-size: 0.85rem;

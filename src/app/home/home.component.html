@@ -12,19 +12,35 @@
   <!-- BANDEAU CHIFFRES CLÉS -->
   <div class="stats-banner" *ngIf="statsLoaded">
     <div class="stat-item">
-      <span class="stat-icon">⚡</span>
+      <span class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+      </span>
       <span class="stat-value">{{ totalPower | number:'1.0-0' }} MW</span>
       <span class="stat-label">{{ 'HOME.STAT_POWER' | translate }}</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <span class="stat-icon">🟢</span>
+      <span class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+        </svg>
+      </span>
       <span class="stat-value">{{ activeReactors }} / {{ totalReactors }}</span>
       <span class="stat-label">{{ 'HOME.STAT_REACTORS' | translate }}</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <span class="stat-icon">📅</span>
+      <span class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </span>
       <span class="stat-value stat-value--date">{{ latestDate }}</span>
       <span class="stat-label">{{ 'HOME.STAT_DATE' | translate }}</span>
     </div>
