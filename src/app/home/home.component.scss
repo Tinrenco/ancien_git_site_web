@@ -47,62 +47,58 @@
   margin: 0 0 36px;
 }
 
-// ─── Stats Banner ──────────────────────────────────────────────────────────────
-
+/* Le conteneur principal du bandeau */
 .stats-banner {
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: #ffffff; /* Fond blanc (à adapter selon ton design) */
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Légère ombre pour le faire ressortir */
+  padding: 20px 0;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
+/* Chaque zone (divisée en 3 parts égales grâce à flex: 1) */
 .stat-item {
+  flex: 1; /* C'est la ligne magique qui force les 3 zones à avoir la même largeur */
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 48px;
-  gap: 2px;
+  flex-direction: column; /* Empile l'icône, le chiffre et le texte de haut en bas */
+  align-items: center; /* Centre horizontalement */
+  justify-content: center; /* Centre verticalement */
+  text-align: center;
 }
 
-.stat-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #1348d0;
-
-  svg {
-    width: 22px;
-    height: 22px;
-  }
-}
-
-.stat-value {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #12356D;
-  line-height: 1.2;
-
-  &--date {
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-}
-
-.stat-label {
-  font-size: 0.78rem;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
+/* Style des séparateurs verticaux entre les zones */
 .stat-divider {
   width: 1px;
-  height: 48px;
-  background: #e2e8f0;
-  flex-shrink: 0;
+  height: 50px; /* Hauteur de la ligne grise */
+  background-color: #e0e0e0;
+}
+
+/* Style des icônes SVG */
+.stat-item svg {
+  width: 28px;
+  height: 28px;
+  color: #005A9C; /* Bleu institutionnel (modifie si besoin) */
+  margin-bottom: 10px;
+}
+
+/* Style des gros chiffres */
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+/* Style du texte descriptif en dessous */
+.stat-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 // ─── Cards ─────────────────────────────────────────────────────────────────────
