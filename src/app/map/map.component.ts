@@ -68,8 +68,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   // Passe à true quand une centrale est sélectionnée : la carte se rétrécit
   // pour laisser la place au panneau latéral (layout CSS flex).
   isCompactView: boolean = false;
-  isHistoricalMode: boolean = false;
-
   isLoading: boolean = false;
 
   // ─── Limites de date disponibles ─────────────────────────────────────────
@@ -162,12 +160,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
    * s'assurer que la date corrigée est bien appliquée aux marqueurs.
    */
   private loadDateLimits(): void {
-    this.minDate = `${this.datasetService.HIST_START_YEAR}-01-01`;
-    this.maxDate = new Date().toISOString().split('T')[0];
-    if (this.selectedDate > this.maxDate) this.selectedDate = this.maxDate;
-    if (this.selectedDate < this.minDate) this.selectedDate = this.minDate;
-    this.isHistoricalMode = !this.datasetService.isRecentDate(this.selectedDate);
-    this.loadCentralesOnMap();
+    this.subs.add(
+      this.datasetService.getEventDateRange().subscribe(range => {
+        this.minDate = range.min;
+        this.maxDate = range.max;
+        if (this.selectedDate > this.maxDate) this.selectedDate = this.maxDate;
+        if (this.selectedDate < this.minDate) this.selectedDate = this.minDate;
+        this.loadCentralesOnMap();
+      })
+    );
   }
 
   // ─── Helpers date/heure ──────────────────────────────────────────────────
@@ -184,7 +185,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   onDateChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedDate = input.value;
-    this.isHistoricalMode = !this.datasetService.isRecentDate(this.selectedDate);
     this.refreshData();
   }
 
@@ -245,18 +245,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    this.isHistoricalMode = !this.datasetService.isRecentDate(this.selectedDate);
-
-    this.mapSub = this.datasetService.getRecordsForDate(
-      this.selectedDate,
-      this.selectedHour,
-      undefined,
-      "tranche like '%1'"
-    ).subscribe({
-      next: (data: any) => {
-        // Adaptation format : l'API EDF retourne { results: [] }, le JSON local
-        // retourne directement un tableau [].
-        const results = data.results || data;
+    this.mapSub = this.datasetService.getSnapshotForDateTime(this.selectedDate, this.selectedHour)
+      .subscribe({
+      next: (data: any[]) => {
+        // Un marqueur par centrale : on garde la première tranche de chaque centrale
+        const byCentrale = new Map<string, any>();
+        for (const r of data) {
+          if (!byCentrale.has(r.centrale)) byCentrale.set(r.centrale, r);
+        }
+        const results = [...byCentrale.values()];
 
         this.dataset  = results;
         this.datasets = { total_count: results.length, results: results };

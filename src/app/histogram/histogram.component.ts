@@ -223,11 +223,17 @@ export class HistogramComponent implements OnInit, OnDestroy {
    * (tranches ou total selon l'état courant).
    */
   private loadDateLimits(): void {
-    this.minDate = `${this.datasetService.HIST_START_YEAR}-01-01`;
-    this.maxDate = new Date().toISOString().split('T')[0];
-    if (this.dateFrom && this.dateFrom < this.minDate) this.dateFrom = this.minDate;
-    if (this.dateTo   && this.dateTo   > this.maxDate) this.dateTo   = this.maxDate;
-    this.selectedTranches.length > 0 ? this.chargerDonneesTranches() : this.chargerProductionTotale();
+    this.isLoading = true;
+    this.subs.add(
+      this.datasetService.getEventDateRange().subscribe(range => {
+        this.minDate = range.min;
+        this.maxDate = range.max;
+        if (this.dateFrom && this.dateFrom < this.minDate) this.dateFrom = this.minDate;
+        if (this.dateTo   && this.dateTo   > this.maxDate) this.dateTo   = this.maxDate;
+        this.isLoading = false;
+        this.selectedTranches.length > 0 ? this.chargerDonneesTranches() : this.chargerProductionTotale();
+      })
+    );
   }
 
   // ─── Mode total (parc France entier) ─────────────────────────────────────
@@ -248,32 +254,16 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.isChartLoading = true;
     this.chartSub?.unsubscribe(); // annule le chargement précédent si en cours
 
-    this.chartSub = this.datasetService.getMultiYearDailyRecords({}, this.buildWhereCondition())
-      .subscribe({
-        next: (data: any) => {
-          const records: any[] = data.results || data;
-
-          // Agrégation : Map timestamp → puissance totale
-          const byDate = new Map<number, number>();
-          for (const r of records) {
-            const t = new Date(r.date_et_heure_fuseau_horaire_europe_paris).getTime();
-            // Accumule la puissance disponible de chaque tranche sur ce timestamp
-            byDate.set(t, (byDate.get(t) || 0) + (r.puissance_disponible || 0));
-          }
-
-          // Conversion Map → tableau de paires [timestamp, valeur] trié
-          const series: [number, number][] = [...byDate.entries()].sort((a, b) => a[0] - b[0]);
-          this.totalSeries = series; // mis en cache pour le changement de langue
-
-          this.afficherProductionTotale(series);
-          // setTimeout(0) : macrotâche qui s'exécute APRÈS le cycle de change detection
-          // Angular courant. Garantit que isChartLoading = true est vu par Angular
-          // (détruit le composant chart via *ngIf), puis isChartLoading = false le
-          // recrée avec les nouvelles options — même quand shareReplay émet en synchrone.
-          setTimeout(() => { this.isChartLoading = false; }, 0);
-        },
-        error: () => { this.isChartLoading = false; }
-      });
+    const from = this.dateFrom || this.minDate;
+    const to   = this.dateTo   || this.maxDate;
+    this.chartSub = this.datasetService.getTotalProductionSeries(from, to).subscribe({
+      next: (series) => {
+        this.totalSeries = series;
+        this.afficherProductionTotale(series);
+        setTimeout(() => { this.isChartLoading = false; }, 0);
+      },
+      error: () => { this.isChartLoading = false; }
+    });
   }
 
   /**
@@ -345,40 +335,16 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.isChartLoading = true;
     this.chartSub?.unsubscribe();
 
-    this.chartSub = this.datasetService.getMultiYearDailyRecords(
-      { tranche: this.selectedTranches }, this.buildWhereCondition()
-    ).subscribe({
-        next: (data: any) => {
-          const records: any[] = data.results || data;
-          this.datasets = { results: records } as DataSets;
-
-          // Groupement des enregistrements par nom de tranche
-          const byTranche = new Map<string, [number, number][]>();
-          for (const r of records) {
-            if (!byTranche.has(r.tranche)) byTranche.set(r.tranche, []);
-            // Construction du timestamp : la date ISO + l'heure stockée séparément.
-            // On crée un objet Date à partir de la date ISO, puis on force
-            // l'heure UTC à la valeur du champ heure_ pour éviter les décalages
-            // de fuseau horaire lors de l'affichage dans Highcharts.
-            const d = new Date(r.date_et_heure_fuseau_horaire_europe_paris);
-            d.setUTCHours(r.heure_fuseau_horaire_europe_paris);
-            byTranche.get(r.tranche)!.push([d.getTime(), r.puissance_disponible]);
-          }
-
-          // Construction de tranchesData dans l'ordre de selectedTranches.
-          // On inclut TOUTES les tranches sélectionnées, même celles sans données
-          // (série vide []), pour qu'elles apparaissent toujours dans la légende.
-          this.tranchesData = this.selectedTranches
-            .map(t => ({
-              tranche: t,
-              series: (byTranche.get(t) || []).sort((a, b) => a[0] - b[0])
-            }));
-
-          this.afficherDonneesTranches();
-          setTimeout(() => { this.isChartLoading = false; }, 0);
-        },
-        error: () => { this.isChartLoading = false; }
-      });
+    const from2 = this.dateFrom || this.minDate;
+    const to2   = this.dateTo   || this.maxDate;
+    this.chartSub = this.datasetService.getTimeSeriesForTranches(this.selectedTranches, from2, to2).subscribe({
+      next: (tranchesData) => {
+        this.tranchesData = tranchesData;
+        this.afficherDonneesTranches();
+        setTimeout(() => { this.isChartLoading = false; }, 0);
+      },
+      error: () => { this.isChartLoading = false; }
+    });
   }
 
   /**

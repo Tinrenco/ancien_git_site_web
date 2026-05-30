@@ -390,17 +390,28 @@ def main():
     write_json(main_recs, output_main)
     print(f"  OK — {len(main_recs):,} enregistrements")
 
-    # 4. Génération des fichiers annuels historiques (midi uniquement)
-    hist_start = 2022
-    hist_end   = _today.year - 1   # dernière année complète
-    for year in range(hist_start, hist_end + 1):
-        y_from = date(year, 1, 1)
-        y_to   = date(year, 12, 31)
-        path   = f'src/assets/donnees_{year}.json'
-        print(f"\nGénération de {path} ({year})...")
-        yearly = build_records(outages, units_info, y_from, y_to, [12])
-        write_json(yearly, path)
-        print(f"  OK — {len(yearly):,} enregistrements")
+    # 4. events.json — événements bruts pour calcul côté navigateur
+    events_export = [
+        {'u': o['unit'],
+         'b': o['begin'].strftime('%Y-%m-%dT%H:%M:%S'),
+         'e': o['end'].strftime('%Y-%m-%dT%H:%M:%S'),
+         'a': o['available']}
+        for o in outages
+    ]
+    write_json(events_export, 'src/assets/events.json')
+    print(f"\nGénération de src/assets/events.json...")
+    print(f"  OK — {len(events_export):,} événements")
+
+    # 5. units.json — réacteurs avec puissance nominale et coordonnées GPS
+    units_export = sorted(
+        [{'unit': unit, 'centrale': get_centrale(unit), 'nominal': nominal, 'gps': gps_for(get_centrale(unit))}
+         for unit, nominal in units_info.items()
+         if gps_for(get_centrale(unit))],
+        key=lambda x: (x['centrale'], x['unit'])
+    )
+    write_json(units_export, 'src/assets/units.json')
+    print(f"Génération de src/assets/units.json...")
+    print(f"  OK — {len(units_export):,} unités")
 
 
 if __name__ == '__main__':

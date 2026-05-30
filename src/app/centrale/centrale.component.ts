@@ -181,18 +181,12 @@ export class CentraleComponent implements OnInit, OnDestroy {
   fetchAdditionalData(): void {
     if (!this.centraleName) return;
 
-    const refinements = this.getRefinements();
-
-    this.datasetService.getRecordsForDate(
-      refinements.date_et_heure_fuseau_horaire_europe_paris[0],
-      this.selectedHour,
-      undefined,
-      `centrale = '${this.centraleName}'`,
-      'tranche ASC'
-    ).subscribe({
-      next: (data: any) => {
-        // Adaptation format : API EDF → { results: [] } / JSON local → []
-        this.additionalData = data.results || data;
+    this.datasetService.getSnapshotForDateTime(this.selectedDate, this.selectedHour)
+    .subscribe({
+      next: (data: any[]) => {
+        this.additionalData = data
+          .filter(r => r.centrale === this.centraleName)
+          .sort((a, b) => a.tranche.localeCompare(b.tranche));
         this.isVisible = true;
       },
       error: (error: any) => {
