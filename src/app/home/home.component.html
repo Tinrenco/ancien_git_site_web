@@ -12,85 +12,32 @@
   <!-- BANDEAU CHIFFRES CLÉS -->
   <div class="stats-banner" *ngIf="statsLoaded">
     <div class="stat-item">
-      <span class="stat-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-        </svg>
-      </span>
       <span class="stat-value">{{ totalPower | number:'1.0-0' }} MW</span>
       <span class="stat-label">{{ 'HOME.STAT_POWER' | translate }}</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <span class="stat-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 22L8 10C8 7 9 4 12 4C15 4 16 7 16 10L18 22" />
-          <path d="M4 22H20" />
-          <path d="M10 4C10 2.5 11 1 12 1" />
-          <path d="M14 4C14 2.5 13 1 12 1" />
-          <path d="M12 4V1" />
-        </svg>
-      </span>
       <span class="stat-value">{{ activeReactors }} / {{ totalReactors }}</span>
       <span class="stat-label">{{ 'HOME.STAT_REACTORS' | translate }}</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <span class="stat-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-      </span>
       <span class="stat-value stat-value--date">{{ latestDate }}</span>
       <span class="stat-label">{{ 'HOME.STAT_DATE' | translate }}</span>
     </div>
   </div>
 
-  <!-- CARTES DE NAVIGATION -->
-  <div class="cards-wrapper">
-
-    <div class="card" routerLink="/carte">
-      <div class="card-content">
-        <div class="icon-wrapper map-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
-        </div>
-        <h2>{{ 'HOME.CARDS.MAP.TITLE' | translate }}</h2>
-        <p>{{ 'HOME.CARDS.MAP.DESCRIPTION' | translate }}</p>
-        <div class="card-action">
-          {{ 'HOME.CARDS.MAP.ACTION' | translate }}
-          <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </div>
+  <!-- PRÉSENTATION DE LA CARTE -->
+  <div class="map-intro">
+    <div class="map-intro-content">
+      <h2 class="map-intro-title">{{ 'HOME.MAP_TITLE' | translate }}</h2>
+      <p class="map-intro-desc">{{ 'HOME.MAP_DESC' | translate }}</p>
     </div>
-
-    <div class="card" routerLink="/histogram">
-      <div class="card-content">
-        <div class="icon-wrapper data-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-          </svg>
-        </div>
-        <h2>{{ 'HOME.CARDS.DATA.TITLE' | translate }}</h2>
-        <p>{{ 'HOME.CARDS.DATA.DESCRIPTION' | translate }}</p>
-        <div class="card-action">
-          {{ 'HOME.CARDS.DATA.ACTION' | translate }}
-          <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <!-- CARTE INTERACTIVE -->
+  <div class="map-section">
+    <app-map></app-map>
+  </div>
+
 </div>

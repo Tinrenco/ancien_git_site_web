@@ -47,58 +47,137 @@
   margin: 0 0 36px;
 }
 
-/* Le conteneur principal du bandeau */
+// ─── Bandeau chiffres clés ─────────────────────────────────────────────────────
+
 .stats-banner {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #ffffff; /* Fond blanc (à adapter selon ton design) */
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Légère ombre pour le faire ressortir */
-  padding: 20px 0;
+  align-items: stretch;
+  background: #0d2856;
+  border-bottom: 3px solid #F1471C;
   width: 100%;
-  margin-bottom: 30px;
 }
 
-/* Chaque zone (divisée en 3 parts égales grâce à flex: 1) */
 .stat-item {
-  flex: 1; /* C'est la ligne magique qui force les 3 zones à avoir la même largeur */
+  flex: 1;
   display: flex;
-  flex-direction: column; /* Empile l'icône, le chiffre et le texte de haut en bas */
-  align-items: center; /* Centre horizontalement */
-  justify-content: center; /* Centre verticalement */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  padding: 22px 16px;
+  gap: 4px;
 }
 
-/* Style des séparateurs verticaux entre les zones */
 .stat-divider {
   width: 1px;
-  height: 50px; /* Hauteur de la ligne grise */
-  background-color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 16px 0;
 }
 
-/* Style des icônes SVG */
-.stat-item svg {
-  width: 28px;
-  height: 28px;
-  color: #005A9C; /* Bleu institutionnel (modifie si besoin) */
-  margin-bottom: 10px;
-}
-
-/* Style des gros chiffres */
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 4px;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
-/* Style du texte descriptif en dessous */
+.stat-value--date {
+  font-size: 1.3rem;
+}
+
 .stat-label {
-  font-size: 0.9rem;
-  color: #6c757d;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+// ─── Présentation carte ────────────────────────────────────────────────────────
+
+.map-intro {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 28px 48px 24px;
+
+  @media (max-width: 768px) { padding: 20px 16px 18px; }
+}
+
+.map-intro-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.map-intro-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #12356D;
+  margin: 0 0 8px;
+}
+
+.map-intro-desc {
+  color: #64748b;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+
+.map-intro-tips {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.map-tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 7px 14px;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    color: #F1471C;
+    flex-shrink: 0;
+  }
+}
+
+// ─── Carte intégrée ────────────────────────────────────────────────────────────
+
+.map-section {
+  width: 100%;
+  height: 920px;
+
+  // Le host app-map et son <main> intermédiaire doivent relayer la hauteur
+  // jusqu'à .dashboard → .content-container → #map.
+  ::ng-deep app-map,
+  ::ng-deep main {
+    display: block;
+    height: 100%;
+  }
+
+  ::ng-deep .dashboard {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  ::ng-deep .content-container {
+    height: calc(100% - 112px);
+  }
+
+  @media (max-width: 768px) {
+    height: 520px;
+
+    ::ng-deep .content-container {
+      height: calc(100% - 148px);
+    }
+  }
 }
 
 // ─── Cards ─────────────────────────────────────────────────────────────────────
@@ -209,15 +288,16 @@ p {
 // ─── Responsive ────────────────────────────────────────────────────────────────
 
 @media (max-width: 768px) {
-  .hero-section { padding: 40px 16px 56px; }
-  .hero-title   { font-size: 1.5rem; }
-  .stat-item    { padding: 16px 24px; }
-  .stat-divider { height: 36px; }
+  .hero-section  { padding: 40px 16px 56px; }
+  .hero-title    { font-size: 1.5rem; }
+  .stat-item     { padding: 16px 8px; }
+  .stat-value    { font-size: 1.3rem; }
+  .stat-value--date { font-size: 1.05rem; }
   .cards-wrapper { padding: 1.5rem 1rem; gap: 1rem; }
   .card-content  { padding: 1.5rem; }
 }
 
 @media (max-width: 480px) {
-  .stats-banner { flex-direction: column; }
-  .stat-divider { width: 80%; height: 1px; }
+  .stats-banner  { flex-direction: column; }
+  .stat-divider  { width: 80%; height: 1px; margin: 0 auto; }
 }

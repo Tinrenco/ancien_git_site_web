@@ -148,7 +148,7 @@ export class SearchBarComponent implements OnInit {
     this.query        = centrale;
     this.showDropdown = false;
     this.selectedIndex = -1;
-    this.router.navigate(['/carte'], { queryParams: { centrale } });
+    this.router.navigate(['/home'], { queryParams: { centrale } });
   }
 
   /**

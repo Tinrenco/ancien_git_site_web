@@ -15,20 +15,17 @@
 
 import { Routes } from '@angular/router';
 import { HomeComponent }         from './home/home.component';
-import { MapComponent }          from './map/map.component';
 import { HistogramComponent }    from './histogram/histogram.component';
 import { NucleaireInfoComponent } from './nucleaire-info/nucleaire-info.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export const routes: Routes = [
 
-  // Page d'accueil : chiffres clés du parc, cartes de navigation.
+  // Page d'accueil : chiffres clés du parc, carte interactive.
   { path: 'home',           component: HomeComponent },
 
-  // Carte Leaflet interactive : disponibilité par centrale/tranche
-  // à une date et heure choisies. Supporte les query params ?date=&hour=
-  // pour des URLs partageables pointant vers un instant précis.
-  { path: 'carte',          component: MapComponent },
+  // Redirection de l'ancienne route /carte vers /home (la carte y est intégrée).
+  { path: 'carte',          redirectTo: '/home', pathMatch: 'full' },
 
   // Histogramme Highcharts : courbe de disponibilité horaire
   // d'une ou plusieurs tranches sur une période donnée.

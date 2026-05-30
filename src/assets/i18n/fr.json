@@ -1,10 +1,10 @@
 {
-  "TITLE":"Disponibilité du parc nucléaire d'EDF SA (Présent, passé et prévisionnel)",
+  "TITLE":"Disponibilité du parc nucléaire français (Présent, passé et prévisionnel)",
     "NAV": {
       "HOME": "Accueil",
       "MAP": "Carte",
       "DATA": "Données",
-      "NUCLEAIRE": "Le nucléaire"
+      "NUCLEAIRE": "Le Nucléaire"
     },
     "MAP": {
       "DATE_LABEL": "Date",
@@ -37,25 +37,25 @@
       "TRANCHES_SELECTED": "tranches sélectionnées"
     },
     "EDF": {
-      "SEARCH_PLACEHOLDER": "Rechercher les données du groupe EDF",
+      "SEARCH_PLACEHOLDER": "Rechercher les données",
       "RECORDS": "enregistrements",
       "FILTER_DATETIME": "Date et Heure (fuseau horaire Europe/Paris)",
       "FILTER_HOUR": "Heure (fuseau horaire Europe/Paris)",
       "FILTER_CENTRALE": "Centrale",
-      "MAIN_TITLE": "Disponibilité du parc nucléaire d'EDF SA (Présent, passé et prévisionnel)",
+      "MAIN_TITLE": "Disponibilité du parc nucléaire français (Présent, passé et prévisionnel)",
       "NAV_INFO": "Informations",
       "NAV_TABLE": "Tableau",
-      "NAV_MAP": "Carte de la disponibilité du Parc Nucléaire d'EDF SA",
+      "NAV_MAP": "Carte de la disponibilité du parc nucléaire français",
       "NAV_EXPORT": "Export",
       "NAV_API": "API",
       "INFO_TITLE": "Informations sur le fonctionnement de cette carte :",
-      "INFO_TEXT": "Cette carte affiche la disponibilité du Parc Nucléaire à une \"Date/Heure\" précise. Par défaut, elle propose une vision à la \"date du jour/Heure actuelle\" (fuseau horaire Europe/Paris). Pour visualiser la disponibilité du Parc Nucléaire passé ou prévisionnelle, sélectionner un couple \"Date/Heure\" dans les filtres à votre disposition sur la gauche. Les tranches dont la puissance disponible est égale à 0 MW sont affichées en orange. Sinon elles sont affichées en vert. Le positionnement géographique des tranches nucléaires est adapté pour offrir une meilleure lisibilité de la carte de France."
+      "INFO_TEXT": "Cette carte affiche la disponibilité du parc nucléaire à une \"Date/Heure\" précise. Par défaut, elle propose une vision à la \"date du jour/Heure actuelle\" (fuseau horaire Europe/Paris). Pour visualiser la disponibilité du Parc Nucléaire passé ou prévisionnelle, sélectionner un couple \"Date/Heure\" dans les filtres à votre disposition sur la gauche. Les tranches dont la puissance disponible est égale à 0 MW sont affichées en orange. Sinon elles sont affichées en vert. Le positionnement géographique des tranches nucléaires est adapté pour offrir une meilleure lisibilité de la carte de France."
     },
     "INFORMATION": {
       "TITLE": "Informations sur les données",
       "ABSTRACT": {
         "TITLE": "Résumé",
-        "CONTENT": "Ces données présentent l'état de disponibilité du parc nucléaire d'EDF SA présent, passé et prévisionnel sur une année glissante. Vous y retrouverez, centrale par centrale, et pour chacune des tranches, leur puissance disponible en MW. Ces données sont actualisées au début de chaque heure."
+        "CONTENT": "Ces données présentent l'état de disponibilité du parc nucléaire français présent, passé et prévisionnel sur une année glissante. Vous y retrouverez, centrale par centrale, et pour chacune des tranches, leur puissance disponible en MW. Ces données sont actualisées au début de chaque heure."
       },
       "DESCRIPTION": {
         "TITLE": "Description détaillée",
@@ -69,21 +69,26 @@
         "TIMEZONE": "Le fuseau horaire de référence utilisé est Europe/Paris."
       },
       "LIABILITY": {
-        "TITLE": "Responsabilité d'EDF",
-        "CONTENT": "Pour rappel, en application de la clause 3.2 des conditions générales d'utilisation du portail opendata.edf.fr, les informations fournies le sont à titre informatif et indicatif...",
+        "TITLE": "Responsabilité et nature du site",
+        "CONTENT": "Ce tableau de bord est le résultat d'un projet académique (Projet P17 - CentraleSupélec) et n'est pas une plateforme officielle de l'entreprise EDF. Bien qu'il exploite les données issues de l'OpenData EDF, les informations fournies sur ce site le sont à titre strictement informatif et indicatif. En aucun cas, la responsabilité d'EDF ne saurait être engagée quant à l'exactitude des visualisations ou à l'utilisation qui pourrait en être faite.",
         "DISCLAIMER": "En conséquence, l'Utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive..."
       }
     },
     "HOME": {
       "HERO_TITLE": "Tableau de bord du parc nucléaire français",
-      "HERO_SUBTITLE": "Disponibilité en temps réel des centrales EDF",
+      "HERO_SUBTITLE": "Disponibilité en temps réel des centrales françaises (France Métropolitaine)",
       "STAT_POWER": "Puissance disponible",
       "STAT_REACTORS": "Réacteurs en fonctionnement",
       "STAT_DATE": "Dernière donnée disponible",
+      "MAP_TITLE": "Carte interactive du parc nucléaire",
+      "MAP_DESC": "Visualisez la disponibilité de chaque centrale nucléaire française à une date et une heure précises — données présentes, passées et prévisionnelles sur une année glissante.",
+      "MAP_TIP1": "Sélectionnez une date et ajustez le curseur horaire",
+      "MAP_TIP2": "Cliquez sur une centrale pour afficher ses tranches",
+      "MAP_TIP3": "Les centrales à 0 MW disponible sont affichées en orange",
       "CARDS": {
         "MAP": {
           "TITLE": "Carte Interactive",
-          "DESCRIPTION": "Visualisez la localisation et la disponibilité des centrales nucléaires EDF en France",
+          "DESCRIPTION": "Visualisez la localisation et la disponibilité des centrales nucléaires françaises",
           "ACTION": "Explorer la carte"
         },
         "DATA": {
@@ -101,6 +106,11 @@
       "FOOTER_ABOUT_BTN": "À propos du projet",
       "FOOTER_CONTACT_BTN": "Nous contacter",
       "FOOTER_BOTTOM": "Projet Web CentraleSupélec — 2026",
+      "FOOTER_BRAND_DESC": "Tableau de bord académique sur la disponibilité du parc nucléaire français — Projet CentraleSupélec.",
+      "FOOTER_COL1_TITLE": "À propos",
+      "FOOTER_COL2_TITLE": "Ressources",
+      "FOOTER_LEGAL_ABOUT": "À propos du projet",
+      "FOOTER_LEGAL_CONTACT": "Contact",
       "ABOUT_TITLE": "À propos du projet",
       "ABOUT_S1_TITLE": "Le projet",
       "ABOUT_S1_P1": "Dans le cadre du pôle projet <strong>« Nouveaux concepts énergétiques »</strong> de <strong>CentraleSupélec (promotion 2028)</strong>, 4 étudiants ont repris et continué le développement d'un site initié par le groupe précédent, en collaboration avec l'équipe EDF en charge de l'Open Data.",

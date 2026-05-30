@@ -20,6 +20,9 @@ src/assets/donnees_daily.json
 .env
 .env.*
 
+# Credentials API EDF (ne jamais versionner)
+api_config.json
+
 # OS
 .DS_Store
 Thumbs.db

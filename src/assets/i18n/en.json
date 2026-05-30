@@ -1,5 +1,5 @@
 {
-  "TITLE":"Availability of EDF SA's nuclear fleet (Present, past and forecast)",
+  "TITLE":"Availability of the French nuclear fleet (Present, past and forecast)",
     "NAV": {
       "HOME": "Home",
       "MAP": "Map",
@@ -13,11 +13,11 @@
       "HOUR_LABEL": "Hour"
     },
     "HISTOGRAM": {
-      "CENTRALE_LABEL": "Power Plant",
-      "CENTRALE_PLACEHOLDER": "Select a power plant",
-      "TRANCHE_LABEL": "Unit",
-      "TRANCHE_PLACEHOLDER": "Select a unit",
-      "DATE_CENTRAL_LABEL": "Central Date",
+      "CENTRALE_LABEL": "Nuclear site",
+      "CENTRALE_PLACEHOLDER": "Select a nuclear site",
+      "TRANCHE_LABEL": "Reactor",
+      "TRANCHE_PLACEHOLDER": "Select a reactor",
+      "DATE_CENTRAL_LABEL": "Central date",
       "LOADING_MESSAGE": "Loading data...",
       "CHART_TITLE": "Temporal evolution of the unit's availability",
       "CHART_SUBTITLE": "Click and drag to zoom",
@@ -37,15 +37,15 @@
       "TRANCHES_SELECTED": "units selected"
     },
     "EDF": {
-      "SEARCH_PLACEHOLDER": "Search EDF group data",
+      "SEARCH_PLACEHOLDER": "Search data",
       "RECORDS": "records",
       "FILTER_DATETIME": "Date and Time (Europe/Paris timezone)",
       "FILTER_HOUR": "Hour (Europe/Paris timezone)",
       "FILTER_CENTRALE": "Plant",
-      "MAIN_TITLE": "Availability of EDF SA's nuclear fleet (Present, past and forecast)",
+      "MAIN_TITLE": "Availability of the French nuclear fleet (Present, past and forecast)",
       "NAV_INFO": "Information",
       "NAV_TABLE": "Table",
-      "NAV_MAP": "Nuclear Fleet Availability Map",
+      "NAV_MAP": "Map of French nuclear fleet availability",
       "NAV_EXPORT": "Export",
       "NAV_API": "API",
       "INFO_TITLE": "How this map works:",
@@ -55,7 +55,7 @@
       "TITLE": "Data Information",
       "ABSTRACT": {
         "TITLE": "Abstract",
-        "CONTENT": "These data show the current, past and forecast availability of EDF SA's nuclear fleet over a sliding year. You will find, plant by plant, and for each unit, their available power in MW. This data is updated at the beginning of each hour."
+        "CONTENT": "These data show the current, past and forecast availability of the French nuclear fleet over a rolling year. You will find, plant by plant, and for each unit, their available power in MW. This data is updated at the beginning of each hour."
       },
       "DESCRIPTION": {
         "TITLE": "Detailed Description",
@@ -69,26 +69,31 @@
         "TIMEZONE": "The reference time zone is Europe/Paris."
       },
       "LIABILITY": {
-        "TITLE": "EDF's Liability",
-        "CONTENT": "As a reminder, pursuant to clause 3.2 of the general conditions of use of the opendata.edf.fr portal, the information provided is for information purposes only...",
-        "DISCLAIMER": "Consequently, Users acknowledge that they use this information under their sole responsibility..."
+        "TITLE": "Liability and nature of the site",
+        "CONTENT": "This dashboard is the result of an academic project (Project P17 - CentraleSupélec) and is not an official platform of EDF. Although it uses data from EDF's Open Data platform, the information provided on this site is strictly for informational and indicative purposes. Under no circumstances shall EDF be held liable for the accuracy of the visualizations or any use that may be made of them.",
+        "DISCLAIMER": "Consequently, the User acknowledges using this information under their sole responsibility..."
       }
     },
     "HOME": {
       "HERO_TITLE": "French nuclear fleet dashboard",
-      "HERO_SUBTITLE": "Real-time availability of EDF power plants",
+      "HERO_SUBTITLE": "Real-time availability of French nuclear plants (Metropolitan France)",
       "STAT_POWER": "Available power",
       "STAT_REACTORS": "Reactors in operation",
       "STAT_DATE": "Latest data available",
+      "MAP_TITLE": "Interactive nuclear fleet map",
+      "MAP_DESC": "Visualize the availability of each French nuclear power plant at a specific date and time — present, past and forecast data over a rolling year.",
+      "MAP_TIP1": "Select a date and adjust the hour slider",
+      "MAP_TIP2": "Click on a plant to display its units",
+      "MAP_TIP3": "Plants with 0 MW available are shown in orange",
       "CARDS": {
         "MAP": {
           "TITLE": "Interactive Map",
-          "DESCRIPTION": "Visualize the location and availability of EDF nuclear power plants in France",
+          "DESCRIPTION": "Visualize the location and availability of French nuclear power plants",
           "ACTION": "Explore the map"
         },
         "DATA": {
           "TITLE": "Data & Analysis",
-          "DESCRIPTION": "Access detailed power data and historical analysis",
+          "DESCRIPTION": "Access detailed power data and historical analyses",
           "ACTION": "View data"
         }
       }
@@ -101,15 +106,20 @@
       "FOOTER_ABOUT_BTN": "About the project",
       "FOOTER_CONTACT_BTN": "Contact us",
       "FOOTER_BOTTOM": "CentraleSupélec Web Project — 2026",
+      "FOOTER_BRAND_DESC": "Academic dashboard on the availability of the French nuclear fleet — CentraleSupélec project.",
+      "FOOTER_COL1_TITLE": "About",
+      "FOOTER_COL2_TITLE": "Resources",
+      "FOOTER_LEGAL_ABOUT": "About the project",
+      "FOOTER_LEGAL_CONTACT": "Contact",
       "ABOUT_TITLE": "About the project",
       "ABOUT_S1_TITLE": "The project",
-      "ABOUT_S1_P1": "As part of the <strong>\"New Energy Concepts\"</strong> project at <strong>CentraleSupélec (class of 2028)</strong>, 4 students continued the development of a site started by the previous group, in collaboration with the EDF Open Data team.",
+      "ABOUT_S1_P1": "As part of the <strong>\"New Energy Concepts\"</strong> project pole at <strong>CentraleSupélec (class of 2028)</strong>, 4 students took over and continued the development of a site started by the previous group, in collaboration with the EDF Open Data team.",
       "ABOUT_S1_P2": "The goal: to make data on the availability of France's nuclear fleet accessible and readable for everyone, through a modern and interactive web interface.",
       "ABOUT_S2_TITLE": "The team",
       "ABOUT_TEAM_ROLE": "CentraleSupélec · Class of 2028",
       "ABOUT_S3_TITLE": "Data collection and processing",
       "ABOUT_S3_P1": "A pair of students retrieved raw data from official sources <strong>ENTSO-E</strong> and <strong>RTE</strong>. This data was then cleaned, formatted and published on EDF's Open Data platform.",
-      "ABOUT_S3_P2": "The data visible on this site comes directly from <a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">EDF Open Data</a>, accessed via an API key provided by the EDF team as part of this partnership.",
+      "ABOUT_S3_P2": "The data visible on this site comes directly from <a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">EDF Open Data</a>, accessed via an API key made available by the EDF team as part of this partnership.",
       "ABOUT_S4_TITLE": "Technical source",
       "ABOUT_S4_P1": "Unit unavailability data is accessible via: <a href=\"https://data.rte-france.com/catalog/-/api/generation/Unavailability-Additional-Information/v4.1\" target=\"_blank\" class=\"modal-link\">RTE Data API</a>. It is updated at the beginning of each hour.",
       "ABOUT_S4_P2": "Official EDF publications (REMIT regulation): <a href=\"https://doaat.edf.fr/indisponibilites/list\" target=\"_blank\" class=\"modal-link\">EDF REMIT</a>.",

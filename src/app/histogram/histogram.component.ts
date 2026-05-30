@@ -284,10 +284,11 @@ export class HistogramComponent implements OnInit, OnDestroy {
           this.totalSeries = series; // mis en cache pour le changement de langue
 
           this.afficherProductionTotale(series);
-          // Promise.resolve().then(...) : micro-tâche qui s'exécute après le rendu
-          // Angular courant, pour que isChartLoading = false soit appliqué après
-          // que updateChart = true ait déclenché le rendu Highcharts.
-          Promise.resolve().then(() => { this.isChartLoading = false; });
+          // setTimeout(0) : macrotâche qui s'exécute APRÈS le cycle de change detection
+          // Angular courant. Garantit que isChartLoading = true est vu par Angular
+          // (détruit le composant chart via *ngIf), puis isChartLoading = false le
+          // recrée avec les nouvelles options — même quand shareReplay émet en synchrone.
+          setTimeout(() => { this.isChartLoading = false; }, 0);
         },
         error: () => { this.isChartLoading = false; }
       });
@@ -382,17 +383,17 @@ export class HistogramComponent implements OnInit, OnDestroy {
             byTranche.get(r.tranche)!.push([d.getTime(), r.puissance_disponible]);
           }
 
-          // Construction de tranchesData dans l'ordre de selectedTranches
-          // (filter() exclut les tranches sans données dans le JSON).
+          // Construction de tranchesData dans l'ordre de selectedTranches.
+          // On inclut TOUTES les tranches sélectionnées, même celles sans données
+          // (série vide []), pour qu'elles apparaissent toujours dans la légende.
           this.tranchesData = this.selectedTranches
-            .filter(t => byTranche.has(t))
             .map(t => ({
               tranche: t,
               series: (byTranche.get(t) || []).sort((a, b) => a[0] - b[0])
             }));
 
           this.afficherDonneesTranches();
-          Promise.resolve().then(() => { this.isChartLoading = false; });
+          setTimeout(() => { this.isChartLoading = false; }, 0);
         },
         error: () => { this.isChartLoading = false; }
       });

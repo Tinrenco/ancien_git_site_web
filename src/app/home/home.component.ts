@@ -26,11 +26,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { DatasetService } from '../srvices/dataset.service';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, SearchBarComponent],
+  imports: [CommonModule, RouterLink, TranslateModule, SearchBarComponent, MapComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

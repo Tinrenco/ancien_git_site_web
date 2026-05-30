@@ -1,67 +1,62 @@
 """
 Script de conversion des données d'indisponibilité nucléaire.
 
-Entrée  : indisponibilites_nucleaire_final.csv
-          Fichier CSV contenant des ÉVÉNEMENTS d'indisponibilité : chaque ligne décrit
-          une période pendant laquelle un réacteur était indisponible (ou partiellement
-          disponible), avec une date de début, une date de fin et une puissance disponible.
+Source des données (par ordre de priorité) :
+  1. API EDF Open Data  — si un token est trouvé dans api_config.json
+                          ou la variable d'environnement EDF_API_TOKEN.
+  2. CSV local          — fichier indisponibilites_nucleaire_final.csv
+                          (fallback si l'API est indisponible ou sans token).
 
 Sorties : deux fichiers JSON au format attendu par l'application Angular :
-          - donnees.json       : données HORAIRES sur 2 mois  → carte + histogramme
-          - donnees_daily.json : données à MIDI sur 4 mois    → listes déroulantes
+  - donnees.json       : données HORAIRES (~2 derniers mois) → carte + histogramme
+  - donnees_daily.json : données à MIDI   (~8 derniers mois) → listes déroulantes
 
-Algorithme général :
-  1. Charger tous les événements du CSV en ne gardant que la dernière version
-     de chaque publication (un même événement peut être corrigé plusieurs fois).
-  2. Éliminer les événements annulés ou inactifs.
-  3. Pour chaque point temporel (jour × heure × réacteur) :
-       - Chercher tous les événements actifs qui couvrent ce moment.
-       - Puissance disponible = min(puissances des événements couvrants),
-         ou puissance nominale si aucun événement ne couvre ce moment
-         (réacteur à pleine capacité).
-  4. Écrire les résultats en JSON.
+Configuration du token API :
+  Créer api_config.json à la racine du projet (non versionné) :
+  { "token": "votre_token_base64_ici" }
+  OU définir la variable d'environnement EDF_API_TOKEN.
 """
 
-import csv                          # lecture des fichiers CSV
-import json                         # écriture des fichiers JSON
-import os                           # création des dossiers de sortie
-from collections import defaultdict # dictionnaire avec valeur par défaut
-from datetime import date, datetime, timedelta, timezone  # manipulation des dates
+import csv
+import json
+import os
+import urllib.request
+import urllib.parse
+from collections import defaultdict
+from datetime import date, datetime, timedelta, timezone
 
 
 # ─── Chemins des fichiers d'entrée et de sortie ───────────────────────────────
 
-# Fichier CSV source contenant les données brutes d'indisponibilité
 INPUT_FILE   = 'indisponibilites_nucleaire_final.csv'
-
-# Fichier JSON de sortie utilisé par la CARTE et l'HISTOGRAMME (données horaires)
 output_main  = 'src/assets/donnees.json'
-
-# Fichier JSON de sortie utilisé pour les LISTES DÉROULANTES (centrale/tranche)
-# Contient uniquement les relevés de midi, donc 24× moins volumineux
 output_daily = 'src/assets/donnees_daily.json'
 
 
 # ─── Plages de dates à générer ────────────────────────────────────────────────
+# Les dates se calculent automatiquement à partir d'aujourd'hui.
+# Modifier les constantes de durée (en jours) pour ajuster la fenêtre.
 
-# Plage pour donnees_daily.json : 4 mois, un seul point par jour (midi)
-# Utilisé pour remplir les dropdowns centrale/tranche dans l'histogramme
-DATE_FROM_DAILY = date(2025, 6, 1)
-DATE_TO_DAILY   = date(2025, 9, 30)
+_today = date.today()
 
-# Plage pour donnees.json : 2 mois, 24 points par jour (une valeur par heure)
-# Plus court car le fichier serait trop volumineux sur une longue période
-DATE_FROM_MAIN  = date(2025, 8, 1)
-DATE_TO_MAIN    = date(2025, 9, 30)
+DATE_TO_DAILY   = _today
+DATE_FROM_DAILY = _today - timedelta(days=240)   # ~8 mois en arrière
+
+DATE_TO_MAIN    = _today
+DATE_FROM_MAIN  = _today - timedelta(days=60)    # ~2 mois en arrière
+
+
+# ─── Configuration de l'API EDF Open Data ────────────────────────────────────
+# Dataset : "Indisponibilités des moyens de production de EDF SA"
+# (accessible avec les identifiants fournis par EDF)
+
+API_BASE       = "https://opendata.edf.fr/data-fair/api/v1"
+API_DATASET_ID = "haqk2fpmdz21sjiwhva-0n2x"
+API_PAGE_SIZE  = 10000   # nombre max d'enregistrements par page
 
 
 # ─── Coordonnées GPS des centrales ───────────────────────────────────────────
-#
-# Ces coordonnées sont ADAPTÉES pour la lisibilité sur la carte de France :
-# certaines centrales proches ont été légèrement décalées pour éviter que
-# leurs marqueurs se superposent.
-# Les noms doivent correspondre EXACTEMENT aux noms dans le CSV
-# (ex : 'ST ALBAN' et non 'SAINT-ALBAN').
+# Légèrement ajustées pour éviter les superpositions de marqueurs sur la carte.
 
 GPS = {
     'BELLEVILLE':  {'lat': 47.5111, 'lon':  2.8733},
@@ -85,10 +80,7 @@ GPS = {
     'TRICASTIN':   {'lat': 44.3317, 'lon':  4.7317},
 }
 
-# Statuts d'événement à exclure systématiquement.
-# Les événements avec ces statuts sont des publications annulées ou invalides
-# qui ne reflètent pas une vraie indisponibilité.
-# Note : les variantes d'"Annulé" (encodage) sont gérées séparément via .lower()
+# Statuts à exclure (publications annulées ou invalides)
 EXCLUDED_STATUSES = {'', 'Inactif', 'DISMISSED'}
 
 
@@ -96,49 +88,25 @@ EXCLUDED_STATUSES = {'', 'Inactif', 'DISMISSED'}
 
 def parse_dt(s):
     """
-    Convertit une chaîne de caractères en objet datetime avec fuseau UTC.
-
-    Le CSV peut contenir des dates dans deux formats différents :
-      - '2025-08-01 14:00:00+02:00'  (avec espace et offset timezone)
-      - '2025-08-01T14:00:00+02:00'  (format ISO avec T)
-
-    Pour éviter les problèmes de parsing avec les offsets timezone variables,
-    on ne garde que les 19 premiers caractères (la partie date + heure pure),
-    puis on attache manuellement le fuseau UTC.
-
+    Convertit une chaîne de date en datetime UTC.
+    Gère les formats ISO avec ou sans offset : '2025-08-01T14:00:00+02:00'
     Retourne None si la chaîne est vide ou non parsable.
     """
     if not s:
         return None
-    s = s.strip()
-
-    # On prend uniquement les 19 premiers caractères : 'YYYY-MM-DD HH:MM:SS'
-    # Cela élimine les offsets timezone (+02:00, Z, etc.) qui varient selon les lignes
-    base = s[:19]
-
-    # On essaie les deux formats possibles
+    base = s.strip()[:19]
     for fmt in ('%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M:%S'):
         try:
-            # replace(tzinfo=timezone.utc) : on considère tout en UTC
-            # pour pouvoir comparer les dates uniformément
             return datetime.strptime(base, fmt).replace(tzinfo=timezone.utc)
         except ValueError:
             continue
-
-    return None  # aucun format ne correspond
+    return None
 
 
 def get_centrale(unit_name):
     """
-    Extrait le nom de la centrale à partir du nom d'une tranche.
-
-    Exemples :
-      'BLAYAIS 3'  → 'BLAYAIS'
-      'ST ALBAN 1' → 'ST ALBAN'
-      'DAMPIERRE'  → 'DAMPIERRE'  (si pas de numéro, retourne tel quel)
-
-    Méthode : on coupe sur le DERNIER espace (rsplit avec maxsplit=1).
-    Si la partie droite est un chiffre, c'est le numéro de tranche → on garde la gauche.
+    Extrait le nom de la centrale depuis le nom complet de l'unité.
+    Exemples : 'BLAYAIS 3' → 'BLAYAIS',  'ST ALBAN 1' → 'ST ALBAN'
     """
     parts = unit_name.rsplit(' ', 1)
     if len(parts) == 2 and parts[1].isdigit():
@@ -147,115 +115,206 @@ def get_centrale(unit_name):
 
 
 def gps_for(centrale):
-    """
-    Retourne le dictionnaire {'lat': ..., 'lon': ...} pour une centrale donnée.
-    Retourne None si la centrale n'est pas dans le dictionnaire GPS.
-    """
     return GPS.get(centrale)
 
 
-# ─── Chargement et dédoublonnage des événements ───────────────────────────────
+# ─── Chargement depuis l'API EDF Open Data ───────────────────────────────────
+
+def get_api_token():
+    """
+    Charge le token d'authentification API depuis :
+      1. La variable d'environnement EDF_API_TOKEN
+      2. Le fichier local api_config.json  (non versionné sur Git)
+    Retourne None si aucun token n'est trouvé.
+    """
+    token = os.environ.get("EDF_API_TOKEN")
+    if token:
+        return token
+    try:
+        with open("api_config.json", encoding="utf-8") as f:
+            return json.load(f).get("token")
+    except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        return None
+
+
+def load_outages_from_api(api_token):
+    """
+    Récupère toutes les indisponibilités nucléaires depuis l'API EDF.
+
+    Algorithme :
+      1. Pagination : on récupère API_PAGE_SIZE enregistrements à la fois
+         jusqu'à avoir tout le dataset (filtre filiere=Nucléaire).
+      2. Exclusion : on filtre les statuts invalides (annulés, inactifs).
+      3. Déduplication : pour chaque identifiant d'événement, on ne garde
+         que la ligne avec le numéro de version le plus élevé.
+      4. Construction : on retourne la même structure que load_outages()
+         pour que build_records() fonctionne sans modification.
+
+    Retourne : (outages, units_info)
+      - outages    : [{'unit', 'begin', 'end', 'available'}, ...]
+      - units_info : {'CHOOZ 1': 1500.0, 'PALUEL 2': 1300.0, ...}
+    """
+    all_records = []
+    after       = None   # curseur de pagination (valeur _i du dernier enregistrement)
+
+    print("  Connexion a l'API EDF Open Data...")
+    while True:
+        # Filtre sur la filière nucléaire (accent encodé correctement par urlencode)
+        params: dict = {
+            "size":    API_PAGE_SIZE,
+            "filiere": "Nucléaire",   # "Nucléaire" — URL-encodé par urlencode
+        }
+        if after is not None:
+            params["after"] = after   # pagination curseur (data-fair)
+
+        url = f"{API_BASE}/datasets/{API_DATASET_ID}/lines?{urllib.parse.urlencode(params)}"
+        req = urllib.request.Request(url, headers={"Authorization": f"Basic {api_token}"})
+
+        with urllib.request.urlopen(req) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+
+        results = data.get("results", [])
+        all_records.extend(results)
+        total = data.get("total", 0)
+        print(f"    {len(all_records)}/{total} enregistrements recuperes...")
+
+        # Fin de pagination : dernière page si la réponse est incomplète
+        if not results or len(results) < API_PAGE_SIZE:
+            break
+
+        # Curseur pour la page suivante : valeur _i du dernier enregistrement
+        after = results[-1].get("_i")
+
+    # Exclusion des statuts invalides
+    valid = [
+        r for r in all_records
+        if r.get("status", "").strip() not in EXCLUDED_STATUSES
+        and "annul" not in r.get("status", "").lower()
+    ]
+
+    # Déduplication : on garde la version la plus récente par identifiant
+    best = {}
+    for r in valid:
+        ident = r.get("identifiant", "")
+        ver   = r.get("numero_de_version", 0) or 0
+        if ident not in best or ver > (best[ident].get("numero_de_version", 0) or 0):
+            best[ident] = r
+
+    # Construction de outages et units_info
+    outages    = []
+    units_info = {}
+
+    for r in best.values():
+        unit = r.get("nom", "").strip()
+        if not unit:
+            continue
+
+        # Filtrer les centrales non-nucléaires : seules celles présentes dans
+        # le dictionnaire GPS (centrales nucléaires françaises connues) sont gardées.
+        # Le filtre filiere=Nucléaire envoyé à l'API est ignoré par le serveur,
+        # ce qui ramène aussi des centrales hydrauliques, BESS, etc.
+        if not gps_for(get_centrale(unit)):
+            continue
+
+        # Puissance nominale : on prend le max rencontré pour cette unité
+        try:
+            nom = float(r.get("puissance_maximale_mw") or 0)
+        except (ValueError, TypeError):
+            nom = 0.0
+        if nom > 0:
+            units_info[unit] = max(units_info.get(unit, 0), nom)
+
+        # Dates de début et de fin de l'indisponibilité
+        begin = parse_dt(r.get("date_de_debut", ""))
+        end   = parse_dt(r.get("date_de_fin",   ""))
+        if not begin or not end or end <= begin:
+            continue
+
+        # Puissance disponible pendant l'indisponibilité.
+        # Si puissance_maximale_mw = 0 dans ce record, c'est une publication
+        # REMIT incomplète (placeholder sans données de puissance) : on l'ignore
+        # pour ne pas affecter le calcul de disponibilité avec de faux 0 MW.
+        try:
+            nom_record = float(r.get("puissance_maximale_mw") or 0)
+        except (ValueError, TypeError):
+            nom_record = 0.0
+
+        if nom_record == 0:
+            continue  # publication placeholder — pas de données fiables
+
+        try:
+            avail = float(r.get("puissance_disponible_mw") or 0)
+        except (ValueError, TypeError):
+            avail = 0.0
+
+        outages.append({
+            "unit":      unit,
+            "begin":     begin,
+            "end":       end,
+            "available": avail,
+        })
+
+    return outages, units_info
+
+
+# ─── Chargement depuis le CSV local (fallback) ───────────────────────────────
 
 def load_outages(csv_path):
     """
-    Lit le CSV et retourne deux structures :
+    Lit le CSV d'indisponibilités et retourne outages + units_info.
+    Utilisé en fallback si l'API est indisponible ou sans token.
 
-    1. outages (liste) : événements d'indisponibilité ACTIFS, chacun sous la forme :
-       {'unit': 'DAMPIERRE 1', 'begin': datetime(...), 'end': datetime(...), 'available': 910.0}
-
-    2. units_info (dict) : puissance nominale par unité :
-       {'DAMPIERRE 1': 910.0, 'DAMPIERRE 2': 910.0, ...}
-
-    Pourquoi dédoublonner ?
-    EDF publie les indisponibilités sous forme de "publications" versionnées.
-    Quand une indisponibilité est corrigée (dates décalées, puissance révisée...),
-    une nouvelle ligne est publiée avec le même publication_id mais un numéro
-    de version supérieur. On ne garde que la ligne avec la version la plus haute.
+    Le CSV contient des publications versionnées : on ne garde que
+    la ligne avec le numéro de version le plus élevé par publication_id.
     """
-    # Dictionnaire temporaire : publication_id → ligne avec la version la plus haute
-    best = {}
-
-    # Dictionnaire final : unité → puissance nominale maximale connue
+    best      = {}
     units_info = {}
 
-    # Ouverture du fichier CSV avec gestion de l'encodage
-    # utf-8-sig gère le BOM (Byte Order Mark) présent dans certains CSV Windows
     try:
         f = open(csv_path, encoding='utf-8-sig')
     except FileNotFoundError:
-        # Si utf-8-sig échoue, on essaie latin-1 (encodage courant des exports Windows)
         f = open(csv_path, encoding='latin-1')
 
     with f:
-        # DictReader lit chaque ligne comme un dictionnaire {nom_colonne: valeur}
-        # delimiter=';' car le CSV utilise le point-virgule comme séparateur (format français)
         reader = csv.DictReader(f, delimiter=';')
-
         for row in reader:
             pub_id = row.get('publication_id', '').strip()
             if not pub_id:
-                continue  # ligne sans identifiant de publication → on ignore
-
-            # Récupération du numéro de version (entier)
+                continue
             try:
                 ver = int(row.get('version', 0))
             except ValueError:
-                ver = 0  # si la version n'est pas un entier valide, on met 0
+                ver = 0
 
-            # Mise à jour de la puissance nominale de l'unité
-            # On prend le MAX de toutes les valeurs rencontrées pour cette unité,
-            # car certaines lignes peuvent avoir des valeurs manquantes ou incorrectes
             unit_name = row.get('unit_name', '').strip()
             if unit_name:
                 try:
                     nom = float(row.get('nominal capacity (MW)', 0) or 0)
                     if nom > 0:
-                        prev = units_info.get(unit_name, 0)
-                        units_info[unit_name] = max(prev, nom)
+                        units_info[unit_name] = max(units_info.get(unit_name, 0), nom)
                 except (ValueError, TypeError):
-                    pass  # valeur non numérique → on ignore silencieusement
+                    pass
 
-            # Dédoublonnage : on ne garde que la ligne avec la version la plus haute
-            prev_ver = best.get(pub_id, {}).get('_ver', -1)
-            if ver > prev_ver:
-                # {**row, '_ver': ver} : copie de la ligne + ajout du champ _ver
+            if ver > best.get(pub_id, {}).get('_ver', -1):
                 best[pub_id] = {**row, '_ver': ver}
 
-    # --- Construction de la liste finale des événements actifs ---
     outages = []
     for row in best.values():
         status = row.get('outage_status', '').strip()
-
-        # Exclusion des événements annulés ou inactifs
-        # On vérifie aussi 'annul' en minuscules pour gérer les variantes
-        # d'encodage d'"Annulé" (avec ou sans accent, majuscules/minuscules)
         if status in EXCLUDED_STATUSES or 'annul' in status.lower():
             continue
-
         unit_name = row.get('unit_name', '').strip()
         if not unit_name:
-            continue  # pas de nom d'unité → ligne inutilisable
-
-        # Conversion des dates de début et fin en objets datetime
+            continue
         begin = parse_dt(row.get('outage_begin_dt (UTC)', ''))
-        end   = parse_dt(row.get('outage_end_dt (UTC)', ''))
-
-        # On ignore les événements avec des dates invalides ou incohérentes
+        end   = parse_dt(row.get('outage_end_dt (UTC)',   ''))
         if not begin or not end or end <= begin:
             continue
-
-        # Puissance disponible pendant l'indisponibilité (peut être 0 = arrêt total)
         try:
             avail = float(row.get('available capacity (MW)', 0) or 0)
         except (ValueError, TypeError):
             avail = 0.0
-
-        outages.append({
-            'unit':      unit_name,
-            'begin':     begin,
-            'end':       end,
-            'available': avail
-        })
+        outages.append({'unit': unit_name, 'begin': begin, 'end': end, 'available': avail})
 
     return outages, units_info
 
@@ -266,86 +325,43 @@ def build_records(outages, units_info, date_from, date_to, hours_per_day):
     """
     Génère la liste de tous les enregistrements pour la plage de dates demandée.
 
-    Paramètres :
-      - outages       : liste des événements actifs (résultat de load_outages)
-      - units_info    : dict {unité: puissance nominale}
-      - date_from     : date de début (incluse)
-      - date_to       : date de fin (incluse)
-      - hours_per_day : liste des heures à générer
-                        → [12]        pour un point par jour (midi seulement)
-                        → range(24)   pour 24 points par jour (toutes les heures)
-
-    Retourne une liste de dicts, chaque dict représentant un enregistrement
-    au format attendu par l'application Angular.
+    Pour chaque point temporel (date × heure × réacteur) :
+      - Si un événement d'indisponibilité couvre ce moment → puissance = min(événements).
+      - Sinon → puissance = puissance nominale (réacteur à pleine capacité).
     """
-
-    # Index des événements par unité pour accélérer la recherche
-    # defaultdict(list) crée automatiquement une liste vide pour toute clé inconnue
-    # Sans cet index, on parcourrait TOUS les événements pour chaque point temporel
-    by_unit = defaultdict(list)
+    by_unit  = defaultdict(list)
     for o in outages:
         by_unit[o['unit']].append(o)
 
-    # Liste de toutes les unités connues (union des unités avec capacité nominale
-    # et des unités présentes dans les événements), triée alphabétiquement
     all_units = sorted(set(units_info) | {o['unit'] for o in outages})
 
     records = []
-    current = date_from  # on commence à la date de début
+    current = date_from
 
-    # Boucle principale : on avance jour par jour
     while current <= date_to:
-
-        # Pour chaque heure demandée dans la journée
         for hour in hours_per_day:
-
-            # Construction du timestamp exact pour ce point temporel
-            # tzinfo=timezone.utc : on travaille en UTC pour comparer avec les événements
-            ts = datetime(current.year, current.month, current.day, hour, 0, 0,
-                          tzinfo=timezone.utc)
-
-            # Chaîne de date au format attendu par Angular
-            # Exemple : '2025-08-15T14:00:00'
+            ts     = datetime(current.year, current.month, current.day, hour, 0, 0,
+                              tzinfo=timezone.utc)
             dt_str = f"{current.isoformat()}T{hour:02d}:00:00"
 
-            # Pour chaque réacteur
             for unit in all_units:
                 nominal = units_info.get(unit, 0)
-
-                # Si la puissance nominale est inconnue ou nulle, on ignore ce réacteur
                 if nominal <= 0:
                     continue
 
-                # Recherche des événements d'indisponibilité qui couvrent ce moment
-                # Un événement "couvre" un moment si : begin <= ts <= end
-                covering = [o for o in by_unit[unit] if o['begin'] <= ts <= o['end']]
+                covering  = [o for o in by_unit[unit] if o['begin'] <= ts <= o['end']]
+                available = min(o['available'] for o in covering) if covering else nominal
+                centrale  = get_centrale(unit)
 
-                if covering:
-                    # Plusieurs indisponibilités simultanées sont possibles
-                    # (ex : arrêt partiel + maintenance).
-                    # On prend le MINIMUM des puissances disponibles :
-                    # c'est la contrainte la plus restrictive qui s'applique.
-                    available = min(o['available'] for o in covering)
-                else:
-                    # Aucun événement ne couvre ce moment → réacteur à pleine capacité
-                    available = nominal
-
-                centrale = get_centrale(unit)
-
-                # Construction de l'enregistrement au format attendu par Angular
-                # Les noms de champs correspondent aux colonnes de l'API EDF Open Data
-                # pour assurer la compatibilité future
                 records.append({
                     'date_et_heure_fuseau_horaire_europe_paris': dt_str,
                     'heure_fuseau_horaire_europe_paris':         hour,
                     'centrale':                                  centrale,
                     'tranche':                                   unit,
                     'puissance_disponible':                      available,
-                    # Coordonnées GPS pour le placement du marqueur sur la carte Leaflet
                     'point_gps_modifie_pour_afficher_la_carte_opendata': gps_for(centrale),
                 })
 
-        # On passe au jour suivant
         current += timedelta(days=1)
 
     return records
@@ -354,16 +370,6 @@ def build_records(outages, units_info, date_from, date_to, hours_per_day):
 # ─── Écriture du fichier JSON ─────────────────────────────────────────────────
 
 def write_json(records, path):
-    """
-    Écrit la liste de records dans un fichier JSON.
-
-    Options choisies :
-      - ensure_ascii=False  : conserve les caractères accentués (é, è, â...)
-                              au lieu de les convertir en séquences \\uXXXX
-      - separators=(',',':') : supprime les espaces inutiles après les virgules
-                               et les deux-points → fichier plus compact (moins de Ko)
-    Le dossier de destination est créé automatiquement s'il n'existe pas.
-    """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, mode='w', encoding='utf-8') as f:
         json.dump(records, f, ensure_ascii=False, separators=(',', ':'))
@@ -372,45 +378,47 @@ def write_json(records, path):
 # ─── Point d'entrée principal ─────────────────────────────────────────────────
 
 def main():
-    """
-    Orchestre l'ensemble du pipeline :
-      1. Chargement et nettoyage des données source
-      2. Génération de donnees_daily.json (liste déroulantes : midi, longue période)
-      3. Génération de donnees.json       (carte + histogramme : horaire, courte période)
-    """
-    print(f"Chargement de {INPUT_FILE} ...")
+    # 1. Chargement des données : API EDF si token disponible, CSV sinon
+    token = get_api_token()
 
-    try:
-        outages, units_info = load_outages(INPUT_FILE)
-    except FileNotFoundError:
-        print(f"Fichier introuvable : {INPUT_FILE}")
-        return
-    except Exception as e:
-        import traceback
-        print(f"Erreur lecture : {e}")
-        traceback.print_exc()
-        return
+    if token:
+        print("Token API trouvé — chargement depuis l'API EDF Open Data...")
+        try:
+            outages, units_info = load_outages_from_api(token)
+        except Exception as e:
+            print(f"  Erreur API : {e}")
+            print("  Bascule sur le CSV local...")
+            try:
+                outages, units_info = load_outages(INPUT_FILE)
+            except FileNotFoundError:
+                print(f"  Fichier CSV introuvable : {INPUT_FILE}")
+                return
+    else:
+        print(f"Aucun token API — chargement depuis {INPUT_FILE} ...")
+        print("  (Pour utiliser l'API : créer api_config.json avec {'token': '...'})")
+        try:
+            outages, units_info = load_outages(INPUT_FILE)
+        except FileNotFoundError:
+            print(f"  Fichier introuvable : {INPUT_FILE}")
+            print("  → Créez api_config.json ou déposez le CSV à la racine du projet.")
+            return
 
-    print(f"  {len(outages)} evenements actifs - {len(units_info)} unites")
+    print(f"  {len(outages)} événements actifs — {len(units_info)} unités")
+    print(f"  Periode donnees_daily : {DATE_FROM_DAILY} -> {DATE_TO_DAILY}")
+    print(f"  Periode donnees.json  : {DATE_FROM_MAIN}  -> {DATE_TO_MAIN}")
 
-    # --- Génération de donnees_daily.json ---
-    # hours_per_day=[12] : un seul relevé par jour, à midi
-    # Utilisé pour alimenter les listes déroulantes centrale/tranche
-    print(f"\nGeneration de {output_daily}  ({DATE_FROM_DAILY} a {DATE_TO_DAILY}, midi) ...")
+    # 2. Génération de donnees_daily.json (midi, longue période)
+    print(f"\nGénération de {output_daily}...")
     daily = build_records(outages, units_info, DATE_FROM_DAILY, DATE_TO_DAILY, [12])
     write_json(daily, output_daily)
-    print(f"OK {output_daily} : {len(daily):,} enregistrements")
+    print(f"  OK — {len(daily):,} enregistrements")
 
-    # --- Génération de donnees.json ---
-    # hours_per_day=range(24) : 24 relevés par jour, un par heure (0h à 23h)
-    # Utilisé par la carte interactive et l'histogramme
-    print(f"\nGeneration de {output_main}  ({DATE_FROM_MAIN} a {DATE_TO_MAIN}, horaire) ...")
+    # 3. Génération de donnees.json (horaire, période courte)
+    print(f"\nGénération de {output_main}...")
     main_recs = build_records(outages, units_info, DATE_FROM_MAIN, DATE_TO_MAIN, list(range(24)))
     write_json(main_recs, output_main)
-    print(f"OK {output_main} : {len(main_recs):,} enregistrements")
+    print(f"  OK — {len(main_recs):,} enregistrements")
 
 
-# Point d'entrée Python : ce bloc n'est exécuté que si on lance le script
-# directement (python convert.py), pas si on l'importe depuis un autre module
 if __name__ == '__main__':
     main()

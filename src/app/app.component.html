@@ -1,179 +1,173 @@
+<!-- ============================================================
+     BARRE DE NAVIGATION — VERSION BUREAU (masquée sur mobile)
+     ============================================================ -->
 <div class="nav-container desktop-nav">
   <div class="nav-container">
     <nav class="main-nav">
       <div class="primary-nav">
+
+        <!-- Logo EDF cliquable qui redirige vers le site officiel EDF -->
         <div class="logo-container">
           <a href="https://www.edf.fr" target="_blank">
             <img src="logoEDF.png" alt="EDF Logo" class="logo">
           </a>
         </div>
-  
-        <div class="center-nav">
-          <a routerLink="/home" routerLinkActive="active" class="nav-link">
-            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
-            </svg>
-            <span>{{ 'NAV.HOME' | translate }}</span>
-          </a>
-          <a routerLink="/carte" routerLinkActive="active" class="nav-link">
-            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            <span>{{ 'NAV.MAP' | translate }}</span>
-          </a>
-  
-          <a routerLink="/histogram" routerLinkActive="active" class="nav-link">
-            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            <span>{{ 'NAV.DATA' | translate }}</span>
-          </a>
 
-          <a routerLink="/nucleaire-info" routerLinkActive="active" class="nav-link">
-            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-              <circle cx="12" cy="12" r="3" stroke-width="2"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
-            </svg>
-            <span>{{ 'NAV.NUCLEAIRE' | translate }}</span>
-          </a>
+        <!-- Liens de navigation principaux (Accueil, Données, Le nucléaire) -->
+        <div class="center-nav">
+          <a routerLink="/home" routerLinkActive="active" class="nav-link">{{ 'NAV.HOME' | translate }}</a>
+          <a routerLink="/histogram" routerLinkActive="active" class="nav-link">{{ 'NAV.DATA' | translate }}</a>
+          <a routerLink="/nucleaire-info" routerLinkActive="active" class="nav-link">{{ 'NAV.NUCLEAIRE' | translate }}</a>
         </div>
 
+        <!-- Sélecteur de langue FR / EN -->
         <div class="nav-group">
           <div class="language-selector">
             <button class="lang-btn" [class.active]="currentLang === 'fr'" (click)="switchLanguage('fr')">FR</button>
             <button class="lang-btn" [class.active]="currentLang === 'en'" (click)="switchLanguage('en')">EN</button>
           </div>
         </div>
+
       </div>
     </nav>
   </div>
 </div>
+
+<!-- ============================================================
+     BARRE DE NAVIGATION — VERSION MOBILE (masquée sur bureau)
+     ============================================================ -->
 <div class="nav-container mobile-nav">
   <div class="nav-container">
     <nav class="main-nav">
       <div class="primary-nav">
-        <!-- Logo conteneur -->
+
+        <!-- Logo EDF cliquable qui redirige vers le site officiel EDF -->
         <div class="logo-container">
           <a href="https://www.edf.fr" target="_blank">
             <img src="logoEDF.png" alt="EDF Logo" class="logo">
           </a>
         </div>
-   
-        <!-- Wrapper pour la navigation et le sélecteur de langue -->
-        <div class="nav-bottom-wrapper">
-          <div class="center-nav">
-            <a routerLink="/home" routerLinkActive="active" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
-              </svg>
-              <span>{{ 'NAV.HOME' | translate }}</span>
-            </a>
-   
-            <a routerLink="/carte" routerLinkActive="active" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              <span>{{ 'NAV.MAP' | translate }}</span>
-            </a>
-   
-            <a routerLink="/histogram" routerLinkActive="active" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-              </svg>
-              <span>{{ 'NAV.DATA' | translate }}</span>
-            </a>
 
-            <a routerLink="/nucleaire-info" routerLinkActive="active" class="nav-link">
-              <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                <circle cx="12" cy="12" r="3" stroke-width="2"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
-              </svg>
-              <span>{{ 'NAV.NUCLEAIRE' | translate }}</span>
-            </a>
+        <!-- Wrapper regroupant les liens de navigation et le sélecteur de langue -->
+        <div class="nav-bottom-wrapper">
+
+          <!-- Liens de navigation principaux -->
+          <div class="center-nav">
+            <a routerLink="/home" routerLinkActive="active" class="nav-link">{{ 'NAV.HOME' | translate }}</a>
+            <a routerLink="/histogram" routerLinkActive="active" class="nav-link">{{ 'NAV.DATA' | translate }}</a>
+            <a routerLink="/nucleaire-info" routerLinkActive="active" class="nav-link">{{ 'NAV.NUCLEAIRE' | translate }}</a>
           </div>
 
+          <!-- Sélecteur de langue FR / EN -->
           <div class="nav-group">
             <div class="language-selector">
               <button class="lang-btn" [class.active]="currentLang === 'fr'" (click)="switchLanguage('fr')">FR</button>
               <button class="lang-btn" [class.active]="currentLang === 'en'" (click)="switchLanguage('en')">EN</button>
             </div>
           </div>
+
         </div>
       </div>
     </nav>
-   </div>
+  </div>
 </div>
- <router-outlet></router-outlet>
 
+<!-- Point d'injection du composant de la route active (Home, Histogram, etc.) -->
+<router-outlet></router-outlet>
+
+<!-- ============================================================
+     FOOTER PRINCIPAL
+     ============================================================ -->
 <footer class="app-footer">
 
-  <!-- Boutons d'action bien visibles -->
-  <div class="footer-actions">
-    <button class="footer-btn" (click)="showAbout = true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/>
-        <line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-      {{ 'APP.FOOTER_ABOUT_BTN' | translate }}
-    </button>
-    <button class="footer-btn footer-btn--outline" (click)="showContact = true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-        <polyline points="22,6 12,13 2,6"/>
-      </svg>
-      {{ 'APP.FOOTER_CONTACT_BTN' | translate }}
-    </button>
-  </div>
+  <!-- Corps du footer : logo, colonnes de liens, bouton contact -->
+  <div class="footer-body">
 
-  <!-- 3 colonnes -->
-  <div class="footer-content">
-    <div class="footer-col">
-      <h4 class="footer-heading">{{ 'INFORMATION.ABSTRACT.TITLE' | translate }}</h4>
-      <p>{{ 'INFORMATION.ABSTRACT.CONTENT' | translate }}</p>
+    <!-- Bloc marque : logo EDF + courte description du projet -->
+    <div class="footer-brand">
+      <a href="https://www.edf.fr" target="_blank">
+        <img src="logoEDF.png" alt="EDF Logo" class="footer-logo">
+      </a>
+      <p class="footer-brand-desc">{{ 'APP.FOOTER_BRAND_DESC' | translate }}</p>
     </div>
 
-    <div class="footer-divider"></div>
+    <!-- Colonnes de liens internes et ressources externes -->
+    <div class="footer-cols">
 
-    <div class="footer-col">
-      <h4 class="footer-heading">{{ 'INFORMATION.ADDITIONAL.TITLE' | translate }}</h4>
-      <ul class="footer-list">
-        <li>{{ 'INFORMATION.ADDITIONAL.GPS_INFO' | translate }}</li>
-        <li>{{ 'INFORMATION.ADDITIONAL.TIMEZONE' | translate }}</li>
-      </ul>
+      <!-- Colonne 1 : liens de navigation interne (À propos, Le nucléaire, Données) -->
+      <div class="footer-col">
+        <h4 class="footer-heading">{{ 'APP.FOOTER_COL1_TITLE' | translate }}</h4>
+        <ul class="footer-links">
+          <!-- Ouvre la modale "À propos du projet" -->
+          <li><button class="footer-link-btn" (click)="showAbout = true">{{ 'APP.FOOTER_ABOUT_BTN' | translate }}</button></li>
+        </ul>
+      </div>
+
+      <!-- Colonne 2 : liens vers les sources de données officielles externes -->
+      <div class="footer-col">
+        <h4 class="footer-heading">{{ 'APP.FOOTER_COL2_TITLE' | translate }}</h4>
+        <ul class="footer-links">
+          <!-- Plateforme Open Data d'EDF (source des données utilisées) -->
+          <li><a href="https://opendata.edf.fr" target="_blank" class="footer-link">EDF Open Data</a></li>
+          <!-- API RTE pour les données d'indisponibilité par tranche -->
+          <li><a href="https://data.rte-france.com" target="_blank" class="footer-link">RTE Data</a></li>
+          <!-- Publications officielles EDF au titre du règlement REMIT -->
+          <li><a href="https://doaat.edf.fr/indisponibilites/list" target="_blank" class="footer-link">EDF REMIT</a></li>
+        </ul>
+      </div>
+
     </div>
 
-    <div class="footer-divider"></div>
+    <!-- Bouton contact (ouvre la modale de contact) -->
+    <div class="footer-right">
+      <button class="footer-contact-btn" (click)="showContact = true">
+        {{ 'APP.FOOTER_CONTACT_BTN' | translate }}
+      </button>
+    </div>
 
-    <div class="footer-col">
-      <h4 class="footer-heading">{{ 'INFORMATION.LIABILITY.TITLE' | translate }}</h4>
-      <p>{{ 'INFORMATION.LIABILITY.CONTENT' | translate }}</p>
+  </div>
+
+  <!-- Barre inférieure : copyright à gauche, liens légaux à droite -->
+  <div class="footer-bottom-bar">
+    <!-- Mention de copyright du projet académique -->
+    <span class="footer-copy">{{ 'APP.FOOTER_BOTTOM' | translate }}</span>
+    <!-- Liens légaux séparés par un pipe -->
+    <div class="footer-legal">
+      <button class="footer-legal-btn" (click)="showAbout = true">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</button>
+      <span class="footer-sep">|</span>
+      <button class="footer-legal-btn" (click)="showContact = true">{{ 'APP.FOOTER_LEGAL_CONTACT' | translate }}</button>
     </div>
   </div>
 
-  <div class="footer-bottom">
-    {{ 'APP.FOOTER_BOTTOM' | translate }}
-  </div>
 </footer>
 
-<!-- Modale À propos -->
+<!-- ============================================================
+     MODALE "À PROPOS DU PROJET"
+     Affichée quand showAbout = true
+     Clic sur l'overlay ferme la modale
+     ============================================================ -->
 <div class="modal-overlay" *ngIf="showAbout" (click)="showAbout = false">
+  <!-- stopPropagation empêche la fermeture au clic à l'intérieur de la boîte -->
   <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <!-- Bouton de fermeture (×) -->
     <button class="modal-close" (click)="showAbout = false">&times;</button>
     <h2 class="modal-title">{{ 'APP.ABOUT_TITLE' | translate }}</h2>
 
+    <!-- Section 1 : présentation du projet -->
     <section class="modal-section">
       <h3>{{ 'APP.ABOUT_S1_TITLE' | translate }}</h3>
+      <!-- innerHTML pour interpréter les balises <strong> dans la traduction -->
       <p [innerHTML]="'APP.ABOUT_S1_P1' | translate"></p>
       <p>{{ 'APP.ABOUT_S1_P2' | translate }}</p>
     </section>
 
+    <!-- Section 2 : présentation de l'équipe (grille 4 cartes) -->
     <section class="modal-section">
       <h3>{{ 'APP.ABOUT_S2_TITLE' | translate }}</h3>
       <div class="team-grid">
+
+        <!-- Carte membre 1 -->
         <div class="team-card">
           <div class="team-avatar">VL</div>
           <div class="team-info">
@@ -181,6 +175,8 @@
             <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
+
+        <!-- Carte membre 2 -->
         <div class="team-card">
           <div class="team-avatar">BB</div>
           <div class="team-info">
@@ -188,6 +184,8 @@
             <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
+
+        <!-- Carte membre 3 -->
         <div class="team-card">
           <div class="team-avatar">EO</div>
           <div class="team-info">
@@ -195,6 +193,8 @@
             <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
+
+        <!-- Carte membre 4 -->
         <div class="team-card">
           <div class="team-avatar">CP</div>
           <div class="team-info">
@@ -202,35 +202,50 @@
             <span class="team-role">{{ 'APP.ABOUT_TEAM_ROLE' | translate }}</span>
           </div>
         </div>
+
       </div>
     </section>
 
+    <!-- Section 3 : collecte et traitement des données -->
     <section class="modal-section">
       <h3>{{ 'APP.ABOUT_S3_TITLE' | translate }}</h3>
       <p [innerHTML]="'APP.ABOUT_S3_P1' | translate"></p>
+      <!-- innerHTML pour interpréter le lien <a> vers EDF Open Data -->
       <p [innerHTML]="'APP.ABOUT_S3_P2' | translate"></p>
     </section>
 
+    <!-- Section 4 : sources techniques (API RTE, publications REMIT) -->
     <section class="modal-section">
       <h3>{{ 'APP.ABOUT_S4_TITLE' | translate }}</h3>
       <p [innerHTML]="'APP.ABOUT_S4_P1' | translate"></p>
       <p [innerHTML]="'APP.ABOUT_S4_P2' | translate"></p>
     </section>
 
+    <!-- Note de bas de modale : avertissement sur la nature indicative des données -->
     <section class="modal-note">
       <p>{{ 'APP.ABOUT_NOTE' | translate }}</p>
     </section>
+
   </div>
 </div>
 
-<!-- Modale Contact -->
+<!-- ============================================================
+     MODALE "NOUS CONTACTER"
+     Affichée quand showContact = true
+     Clic sur l'overlay ferme la modale
+     ============================================================ -->
 <div class="modal-overlay" *ngIf="showContact" (click)="showContact = false">
   <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <!-- Bouton de fermeture (×) -->
     <button class="modal-close" (click)="showContact = false">&times;</button>
     <h2 class="modal-title">{{ 'APP.CONTACT_TITLE' | translate }}</h2>
     <p class="modal-subtitle">{{ 'APP.CONTACT_SUBTITLE' | translate }}</p>
 
+    <!-- Formulaire de contact — affiché tant que le message n'a pas été envoyé -->
     <div *ngIf="!contactSent">
+
+      <!-- Ligne avec deux champs côte à côte : Nom et Email -->
       <div class="form-row">
         <div class="form-group">
           <label>{{ 'APP.CONTACT_NAME' | translate }}</label>
@@ -241,27 +256,38 @@
           <input type="email" [(ngModel)]="contact.email" [placeholder]="'APP.CONTACT_EMAIL_PH' | translate" class="form-input">
         </div>
       </div>
+
+      <!-- Champ Sujet -->
       <div class="form-group">
         <label>{{ 'APP.CONTACT_SUBJECT' | translate }}</label>
         <input type="text" [(ngModel)]="contact.sujet" [placeholder]="'APP.CONTACT_SUBJECT_PH' | translate" class="form-input">
       </div>
+
+      <!-- Champ Message (zone de texte multiligne) -->
       <div class="form-group">
         <label>{{ 'APP.CONTACT_MESSAGE' | translate }}</label>
         <textarea [(ngModel)]="contact.message" [placeholder]="'APP.CONTACT_MSG_PH' | translate" rows="5" class="form-input form-textarea"></textarea>
       </div>
+
+      <!-- Bouton d'envoi — désactivé si Nom, Email ou Message sont vides -->
       <button class="form-submit" (click)="sendContact()"
               [disabled]="!contact.nom || !contact.email || !contact.message">
         {{ 'APP.CONTACT_SEND' | translate }}
       </button>
+
     </div>
 
+    <!-- Message de confirmation — affiché après envoi réussi -->
     <div *ngIf="contactSent" class="contact-success">
+      <!-- Icône check verte SVG -->
       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
            fill="none" stroke="#22c55e" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
       <p>{{ 'APP.CONTACT_SUCCESS' | translate }}</p>
+      <!-- Ferme la modale et réinitialise l'état d'envoi -->
       <button class="footer-btn" (click)="showContact = false; contactSent = false">{{ 'APP.CONTACT_CLOSE' | translate }}</button>
     </div>
+
   </div>
 </div>

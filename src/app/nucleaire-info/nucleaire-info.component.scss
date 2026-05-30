@@ -1,19 +1,33 @@
-// ─── Variables ─────────────────────────────────────────────────────────────────
-$blue:    #12356D;
-$orange:  #F1471C;
-$light:   #f8fafc;
-$white:   #ffffff;
-$dark:    #0f2347;
-$gray:    #64748b;
-$border:  #e2e8f0;
+// ============================================================
+// VARIABLES GLOBALES
+// Palette partagée dans tout le composant pour cohérence
+// ============================================================
 
-// ─── Container ─────────────────────────────────────────────────────────────────
+$blue:    #12356D;  // bleu marine institutionnel (titres, numéros, accents)
+$orange:  #F1471C;  // orange EDF (flèches, soulignements, badges actifs)
+$light:   #f8fafc;  // fond gris très clair (sections alternées)
+$white:   #ffffff;  // blanc pur
+$dark:    #0f2347;  // bleu très sombre (fond hero)
+$gray:    #64748b;  // gris moyen (textes secondaires, labels)
+$border:  #e2e8f0;  // gris clair (bordures de cartes, séparateurs)
+
+
+// ============================================================
+// CONTENEUR PRINCIPAL
+// ============================================================
+
+// Enveloppe toute la page ; hauteur minimale = écran sans la navbar
 .nucleaire-container {
   min-height: calc(100vh - 64px);
   background: $light;
 }
 
-// ─── Hero ──────────────────────────────────────────────────────────────────────
+
+// ============================================================
+// SECTION HERO (en-tête de la page)
+// ============================================================
+
+// Fond dégradé sombre du bleu très foncé vers le bleu marine
 .hero-section {
   background: linear-gradient(135deg, $dark 0%, $blue 60%, darken($blue, 5%) 100%);
   padding: 64px 24px 72px;
@@ -21,6 +35,7 @@ $border:  #e2e8f0;
   position: relative;
   overflow: hidden;
 
+  // Halo orange décoratif en arrière-plan (non interactif)
   &::before {
     content: '';
     position: absolute;
@@ -30,18 +45,20 @@ $border:  #e2e8f0;
   }
 }
 
+// Conteneur interne centré avec largeur max
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 1;        // passe au-dessus du halo ::before
   max-width: 700px;
   margin: 0 auto;
 }
 
+// Pastille "Guide pédagogique" au-dessus du titre
 .hero-badge {
   display: inline-block;
   background: rgba($orange, 0.2);
   border: 1px solid rgba($orange, 0.4);
-  color: lighten($orange, 25%);
+  color: lighten($orange, 25%);    // orange clair lisible sur fond sombre
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 1px;
@@ -51,6 +68,7 @@ $border:  #e2e8f0;
   margin-bottom: 20px;
 }
 
+// Titre principal de la page (blanc sur fond sombre)
 .hero-title {
   color: $white;
   font-size: 2.2rem;
@@ -60,6 +78,7 @@ $border:  #e2e8f0;
   text-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
+// Sous-titre descriptif légèrement transparent
 .hero-subtitle {
   color: rgba($white, 0.75);
   font-size: 1.05rem;
@@ -67,20 +86,28 @@ $border:  #e2e8f0;
   margin: 0;
 }
 
-// ─── Sections ──────────────────────────────────────────────────────────────────
+
+// ============================================================
+// SECTIONS DE CONTENU (blocs alternés)
+// ============================================================
+
+// Section générique avec padding vertical
+// Variantes de fond : blanc, gris clair, bleu sombre
 .info-section {
   padding: 64px 24px;
 
-  &.section--white { background: $white; }
-  &.section--light { background: $light; }
-  &.section--dark  { background: $dark; }
+  &.section--white { background: $white; }  // fond blanc
+  &.section--light { background: $light; }  // fond gris très clair
+  &.section--dark  { background: $dark;  }  // fond sombre (section chiffres clés)
 }
 
+// Conteneur interne centré, largeur limitée pour la lisibilité
 .section-inner {
   max-width: 1100px;
   margin: 0 auto;
 }
 
+// En-tête de section : titre + sous-titre centrés
 .section-header {
   text-align: center;
   margin-bottom: 48px;
@@ -92,11 +119,13 @@ $border:  #e2e8f0;
     margin: 0 0 12px;
   }
 
+  // Variante pour les sections à fond sombre : titre en blanc
   &--light h2 {
     color: $white;
   }
 }
 
+// Sous-titre de section : texte gris centré avec largeur max pour confort de lecture
 .section-subtitle {
   color: $gray;
   font-size: 1rem;
@@ -104,12 +133,18 @@ $border:  #e2e8f0;
   max-width: 680px;
   margin: 0 auto;
 
+  // Variante fond sombre : texte blanc atténué
   &--light {
     color: rgba($white, 0.75);
   }
 }
 
-// ─── Two-col layout ────────────────────────────────────────────────────────────
+
+// ============================================================
+// MISE EN PAGE DEUX COLONNES (texte | illustration)
+// ============================================================
+
+// Grille 50/50 centrée verticalement
 .two-col-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -117,10 +152,11 @@ $border:  #e2e8f0;
   align-items: center;
 }
 
+// Colonne de texte : paragraphe d'accroche + texte courant
 .text-content {
   .lead {
     font-size: 1.05rem;
-    color: #334155;
+    color: #334155;       // gris foncé pour le chapô
     line-height: 1.7;
     margin: 0 0 16px;
   }
@@ -133,7 +169,12 @@ $border:  #e2e8f0;
   }
 }
 
-// ─── Info box ──────────────────────────────────────────────────────────────────
+
+// ============================================================
+// BOÎTE D'INFORMATION (encadrés colorés)
+// ============================================================
+
+// Boîte bleue avec bordure gauche (utilisée pour les chiffres clés)
 .info-box {
   display: flex;
   gap: 12px;
@@ -145,6 +186,7 @@ $border:  #e2e8f0;
   color: #334155;
   line-height: 1.6;
 
+  // Variante orange centrée (ex : encadré réseau électrique)
   &--centered {
     margin-top: 36px;
     border-left-color: $orange;
@@ -152,10 +194,14 @@ $border:  #e2e8f0;
     border-radius: 8px;
     border-left-width: 4px;
   }
-
 }
 
-// ─── SVG Diagram ──────────────────────────────────────────────────────────────
+
+// ============================================================
+// DIAGRAMME SVG (illustration fission)
+// ============================================================
+
+// Conteneur de l'illustration, centré horizontalement
 .visual-content {
   display: flex;
   justify-content: center;
@@ -166,6 +212,7 @@ $border:  #e2e8f0;
   width: 100%;
 }
 
+// SVG lui-même : fond gris très clair, bordure fine, coins arrondis
 .diagram-svg {
   width: 100%;
   max-width: 340px;
@@ -176,6 +223,7 @@ $border:  #e2e8f0;
   padding: 8px;
 }
 
+// Légende en italique sous le diagramme
 .diagram-caption {
   font-size: 0.78rem;
   color: $gray;
@@ -183,17 +231,23 @@ $border:  #e2e8f0;
   font-style: italic;
 }
 
-// ─── Steps ─────────────────────────────────────────────────────────────────────
+
+// ============================================================
+// ÉTAPES DU FONCTIONNEMENT (cartes numérotées)
+// ============================================================
+
+// Rangée horizontale de cartes d'étapes, défilable si l'écran est étroit
 .steps-container {
   display: flex;
   align-items: stretch;
   gap: 0;
   flex-wrap: nowrap;
-  overflow-x: auto;
+  overflow-x: auto;       // scroll horizontal sur les petits écrans
   padding-bottom: 8px;
   margin-bottom: 32px;
 }
 
+// Carte individuelle d'une étape (numéro + titre + description)
 .step-card {
   flex: 1;
   min-width: 130px;
@@ -209,6 +263,7 @@ $border:  #e2e8f0;
   box-shadow: 0 2px 8px rgba($blue, 0.06);
   transition: transform 0.2s, box-shadow 0.2s;
 
+  // Légère élévation au survol
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba($blue, 0.12);
@@ -229,6 +284,7 @@ $border:  #e2e8f0;
   }
 }
 
+// Badge rond bleu avec le numéro de l'étape
 .step-number {
   width: 24px;
   height: 24px;
@@ -240,10 +296,10 @@ $border:  #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  flex-shrink: 0;   // ne rétrécit pas si l'espace est contraint
 }
 
-
+// Flèche orange entre les cartes d'étapes
 .step-arrow {
   display: flex;
   align-items: center;
@@ -255,27 +311,37 @@ $border:  #e2e8f0;
   align-self: center;
 }
 
-// ─── Cooling note ──────────────────────────────────────────────────────────────
+
+// ============================================================
+// NOTE SUR LE REFROIDISSEMENT (tours aéroréfrigérantes)
+// ============================================================
+
+// Encadré bleu ciel distinct du reste du contenu
 .cooling-note {
   display: flex;
   gap: 16px;
   background: #f0f9ff;
-  border: 1px solid #bae6fd;
+  border: 1px solid #bae6fd;   // bordure bleue claire
   border-radius: 10px;
   padding: 16px 20px;
   font-size: 0.9rem;
   color: #334155;
   line-height: 1.6;
-
 }
 
-// ─── Circuits ─────────────────────────────────────────────────────────────────
+
+// ============================================================
+// CIRCUITS D'UNE CENTRALE (grille 3 colonnes)
+// ============================================================
+
+// Grille des 3 circuits : primaire, secondaire, refroidissement
 .circuits-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
+// Carte d'un circuit : fond coloré + bordure colorée selon le circuit
 .circuit-card {
   border-radius: 14px;
   padding: 24px;
@@ -295,22 +361,26 @@ $border:  #e2e8f0;
     margin: 0;
   }
 
+  // Circuit primaire : rouge clair (radioactif)
   &--primary {
     background: #fef2f2;
     border-color: #fca5a5;
   }
 
+  // Circuit secondaire : vert clair (non radioactif)
   &--secondary {
     background: #f0fdf4;
     border-color: #86efac;
   }
 
+  // Circuit tertiaire / refroidissement : bleu clair
   &--tertiary {
     background: #eff6ff;
     border-color: #93c5fd;
   }
 }
 
+// Badge "Circuit 1 / 2 / 3" en haut de chaque carte
 .circuit-badge {
   display: inline-block;
   background: rgba($blue, 0.1);
@@ -323,26 +393,33 @@ $border:  #e2e8f0;
   border-radius: 20px;
 }
 
+// Statut du circuit (Radioactif / Non radioactif)
 .circuit-status {
   font-size: 0.82rem;
   font-weight: 600;
   margin: 0 0 10px;
 
-  &.status--warning { color: #dc2626; }
-  &.status--ok      { color: #16a34a; }
+  &.status--warning { color: #dc2626; }  // rouge = radioactif
+  &.status--ok      { color: #16a34a; }  // vert  = non radioactif
 }
 
-// ─── Network chain ─────────────────────────────────────────────────────────────
+
+// ============================================================
+// CHAÎNE RÉSEAU ÉLECTRIQUE (centrale → prise)
+// ============================================================
+
+// Rangée horizontale de nœuds reliés par des connecteurs
 .network-chain {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0;
   flex-wrap: nowrap;
-  overflow-x: auto;
+  overflow-x: auto;       // défilement horizontal si nécessaire
   padding: 16px 0 32px;
 }
 
+// Nœud (centrale, réseau THT, réseau HTA, domicile)
 .network-node {
   display: flex;
   flex-direction: column;
@@ -356,11 +433,13 @@ $border:  #e2e8f0;
   text-align: center;
   box-shadow: 0 2px 8px rgba($blue, 0.07);
 
+  // Variante pour le nœud final (domicile) : bordure et fond orange clair
   &--end {
     border-color: $orange;
     background: #fff7f5;
   }
 
+  // Icône SVG du nœud (couleur bleue institutionnelle)
   .network-icon {
     width: 44px;
     height: 44px;
@@ -372,18 +451,21 @@ $border:  #e2e8f0;
     svg { width: 32px; height: 32px; }
   }
 
+  // Nom du nœud (ex : "Réseau THT")
   .network-label {
     font-size: 0.85rem;
     font-weight: 600;
     color: $blue;
   }
 
+  // Tension en orange (ex : "400 kV")
   .network-voltage {
     font-size: 1rem;
     font-weight: 700;
     color: $orange;
   }
 
+  // Acteur responsable (EDF, RTE, Enedis…) en petites capitales grises
   .network-actor {
     font-size: 0.72rem;
     color: $gray;
@@ -392,6 +474,7 @@ $border:  #e2e8f0;
   }
 }
 
+// Connecteur entre deux nœuds : ligne + flèche + libellé de transformation
 .network-connector {
   display: flex;
   flex-direction: column;
@@ -400,6 +483,7 @@ $border:  #e2e8f0;
   padding: 0 4px;
   flex-shrink: 0;
 
+  // Ligne horizontale avec dégradé bleu → orange et flèche en bout
   .connector-line {
     width: 50px;
     height: 3px;
@@ -407,6 +491,7 @@ $border:  #e2e8f0;
     border-radius: 2px;
     position: relative;
 
+    // Tête de flèche triangulaire à droite de la ligne
     &::after {
       content: '';
       position: absolute;
@@ -418,6 +503,7 @@ $border:  #e2e8f0;
     }
   }
 
+  // Libellé sous la ligne (ex : "Transformateur élévateur")
   .connector-label {
     font-size: 0.68rem;
     color: $gray;
@@ -427,20 +513,27 @@ $border:  #e2e8f0;
   }
 }
 
-// ─── Stats grid ────────────────────────────────────────────────────────────────
+
+// ============================================================
+// GRILLE DE STATISTIQUES (section chiffres clés)
+// ============================================================
+
+// Grille 3 colonnes sur fond sombre
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
+// Carte statistique individuelle : fond bleu sombre explicite (indépendant du fond de section)
 .stat-card {
-  background: rgba($white, 0.07);
-  border: 1px solid rgba($white, 0.15);
+  background: $dark;
+  border: 1px solid rgba($white, 0.1);
   border-radius: 14px;
   padding: 28px 20px;
   text-align: center;
 
+  // Grand chiffre en blanc gras
   .stat-number {
     font-size: 2.2rem;
     font-weight: 800;
@@ -449,6 +542,7 @@ $border:  #e2e8f0;
     margin-bottom: 10px;
   }
 
+  // Label descriptif en blanc atténué
   .stat-label {
     font-size: 0.82rem;
     color: rgba($white, 0.65);
@@ -456,26 +550,37 @@ $border:  #e2e8f0;
   }
 }
 
-// ─── Responsive ────────────────────────────────────────────────────────────────
+
+// ============================================================
+// RESPONSIVE
+// ============================================================
+
+// Tablette (≤ 900px) : mise en page simplifiée
 @media (max-width: 900px) {
-  .two-col-layout     { grid-template-columns: 1fr; gap: 32px; }
-  .circuits-grid      { grid-template-columns: 1fr; }
-  .stats-grid         { grid-template-columns: repeat(2, 1fr); }
+  .two-col-layout  { grid-template-columns: 1fr; gap: 32px; }  // une seule colonne
+  .circuits-grid   { grid-template-columns: 1fr; }              // circuits empilés
+  .stats-grid      { grid-template-columns: repeat(2, 1fr); }  // 2 colonnes au lieu de 3
 }
 
+// Mobile (≤ 640px) : ajustements supplémentaires
 @media (max-width: 640px) {
-  .hero-title       { font-size: 1.6rem; }
-  .info-section     { padding: 40px 16px; }
-  .steps-container  { gap: 8px; }
-  .step-arrow       { display: none; }
-  .stats-grid       { grid-template-columns: 1fr 1fr; }
-  .network-chain    { flex-direction: column; }
+  .hero-title      { font-size: 1.6rem; }
+  .info-section    { padding: 40px 16px; }
+  .steps-container { gap: 8px; }
+  .step-arrow      { display: none; }          // flèches masquées, les cartes s'empilent
+  .stats-grid      { grid-template-columns: 1fr 1fr; }
+  .network-chain   { flex-direction: column; } // chaîne réseau verticale sur mobile
+
+  // Connecteur vertical (rotation de la ligne et de la flèche)
   .network-connector {
     flex-direction: row;
+
     .connector-line {
       width: 3px;
       height: 40px;
-      background: linear-gradient(180deg, $blue, $orange);
+      background: linear-gradient(180deg, $blue, $orange); // dégradé vertical
+
+      // Flèche pointant vers le bas
       &::after {
         right: -4px;
         top: auto;
@@ -486,10 +591,12 @@ $border:  #e2e8f0;
         border-bottom: none;
       }
     }
-    .connector-label { writing-mode: horizontal-tb; }
+
+    .connector-label { writing-mode: horizontal-tb; } // libellé reste horizontal
   }
 }
 
+// Très petit écran (≤ 400px) : stats en une seule colonne
 @media (max-width: 400px) {
   .stats-grid { grid-template-columns: 1fr; }
 }

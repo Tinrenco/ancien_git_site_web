@@ -16,13 +16,13 @@
 // ============================================================
 
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
 import { DatasetService } from '../srvices/dataset.service';
 import { DataSets, DateLimits, Dispo } from '../app.component.models';
 import { CentraleComponent } from '../centrale/centrale.component';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -32,7 +32,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, CentraleComponent, TranslateModule]
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ─── État de la sélection date/heure ────────────────────────────────────
 
@@ -91,6 +91,10 @@ export class MapComponent implements OnInit, OnDestroy {
   // Tous sont annulés proprement dans ngOnDestroy().
   private subs = new Subscription();
 
+  // Nom de centrale à auto-sélectionner une fois les données chargées.
+  // Mis à jour par la souscription aux queryParams (cas carte embarquée dans /home).
+  private pendingCentrale: string | null = null;
+
   constructor(
     private datasetService: DatasetService,
     private router: Router,
@@ -113,17 +117,40 @@ export class MapComponent implements OnInit, OnDestroy {
    *   4. Charge les limites de date disponibles dans les données.
    */
   ngOnInit(): void {
-    this.initMap();
-
-    // Lecture des paramètres URL (ex : /carte?date=2025-09-01&hour=14&centrale=BUGEY)
-    // Priorité aux params URL > date/heure courante.
-    // Cela permet de partager une URL et de retrouver exactement le même état.
     const qp = this.activatedRoute.snapshot.queryParams;
-    this.selectedDate = qp['date'] || new Date().toISOString().split('T')[0];
-    this.selectedHour = qp['hour'] !== undefined ? parseInt(qp['hour'], 10) : new Date().getHours();
+    this.selectedDate    = qp['date'] || new Date().toISOString().split('T')[0];
+    this.selectedHour    = qp['hour'] !== undefined ? parseInt(qp['hour'], 10) : new Date().getHours();
+    this.pendingCentrale = qp['centrale'] || null;
 
-    this.loadCentralesOnMap();
-    this.loadDateLimits();
+    // Réagit aux changements de query params quand la carte est embarquée
+    // dans /home : l'utilisateur navigue vers /home?centrale=X depuis la
+    // barre de recherche sans que HomeComponent soit détruit/recréé.
+    this.subs.add(
+      this.activatedRoute.queryParams.subscribe(params => {
+        const c = params['centrale'];
+        if (c && c !== this.selectedCentrale?.centrale) {
+          this.pendingCentrale = c;
+          if (this.dataset.length > 0) {
+            const match = this.dataset.find(d => d.centrale === c);
+            if (match) this.selectCentrale(match);
+          }
+        }
+      })
+    );
+  }
+
+  // Leaflet nécessite que le div#map soit dans le DOM avant d'être initialisé.
+  // Quand le composant est embarqué (pas via router-outlet), le DOM du template
+  // n'est disponible qu'à partir de ngAfterViewInit, pas de ngOnInit.
+  ngAfterViewInit(): void {
+    this.initMap();
+    // Laisse le navigateur appliquer le CSS (notamment les surcharges ::ng-deep
+    // du composant parent) avant que Leaflet calcule la taille du conteneur.
+    setTimeout(() => {
+      this.map.invalidateSize();
+      this.loadCentralesOnMap();
+      this.loadDateLimits();
+    }, 0);
   }
 
   // ─── Chargement des limites de date ──────────────────────────────────────
@@ -176,12 +203,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   // ─── Helpers date/heure ──────────────────────────────────────────────────
-
-  /** Réinitialise selectedDate à la date du jour (bouton "Aujourd'hui"). */
-  private setCurrentDate(): void {
-    const today = new Date();
-    this.selectedDate = today.toISOString().split('T')[0];
-  }
 
   /** Réinitialise selectedHour à l'heure courante (bouton "Maintenant"). */
   setCurrentHour(): void {
@@ -300,12 +321,9 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         });
 
-        // Auto-sélection si l'URL contient ?centrale=NOM (ex: depuis la recherche).
-        // La condition !this.selectedCentrale évite d'écraser une sélection
-        // déjà faite par l'utilisateur lors d'un rechargement de données.
-        const centraleName = this.activatedRoute.snapshot.queryParams['centrale'];
-        if (centraleName && !this.selectedCentrale) {
-          const match = this.dataset.find(d => d.centrale === centraleName);
+        // Auto-sélection si ?centrale=NOM est présent (depuis la recherche ou URL partagée).
+        if (this.pendingCentrale && !this.selectedCentrale) {
+          const match = this.dataset.find(d => d.centrale === this.pendingCentrale);
           if (match) this.selectCentrale(match);
         }
 
