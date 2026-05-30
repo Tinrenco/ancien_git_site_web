@@ -68,8 +68,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   // Passe à true quand une centrale est sélectionnée : la carte se rétrécit
   // pour laisser la place au panneau latéral (layout CSS flex).
   isCompactView: boolean = false;
+  isHistoricalMode: boolean = false;
 
-  // Masque la carte et affiche un spinner pendant les requêtes réseau.
   isLoading: boolean = false;
 
   // ─── Limites de date disponibles ─────────────────────────────────────────
@@ -162,44 +162,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
    * s'assurer que la date corrigée est bien appliquée aux marqueurs.
    */
   private loadDateLimits(): void {
-    this.isLoading = true;
-    this.subs.add(this.datasetService.getDateLimits().subscribe({
-      next: (data: any) => {
-        // getDateLimits() retourne { total_count, results: [{ min(…), max(…) }] }
-        // On supporte aussi un tableau direct (format de secours).
-        const results = data.results || data;
-
-        try {
-          // Conversion ISO string → YYYY-MM-DD pour l'attribut min/max de <input type="date">
-          this.minDate = new Date(results[0]['min(date_et_heure_fuseau_horaire_europe_paris)']).toISOString().split('T')[0];
-          this.maxDate = new Date(results[0]['max(date_et_heure_fuseau_horaire_europe_paris)']).toISOString().split('T')[0];
-        } catch (e) {
-          // Sécurité si les clés n'existent pas dans le JSON local
-          this.minDate = '2020-01-01';
-          this.maxDate = '2030-12-31';
-        }
-
-        // Si la date sélectionnée (URL ou heure courante) est hors plage,
-        // on la ramène au bord le plus proche.
-        const currentDate  = new Date(this.selectedDate);
-        const minDateTime  = new Date(this.minDate);
-        const maxDateTime  = new Date(this.maxDate);
-
-        if (currentDate < minDateTime) {
-          this.selectedDate = this.minDate;
-        } else if (currentDate > maxDateTime) {
-          this.selectedDate = this.maxDate;
-        }
-
-        this.isLoading = false;
-        // Rechargement avec la date potentiellement corrigée
-        this.loadCentralesOnMap();
-      },
-      error: (error: any) => {
-        console.error('Erreur lors du chargement des dates limites:', error);
-        this.isLoading = false;
-      }
-    }));
+    this.minDate = `${this.datasetService.HIST_START_YEAR}-01-01`;
+    this.maxDate = new Date().toISOString().split('T')[0];
+    if (this.selectedDate > this.maxDate) this.selectedDate = this.maxDate;
+    if (this.selectedDate < this.minDate) this.selectedDate = this.minDate;
+    this.isHistoricalMode = !this.datasetService.isRecentDate(this.selectedDate);
+    this.loadCentralesOnMap();
   }
 
   // ─── Helpers date/heure ──────────────────────────────────────────────────
@@ -216,8 +184,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   onDateChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedDate = input.value;
-    console.log(`Date sélectionnée : ${this.selectedDate}`);
-    this.refreshData(); // recharge les marqueurs et met à jour l'URL
+    this.isHistoricalMode = !this.datasetService.isRecentDate(this.selectedDate);
+    this.refreshData();
   }
 
   /** Appelé quand l'utilisateur déplace le slider d'heure. */
@@ -277,11 +245,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    // Requête au service : données horaires filtrées sur date+heure+tranche1
-    this.mapSub = (this.datasetService as any).getDatasetAllRecords(
-      this.getRefinementsForNow(),
-      ['centrale', 'point_gps_modifie_pour_afficher_la_carte_opendata'],
-      "tranche like '%1'"  // clause WHERE : tranche se terminant par '1' (T1, R1…)
+    this.isHistoricalMode = !this.datasetService.isRecentDate(this.selectedDate);
+
+    this.mapSub = this.datasetService.getRecordsForDate(
+      this.selectedDate,
+      this.selectedHour,
+      undefined,
+      "tranche like '%1'"
     ).subscribe({
       next: (data: any) => {
         // Adaptation format : l'API EDF retourne { results: [] }, le JSON local

@@ -390,6 +390,18 @@ def main():
     write_json(main_recs, output_main)
     print(f"  OK — {len(main_recs):,} enregistrements")
 
+    # 4. Génération des fichiers annuels historiques (midi uniquement)
+    hist_start = 2022
+    hist_end   = _today.year - 1   # dernière année complète
+    for year in range(hist_start, hist_end + 1):
+        y_from = date(year, 1, 1)
+        y_to   = date(year, 12, 31)
+        path   = f'src/assets/donnees_{year}.json'
+        print(f"\nGénération de {path} ({year})...")
+        yearly = build_records(outages, units_info, y_from, y_to, [12])
+        write_json(yearly, path)
+        print(f"  OK — {len(yearly):,} enregistrements")
+
 
 if __name__ == '__main__':
     main()

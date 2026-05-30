@@ -183,11 +183,12 @@ export class CentraleComponent implements OnInit, OnDestroy {
 
     const refinements = this.getRefinements();
 
-    (this.datasetService as any).getDatasetAllRecords(
-      refinements,
-      ['centrale', 'tranche', 'point_gps_modifie_pour_afficher_la_carte_opendata', 'puissance_disponible'],
-      `centrale = '${this.centraleName}'`, // filtre sur le nom de la centrale
-      'tranche ASC'                         // tri alphabétique des tranches
+    this.datasetService.getRecordsForDate(
+      refinements.date_et_heure_fuseau_horaire_europe_paris[0],
+      this.selectedHour,
+      undefined,
+      `centrale = '${this.centraleName}'`,
+      'tranche ASC'
     ).subscribe({
       next: (data: any) => {
         // Adaptation format : API EDF → { results: [] } / JSON local → []

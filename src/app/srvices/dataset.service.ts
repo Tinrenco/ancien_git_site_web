@@ -21,7 +21,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 
 // @Injectable({ providedIn: 'root' }) : Angular instancie ce service
@@ -38,13 +38,16 @@ export class DatasetService {
   // donnees.json  : enregistrements horaires sur ~2 mois.
   //   Utilisé par les graphiques (histogram) qui nécessitent une
   //   granularité fine (1 point par heure).
-  private baseUrl = 'assets/donnees.json';
-
-  // donnees_daily.json : un enregistrement par jour (prise à midi).
-  //   Utilisé par la carte et les listes de centrales / tranches,
-  //   pour lesquelles une résolution journalière est suffisante et
-  //   le fichier est ~24× plus léger.
+  private baseUrl  = 'assets/donnees.json';
   private dailyUrl = 'assets/donnees_daily.json';
+
+  // Jours couverts par chaque source (pour choisir la bonne)
+  private readonly RECENT_DAYS = 62;
+  private readonly DAILY_DAYS  = 242;
+  readonly HIST_START_YEAR = 2022;
+
+  // Cache des fichiers annuels chargés à la demande
+  private yearCache = new Map<number, Observable<any[]>>();
 
   // ─── Observables de cache ───────────────────────────────────────────────────
   //
@@ -277,6 +280,120 @@ export class DatasetService {
         'max(date_et_heure_fuseau_horaire_europe_paris)': maxDate
       }]
     };
+  }
+
+  // ─── Données historiques ────────────────────────────────────────────────────
+
+  /** Charge le fichier annuel donnees_YYYY.json en le mettant en cache. */
+  getYearData(year: number): Observable<any[]> {
+    if (!this.yearCache.has(year)) {
+      this.yearCache.set(year,
+        this.http.get<any[]>(`assets/donnees_${year}.json`).pipe(
+          shareReplay(1),
+          catchError(() => of([]))
+        )
+      );
+    }
+    return this.yearCache.get(year)!;
+  }
+
+  /** Vrai si la date est couverte par donnees.json (données horaires). */
+  isRecentDate(date: string): boolean {
+    return (Date.now() - new Date(date).getTime()) / 86400000 <= this.RECENT_DAYS;
+  }
+
+  /**
+   * Méthode unifiée pour la carte et le panneau centrale.
+   * Choisit automatiquement la bonne source selon l'ancienneté de la date :
+   *  - récente  (< 62j)  → donnees.json,       heure exacte
+   *  - moyenne  (< 242j) → donnees_daily.json,  midi
+   *  - historique        → donnees_YYYY.json,   midi
+   */
+  getRecordsForDate(
+    date: string,
+    hour: number,
+    refinements?: Record<string, string[]>,
+    where?: string,
+    orderBy?: string
+  ): Observable<any[]> {
+    const daysBack  = (Date.now() - new Date(date).getTime()) / 86400000;
+    const source$   = daysBack <= this.RECENT_DAYS ? this.allData$
+                    : daysBack <= this.DAILY_DAYS  ? this.dailyData$
+                    : this.getYearData(new Date(date).getFullYear());
+    const actualHour = daysBack <= this.RECENT_DAYS ? hour : 12;
+
+    return source$.pipe(map((records: any[]) => {
+      let f = records.filter((r: any) =>
+        String(r.date_et_heure_fuseau_horaire_europe_paris ?? '').startsWith(date) &&
+        Number(r.heure_fuseau_horaire_europe_paris) === actualHour
+      );
+      if (refinements) {
+        for (const [k, vs] of Object.entries(refinements)) {
+          if (k === 'date_et_heure_fuseau_horaire_europe_paris') continue;
+          if (k === 'heure_fuseau_horaire_europe_paris') continue;
+          if (!vs?.length) continue;
+          f = f.filter((r: any) => vs.some(v => String(r[k] ?? '') === String(v)));
+        }
+      }
+      if (where?.trim()) f = this.applyWhere(f, where);
+      if (orderBy) {
+        const field = orderBy.replace(/\s+(asc|desc)$/i, '').trim();
+        const desc  = /desc$/i.test(orderBy);
+        f = [...f].sort((a: any, b: any) => {
+          if (a[field] < b[field]) return desc ? 1 : -1;
+          if (a[field] > b[field]) return desc ? -1 : 1;
+          return 0;
+        });
+      }
+      return f;
+    }));
+  }
+
+  /**
+   * Méthode pour l'histogramme : combine les fichiers annuels nécessaires
+   * quand la plage demandée dépasse donnees_daily.json.
+   */
+  getMultiYearDailyRecords(
+    refinements?: Record<string, string[]>,
+    where?: string
+  ): Observable<any[]> {
+    const fromMatch = where?.match(/date_et_heure_fuseau_horaire_europe_paris>="(\d{4}-\d{2}-\d{2})/);
+    const dateFrom  = fromMatch?.[1];
+    if (!dateFrom) return this.getDailyRecords(refinements, where);
+
+    const dailyCutoff = new Date(Date.now() - this.DAILY_DAYS * 86400000);
+    if (new Date(dateFrom) >= dailyCutoff) return this.getDailyRecords(refinements, where);
+
+    const toMatch  = where?.match(/date_et_heure_fuseau_horaire_europe_paris<="(\d{4}-\d{2}-\d{2})/);
+    const dateTo   = toMatch?.[1] || new Date().toISOString().split('T')[0];
+    const yearFrom = new Date(dateFrom).getFullYear();
+    const yearTo   = new Date(dateTo).getFullYear();
+
+    const sources: Observable<any[]>[] = [];
+    for (let y = yearFrom; y <= yearTo; y++) {
+      if (new Date(y, 11, 31) < dailyCutoff) {
+        sources.push(this.getYearData(y));
+      } else {
+        sources.push(this.dailyData$);
+        break;
+      }
+    }
+    if (sources.length === 0) return this.getDailyRecords(refinements, where);
+
+    return forkJoin(sources).pipe(
+      map((arrays: any[][]) => ([] as any[]).concat(...arrays)),
+      map((records: any[]) => {
+        let f = records;
+        if (refinements) {
+          for (const [k, vs] of Object.entries(refinements)) {
+            if (!vs?.length) continue;
+            f = f.filter((r: any) => vs.some(v => String(r[k] ?? '') === String(v)));
+          }
+        }
+        if (where?.trim()) f = this.applyWhere(f, where);
+        return f;
+      })
+    );
   }
 
   // ─── Méthodes secondaires (stubs de compatibilité) ─────────────────────────

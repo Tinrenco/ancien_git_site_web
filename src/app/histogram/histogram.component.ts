@@ -223,28 +223,11 @@ export class HistogramComponent implements OnInit, OnDestroy {
    * (tranches ou total selon l'état courant).
    */
   private loadDateLimits(): void {
-    this.isLoading = true;
-    (this.datasetService as any).getDateLimits().subscribe({
-      next: (data: any) => {
-        const results = data.results || data;
-        try {
-          this.minDate = results[0]['min(date_et_heure_fuseau_horaire_europe_paris)'].split('T')[0];
-          this.maxDate = results[0]['max(date_et_heure_fuseau_horaire_europe_paris)'].split('T')[0];
-        } catch {
-          this.minDate = '2020-01-01';
-          this.maxDate = '2030-12-31';
-        }
-
-        // Contraindre les bornes sélectionnées à la plage disponible
-        if (this.dateFrom && this.dateFrom < this.minDate) this.dateFrom = this.minDate;
-        if (this.dateTo   && this.dateTo   > this.maxDate) this.dateTo   = this.maxDate;
-
-        this.isLoading = false;
-        // Déclenche le premier rendu du graphique
-        this.selectedTranches.length > 0 ? this.chargerDonneesTranches() : this.chargerProductionTotale();
-      },
-      error: () => { this.isLoading = false; }
-    });
+    this.minDate = `${this.datasetService.HIST_START_YEAR}-01-01`;
+    this.maxDate = new Date().toISOString().split('T')[0];
+    if (this.dateFrom && this.dateFrom < this.minDate) this.dateFrom = this.minDate;
+    if (this.dateTo   && this.dateTo   > this.maxDate) this.dateTo   = this.maxDate;
+    this.selectedTranches.length > 0 ? this.chargerDonneesTranches() : this.chargerProductionTotale();
   }
 
   // ─── Mode total (parc France entier) ─────────────────────────────────────
@@ -265,8 +248,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.isChartLoading = true;
     this.chartSub?.unsubscribe(); // annule le chargement précédent si en cours
 
-    this.chartSub = (this.datasetService as any)
-      .getDatasetAllRecords({}, [], this.buildWhereCondition())
+    this.chartSub = this.datasetService.getMultiYearDailyRecords({}, this.buildWhereCondition())
       .subscribe({
         next: (data: any) => {
           const records: any[] = data.results || data;
@@ -363,9 +345,9 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.isChartLoading = true;
     this.chartSub?.unsubscribe();
 
-    this.chartSub = (this.datasetService as any)
-      .getDatasetAllRecords({ tranche: this.selectedTranches }, [], this.buildWhereCondition())
-      .subscribe({
+    this.chartSub = this.datasetService.getMultiYearDailyRecords(
+      { tranche: this.selectedTranches }, this.buildWhereCondition()
+    ).subscribe({
         next: (data: any) => {
           const records: any[] = data.results || data;
           this.datasets = { results: records } as DataSets;

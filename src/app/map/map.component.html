@@ -23,14 +23,14 @@
           />
         </div>
 
-        <div class="control-item time-picker">
+        <div class="control-item time-picker" [class.historical-mode]="isHistoricalMode">
           <label for="timeRange">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12 6 12 12 16 14"/>
             </svg>
-            {{ 'MAP.TIME_LABEL' | translate }}: 
-            <span class="time-label">{{ selectedHour | number:'2.0' }}:00</span>
+            {{ 'MAP.TIME_LABEL' | translate }}:
+            <span class="time-label">{{ isHistoricalMode ? '12' : (selectedHour | number:'2.0') }}:00</span>
           </label>
           <input
             type="range"
@@ -41,7 +41,11 @@
             step="1"
             [value]="selectedHour"
             (input)="onTimeChange($event)"
+            [disabled]="isHistoricalMode"
           />
+          <p *ngIf="isHistoricalMode" class="historical-note">
+            {{ 'MAP.HISTORICAL_NOTE' | translate }}
+          </p>
         </div>
       </div>
     </div>

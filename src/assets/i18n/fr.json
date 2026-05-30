@@ -10,7 +10,8 @@
       "DATE_LABEL": "Date",
       "TIME_LABEL": "Heure",
       "LOADING_MESSAGE": "Chargement des données...",
-      "HOUR_LABEL": "Heure"
+      "HOUR_LABEL": "Heure",
+      "HISTORICAL_NOTE": "Données historiques — résolution journalière (midi)"
     },
     "HISTOGRAM": {
       "CENTRALE_LABEL": "Site nucléaire",
