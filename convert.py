@@ -28,7 +28,7 @@ from datetime import date, datetime, timedelta, timezone
 
 # ─── Chemins des fichiers d'entrée et de sortie ───────────────────────────────
 
-INPUT_FILE   = 'indisponibilites_nucleaire_final.csv'
+INPUT_FILE   = 'donnees_edf.csv'
 output_main  = 'src/assets/donnees.json'
 output_daily = 'src/assets/donnees_daily.json'
 
@@ -276,7 +276,7 @@ def load_outages(csv_path):
         f = open(csv_path, encoding='latin-1')
 
     with f:
-        reader = csv.DictReader(f, delimiter=';')
+        reader = csv.DictReader(f, delimiter=',')
         for row in reader:
             pub_id = row.get('publication_id', '').strip()
             if not pub_id:

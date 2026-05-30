@@ -29,6 +29,8 @@
       "FULL_PERIOD": "Toute la période",
       "TOTAL_MODE_TITLE": "Production nucléaire totale — France",
       "TOTAL_MODE_SUBTITLE": "Sélectionnez une centrale et une tranche pour afficher les données détaillées",
+      "TRANCHES_SELECTED": "tranches sélectionnées",
+      "EXPORT_CSV": "Exporter CSV",
       "TOTAL_CHART_TITLE": "Disponibilité nucléaire totale — France",
       "TOTAL_CHART_SUBTITLE": "Puissance disponible cumulée de toutes les tranches (MW)",
       "TOTAL_SERIES_NAME": "Puissance totale (MW)",
