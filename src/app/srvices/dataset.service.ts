@@ -325,55 +325,65 @@ export class DatasetService {
    * Calcule une série temporelle (un point par jour à midi) pour une liste de tranches.
    * Utilisé par le graphique historique de l'histogramme.
    */
+  // Résolution adaptive : horaire si ≤ 31 jours, journalière sinon
+  private readonly HOURLY_THRESHOLD_DAYS = 31;
+
+  private buildTimestamps(dateFrom: string, dateTo: string): number[] {
+    const days = (new Date(dateTo).getTime() - new Date(dateFrom).getTime()) / 86400000;
+    const hourly = days <= this.HOURLY_THRESHOLD_DAYS;
+    const ts: number[] = [];
+    const cur = hourly
+      ? new Date(`${dateFrom}T00:00:00`)
+      : new Date(`${dateFrom}T12:00:00`);
+    const end = hourly
+      ? new Date(`${dateTo}T23:00:00`)
+      : new Date(`${dateTo}T12:00:00`);
+    while (cur <= end) {
+      ts.push(cur.getTime());
+      hourly ? cur.setHours(cur.getHours() + 1) : cur.setDate(cur.getDate() + 1);
+    }
+    return ts;
+  }
+
   getTimeSeriesForTranches(
     tranches: string[],
     dateFrom: string,
     dateTo: string
   ): Observable<{tranche: string; series: [number, number][]}[]> {
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
-      map(([byUnit, units]) =>
-        tranches.map(name => {
+      map(([byUnit, units]) => {
+        const timestamps = this.buildTimestamps(dateFrom, dateTo);
+        return tranches.map(name => {
           const unit    = (units as any[]).find(u => u.unit === name);
           const nominal = unit?.nominal ?? 0;
           const evs     = byUnit.get(name) ?? [];
-          const series: [number, number][] = [];
-
-          const cur = new Date(`${dateFrom}T12:00:00`);
-          const end = new Date(`${dateTo}T12:00:00`);
-          while (cur <= end) {
-            const ts       = cur.getTime();
+          const series: [number, number][] = timestamps.map(ts => {
             const covering = evs.filter(e => e.b <= ts && e.e >= ts);
-            series.push([ts, covering.length > 0 ? Math.min(...covering.map(e => e.a)) : nominal]);
-            cur.setDate(cur.getDate() + 1);
-          }
+            return [ts, covering.length > 0 ? Math.min(...covering.map(e => e.a)) : nominal];
+          });
           return { tranche: name, series };
-        })
-      )
+        });
+      })
     );
   }
 
   /**
-   * Calcule la production totale France (somme de tous les réacteurs) jour par jour.
-   * Utilisé par le mode "total" de l'histogramme.
+   * Calcule la production totale France (somme de tous les réacteurs).
+   * Résolution horaire si la plage ≤ 31 jours, journalière sinon.
    */
   getTotalProductionSeries(dateFrom: string, dateTo: string): Observable<[number, number][]> {
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
       map(([byUnit, units]) => {
-        const series: [number, number][] = [];
-        const cur = new Date(`${dateFrom}T12:00:00`);
-        const end = new Date(`${dateTo}T12:00:00`);
-        while (cur <= end) {
-          const ts = cur.getTime();
+        const timestamps = this.buildTimestamps(dateFrom, dateTo);
+        return timestamps.map(ts => {
           let total = 0;
           for (const unit of (units as any[])) {
             const evs      = byUnit.get(unit.unit) ?? [];
             const covering = evs.filter(e => e.b <= ts && e.e >= ts);
             total += covering.length > 0 ? Math.min(...covering.map(e => e.a)) : unit.nominal;
           }
-          series.push([ts, total]);
-          cur.setDate(cur.getDate() + 1);
-        }
-        return series;
+          return [ts, total] as [number, number];
+        });
       })
     );
   }

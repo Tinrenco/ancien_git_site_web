@@ -307,7 +307,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
       },
       series: [{ type: 'area', name: seriesName, data: series }],
       tooltip: {
-        xDateFormat:  '%e %B %Y',
+        xDateFormat:  series.length > 0 && (series[1]?.[0] - series[0]?.[0]) < 86400000 ? '%e %B %Y %H:%M' : '%e %B %Y',
         shared:       true,
         useHTML:      true,
         headerFormat: '<small>{point.key}</small><br/>',
@@ -417,7 +417,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
       legend: { enabled: !isSingle, itemStyle: { color: '#003366' } },
       series,
       tooltip: {
-        xDateFormat:  '%e %B %Y',
+        xDateFormat:  series.length > 0 && (series[1]?.[0] - series[0]?.[0]) < 86400000 ? '%e %B %Y %H:%M' : '%e %B %Y',
         shared:       true,
         useHTML:      true,
         headerFormat: '<small>{point.key}</small><br/>',
