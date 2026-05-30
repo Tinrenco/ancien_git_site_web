@@ -32,6 +32,8 @@
       "TOTAL_MODE_SUBTITLE": "Sélectionnez une centrale et une tranche pour afficher les données détaillées",
       "TRANCHES_SELECTED": "tranches sélectionnées",
       "EXPORT_CSV": "Exporter CSV",
+      "NOTE_HOURLY": "Résolution horaire — plage ≤ 31 jours : idéal pour suivre l'évolution en temps réel.",
+      "NOTE_DAILY": "Résolution journalière — plage > 31 jours : vue d'ensemble de l'évolution long terme.",
       "TOTAL_CHART_TITLE": "Disponibilité nucléaire totale — France",
       "TOTAL_CHART_SUBTITLE": "Puissance disponible cumulée de toutes les tranches (MW)",
       "TOTAL_SERIES_NAME": "Puissance totale (MW)",

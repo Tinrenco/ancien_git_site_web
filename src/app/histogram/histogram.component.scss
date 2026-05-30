@@ -313,3 +313,17 @@ input[type="date"].form-control {
   z-index: 1000;
   border-radius: 8px;
 }
+.resolution-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 4px;
+  padding: 7px 12px;
+  background: #eff6ff;
+  border-left: 3px solid #12356D;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.82rem;
+  color: #334155;
+
+  svg { flex-shrink: 0; color: #12356D; }
+}

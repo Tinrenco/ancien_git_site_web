@@ -137,6 +137,14 @@ export class HistogramComponent implements OnInit, OnDestroy {
     return !this.dateFrom && !this.dateTo;
   }
 
+  get isHourlyMode(): boolean {
+    const from = this.dateFrom || this.minDate;
+    const to   = this.dateTo   || this.maxDate;
+    if (!from || !to) return false;
+    const days = (new Date(to).getTime() - new Date(from).getTime()) / 86400000;
+    return days <= 31;
+  }
+
   /**
    * Retourne la couleur d'une tranche par son index dans selectedTranches.
    * Utilisé pour colorier les puces (color dots) des checkboxes dans le template.
