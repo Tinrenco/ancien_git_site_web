@@ -6,13 +6,6 @@
     <nav class="main-nav">
       <div class="primary-nav">
 
-        <!-- Logo EDF cliquable qui redirige vers le site officiel EDF -->
-        <div class="logo-container">
-          <a href="https://www.edf.fr" target="_blank">
-            <img src="logoEDF.png" alt="EDF Logo" class="logo">
-          </a>
-        </div>
-
         <!-- Liens de navigation principaux (Accueil, Données, Le nucléaire) -->
         <div class="center-nav">
           <a routerLink="/home" routerLinkActive="active" class="nav-link">{{ 'NAV.HOME' | translate }}</a>
@@ -40,13 +33,6 @@
   <div class="nav-container">
     <nav class="main-nav">
       <div class="primary-nav">
-
-        <!-- Logo EDF cliquable qui redirige vers le site officiel EDF -->
-        <div class="logo-container">
-          <a href="https://www.edf.fr" target="_blank">
-            <img src="logoEDF.png" alt="EDF Logo" class="logo">
-          </a>
-        </div>
 
         <!-- Wrapper regroupant les liens de navigation et le sélecteur de langue -->
         <div class="nav-bottom-wrapper">
@@ -83,14 +69,6 @@
   <!-- Corps du footer : logo, colonnes de liens, bouton contact -->
   <div class="footer-body">
 
-    <!-- Bloc marque : logo EDF + courte description du projet -->
-    <div class="footer-brand">
-      <a href="https://www.edf.fr" target="_blank">
-        <img src="logoEDF.png" alt="EDF Logo" class="footer-logo">
-      </a>
-      <p class="footer-brand-desc">{{ 'APP.FOOTER_BRAND_DESC' | translate }}</p>
-    </div>
-
     <!-- Colonnes de liens internes et ressources externes -->
     <div class="footer-cols">
 
@@ -100,6 +78,7 @@
         <ul class="footer-links">
           <!-- Ouvre la modale "À propos du projet" -->
           <li><button class="footer-link-btn" (click)="showAbout = true">{{ 'APP.FOOTER_ABOUT_BTN' | translate }}</button></li>
+           <li><button class="footer-link-btn" (click)="showAbout = true">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</button></li>
         </ul>
       </div>
 
