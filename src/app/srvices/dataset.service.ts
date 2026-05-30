@@ -349,7 +349,7 @@ export class DatasetService {
     tranches: string[],
     dateFrom: string,
     dateTo: string
-  ): Observable<{tranche: string; series: [number, number][]}[]> {
+  ): Observable<{tranche: string; series: [number, number][]; nominal: number}[]> {
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
       map(([byUnit, units]) => {
         const timestamps = this.buildTimestamps(dateFrom, dateTo);
@@ -361,7 +361,7 @@ export class DatasetService {
             const covering = evs.filter(e => e.b <= ts && e.e >= ts);
             return [ts, covering.length > 0 ? Math.min(...covering.map(e => e.a)) : nominal];
           });
-          return { tranche: name, series };
+          return { tranche: name, series, nominal };
         });
       })
     );
@@ -369,13 +369,18 @@ export class DatasetService {
 
   /**
    * Calcule la production totale France (somme de tous les réacteurs).
+   * Retourne aussi la puissance nominale totale pour la ligne de référence.
    * Résolution horaire si la plage ≤ 31 jours, journalière sinon.
    */
-  getTotalProductionSeries(dateFrom: string, dateTo: string): Observable<[number, number][]> {
+  getTotalProductionSeries(
+    dateFrom: string,
+    dateTo: string
+  ): Observable<{series: [number, number][]; totalNominal: number}> {
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
       map(([byUnit, units]) => {
-        const timestamps = this.buildTimestamps(dateFrom, dateTo);
-        return timestamps.map(ts => {
+        const timestamps   = this.buildTimestamps(dateFrom, dateTo);
+        const totalNominal = (units as any[]).reduce((s, u) => s + (u.nominal ?? 0), 0);
+        const series: [number, number][] = timestamps.map(ts => {
           let total = 0;
           for (const unit of (units as any[])) {
             const evs      = byUnit.get(unit.unit) ?? [];
@@ -384,6 +389,7 @@ export class DatasetService {
           }
           return [ts, total] as [number, number];
         });
+        return { series, totalNominal };
       })
     );
   }

@@ -34,6 +34,7 @@
       "EXPORT_CSV": "Export CSV",
       "NOTE_HOURLY": "Hourly resolution — range ≤ 31 days: ideal for real-time monitoring.",
       "NOTE_DAILY": "Daily resolution — range > 31 days: overview of long-term trends.",
+      "NOMINAL_LABEL": "Nominal power",
       "TOTAL_CHART_TITLE": "Total nuclear availability — France",
       "TOTAL_CHART_SUBTITLE": "Cumulative available power of all units (MW)",
       "TOTAL_SERIES_NAME": "Total power (MW)",

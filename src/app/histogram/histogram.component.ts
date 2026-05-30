@@ -106,8 +106,9 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
   // Cache des données de la dernière requête, pour le re-rendu
   // sans re-requête (ex: changement de langue).
-  private totalSeries: [number, number][] = [];
-  private tranchesData: { tranche: string; series: [number, number][] }[] = [];
+  private totalSeries:    [number, number][]  = [];
+  private totalNominal:   number = 0;
+  private tranchesData:   { tranche: string; series: [number, number][]; nominal: number }[] = [];
 
   // ─── Highcharts ──────────────────────────────────────────────────────────
 
@@ -265,8 +266,9 @@ export class HistogramComponent implements OnInit, OnDestroy {
     const from = this.dateFrom || this.minDate;
     const to   = this.dateTo   || this.maxDate;
     this.chartSub = this.datasetService.getTotalProductionSeries(from, to).subscribe({
-      next: (series) => {
-        this.totalSeries = series;
+      next: ({ series, totalNominal }) => {
+        this.totalSeries  = series;
+        this.totalNominal = totalNominal;
         this.afficherProductionTotale(series);
         setTimeout(() => { this.isChartLoading = false; }, 0);
       },
@@ -285,27 +287,37 @@ export class HistogramComponent implements OnInit, OnDestroy {
     const chartSubtitle = this.translate.instant('HISTOGRAM.TOTAL_CHART_SUBTITLE');
     const yAxisTitle    = this.translate.instant('HISTOGRAM.Y_AXIS_TITLE');
     const seriesName    = this.translate.instant('HISTOGRAM.TOTAL_SERIES_NAME');
+    const nominalLabel  = this.translate.instant('HISTOGRAM.NOMINAL_LABEL');
+
+    const nominalPlotLine: Highcharts.YAxisPlotLinesOptions[] = this.totalNominal > 0 ? [{
+      value:     this.totalNominal,
+      color:     '#12356D',
+      dashStyle: 'Dash',
+      width:     1.5,
+      label: {
+        text:  `${nominalLabel}: ${Math.round(this.totalNominal).toLocaleString()} MW`,
+        align: 'right',
+        style: { color: '#12356D', fontSize: '11px' }
+      }
+    }] : [];
 
     this.chartOptions = {
-      chart: {
-        zooming: { type: 'x' },  // zoom horizontal par sélection de plage
-        backgroundColor: '#FFFFFF'
-      },
+      chart: { zooming: { type: 'x' }, backgroundColor: '#FFFFFF' },
       title:    { text: chartTitle,    style: { color: '#003366', fontWeight: 'bold' } },
       subtitle: { text: chartSubtitle, style: { color: '#003366' } },
       xAxis: { type: 'datetime', labels: { style: { color: '#003366' } } },
       yAxis: {
-        title:  { text: yAxisTitle, style: { color: '#003366' } },
-        labels: { style: { color: '#003366' } },
-        min: 0  // l'axe Y ne descend jamais en dessous de 0 MW
+        title:     { text: yAxisTitle, style: { color: '#003366' } },
+        labels:    { style: { color: '#003366' } },
+        min:       0,
+        plotLines: nominalPlotLine
       },
-      legend: { enabled: false }, // inutile pour une seule série
+      legend: { enabled: false },
       plotOptions: {
         area: {
           marker:    { radius: 2 },
           lineWidth: 2,
           color:     '#FF7300',
-          // Dégradé vertical orange → transparent
           fillColor: {
             linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
             stops: [[0, 'rgba(255,115,0,0.5)'], [1, 'rgba(255,115,0,0.05)']]
@@ -322,7 +334,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
         pointFormat:  '● {series.name}: <b>{point.y:.0f} MW</b><br/>'
       }
     };
-    this.updateChart = true; // déclenche le re-rendu Highcharts
+    this.updateChart = true;
   }
 
   // ─── Mode multi-tranches ──────────────────────────────────────────────────
@@ -381,11 +393,12 @@ export class HistogramComponent implements OnInit, OnDestroy {
     const yAxisTitle = this.translate.instant('HISTOGRAM.Y_AXIS_TITLE');
 
     // Construction des séries Highcharts
+    const nominalLabel = this.translate.instant('HISTOGRAM.NOMINAL_LABEL');
+
     const series: Highcharts.SeriesOptionsType[] = this.tranchesData.map((td, i) => {
       const color = this.SERIES_COLORS[i % this.SERIES_COLORS.length];
 
       if (isSingle) {
-        // Tranche unique : area chart avec dégradé orange (même style que le total)
         return {
           type: 'area',
           name: td.tranche,
@@ -399,7 +412,6 @@ export class HistogramComponent implements OnInit, OnDestroy {
           marker: { radius: 4, fillColor: '#003366', lineWidth: 2, lineColor: '#003366' }
         } as Highcharts.SeriesAreaOptions;
       } else {
-        // Multi-tranches : lignes colorées pour distinguer visuellement chaque tranche
         return {
           type: 'line',
           name: td.tranche,
@@ -411,6 +423,26 @@ export class HistogramComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Série en tirets pour la puissance nominale de chaque tranche
+    const nominalSeries: Highcharts.SeriesOptionsType[] = this.tranchesData
+      .filter(td => td.nominal > 0 && td.series.length >= 2)
+      .map((td, i) => {
+        const color = this.SERIES_COLORS[i % this.SERIES_COLORS.length];
+        const start = td.series[0][0];
+        const end   = td.series[td.series.length - 1][0];
+        return {
+          type:               'line',
+          name:               isSingle ? `${nominalLabel} (${td.nominal} MW)` : `${td.tranche} — ${nominalLabel}`,
+          data:               [[start, td.nominal], [end, td.nominal]] as [number, number][],
+          color,
+          dashStyle:          'Dash',
+          lineWidth:          1.5,
+          marker:             { enabled: false },
+          enableMouseTracking: false,
+          showInLegend:       true
+        } as Highcharts.SeriesLineOptions;
+      });
+
     this.chartOptions = {
       chart: { zooming: { type: 'x' }, backgroundColor: '#FFFFFF' },
       title:    { text: chartTitle,    style: { color: '#003366', fontWeight: 'bold' } },
@@ -421,9 +453,8 @@ export class HistogramComponent implements OnInit, OnDestroy {
         labels: { style: { color: '#003366' } },
         min: 0
       },
-      // Légende visible uniquement en mode multi-tranches (isSingle = false)
-      legend: { enabled: !isSingle, itemStyle: { color: '#003366' } },
-      series,
+      legend: { enabled: true, itemStyle: { color: '#003366' } },
+      series: [...series, ...nominalSeries],
       tooltip: {
         xDateFormat:  '%e %B %Y %H:%M',
         shared:       true,
