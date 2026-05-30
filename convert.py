@@ -51,7 +51,7 @@ DATE_FROM_MAIN  = _today - timedelta(days=60)    # ~2 mois en arrière
 # (accessible avec les identifiants fournis par EDF)
 
 API_BASE       = "https://opendata.edf.fr/data-fair/api/v1"
-API_DATASET_ID = "haqk2fpmdz21sjiwhva-0n2x"
+API_DATASET_ID = "4wsb2p5ghkbutlyrnqjmgazo"
 API_PAGE_SIZE  = 10000   # nombre max d'enregistrements par page
 
 
@@ -140,35 +140,20 @@ def get_api_token():
 def load_outages_from_api(api_token):
     """
     Récupère toutes les indisponibilités nucléaires depuis l'API EDF.
-
-    Algorithme :
-      1. Pagination : on récupère API_PAGE_SIZE enregistrements à la fois
-         jusqu'à avoir tout le dataset (filtre filiere=Nucléaire).
-      2. Exclusion : on filtre les statuts invalides (annulés, inactifs).
-      3. Déduplication : pour chaque identifiant d'événement, on ne garde
-         que la ligne avec le numéro de version le plus élevé.
-      4. Construction : on retourne la même structure que load_outages()
-         pour que build_records() fonctionne sans modification.
-
-    Retourne : (outages, units_info)
-      - outages    : [{'unit', 'begin', 'end', 'available'}, ...]
-      - units_info : {'CHOOZ 1': 1500.0, 'PALUEL 2': 1300.0, ...}
+    Pagination par curseur _i, header x-apiKey.
+    Retourne (outages, units_info) dans le même format que load_outages().
     """
     all_records = []
-    after       = None   # curseur de pagination (valeur _i du dernier enregistrement)
+    after       = None
 
     print("  Connexion a l'API EDF Open Data...")
     while True:
-        # Filtre sur la filière nucléaire (accent encodé correctement par urlencode)
-        params: dict = {
-            "size":    API_PAGE_SIZE,
-            "filiere": "Nucléaire",   # "Nucléaire" — URL-encodé par urlencode
-        }
+        params: dict = {"size": API_PAGE_SIZE}
         if after is not None:
-            params["after"] = after   # pagination curseur (data-fair)
+            params["after"] = after
 
         url = f"{API_BASE}/datasets/{API_DATASET_ID}/lines?{urllib.parse.urlencode(params)}"
-        req = urllib.request.Request(url, headers={"Authorization": f"Basic {api_token}"})
+        req = urllib.request.Request(url, headers={"x-apiKey": api_token})
 
         with urllib.request.urlopen(req) as resp:
             data = json.loads(resp.read().decode("utf-8"))
@@ -178,81 +163,67 @@ def load_outages_from_api(api_token):
         total = data.get("total", 0)
         print(f"    {len(all_records)}/{total} enregistrements recuperes...")
 
-        # Fin de pagination : dernière page si la réponse est incomplète
         if not results or len(results) < API_PAGE_SIZE:
             break
 
-        # Curseur pour la page suivante : valeur _i du dernier enregistrement
         after = results[-1].get("_i")
 
-    # Exclusion des statuts invalides
-    valid = [
-        r for r in all_records
-        if r.get("status", "").strip() not in EXCLUDED_STATUSES
-        and "annul" not in r.get("status", "").lower()
-    ]
-
-    # Déduplication : on garde la version la plus récente par identifiant
+    # Déduplication : on garde la version la plus récente par publication_id
     best = {}
-    for r in valid:
-        ident = r.get("identifiant", "")
-        ver   = r.get("numero_de_version", 0) or 0
-        if ident not in best or ver > (best[ident].get("numero_de_version", 0) or 0):
-            best[ident] = r
-
-    # Construction de outages et units_info
-    outages    = []
     units_info = {}
 
-    for r in best.values():
-        unit = r.get("nom", "").strip()
-        if not unit:
+    for r in all_records:
+        pub_id = str(r.get("publication_id", "")).strip()
+        if not pub_id:
             continue
 
-        # Filtrer les centrales non-nucléaires : seules celles présentes dans
-        # le dictionnaire GPS (centrales nucléaires françaises connues) sont gardées.
-        # Le filtre filiere=Nucléaire envoyé à l'API est ignoré par le serveur,
-        # ce qui ramène aussi des centrales hydrauliques, BESS, etc.
-        if not gps_for(get_centrale(unit)):
-            continue
-
-        # Puissance nominale : on prend le max rencontré pour cette unité
+        ver = r.get("version", 0) or 0
         try:
-            nom = float(r.get("puissance_maximale_mw") or 0)
+            ver = int(ver)
         except (ValueError, TypeError):
-            nom = 0.0
-        if nom > 0:
-            units_info[unit] = max(units_info.get(unit, 0), nom)
+            ver = 0
 
-        # Dates de début et de fin de l'indisponibilité
-        begin = parse_dt(r.get("date_de_debut", ""))
-        end   = parse_dt(r.get("date_de_fin",   ""))
+        unit_name = str(r.get("unit_name", "")).strip()
+        if unit_name:
+            try:
+                nom = float(r.get("nominal_capacity_mw") or 0)
+                if nom > 0:
+                    units_info[unit_name] = max(units_info.get(unit_name, 0), nom)
+            except (ValueError, TypeError):
+                pass
+
+        if ver > best.get(pub_id, {}).get("_ver", -1):
+            best[pub_id] = {**r, "_ver": ver}
+
+    outages = []
+    for r in best.values():
+        status = str(r.get("outage_status", "")).strip()
+        if status in EXCLUDED_STATUSES or "annul" in status.lower():
+            continue
+
+        unit_name = str(r.get("unit_name", "")).strip()
+        if not unit_name:
+            continue
+
+        begin = parse_dt(str(r.get("outage_begin_dt_utc", "")))
+        end   = parse_dt(str(r.get("outage_end_dt_utc",   "")))
         if not begin or not end or end <= begin:
             continue
 
-        # Puissance disponible pendant l'indisponibilité.
-        # Si puissance_maximale_mw = 0 dans ce record, c'est une publication
-        # REMIT incomplète (placeholder sans données de puissance) : on l'ignore
-        # pour ne pas affecter le calcul de disponibilité avec de faux 0 MW.
         try:
-            nom_record = float(r.get("puissance_maximale_mw") or 0)
+            nom_record = float(r.get("nominal_capacity_mw") or 0)
         except (ValueError, TypeError):
             nom_record = 0.0
 
         if nom_record == 0:
-            continue  # publication placeholder — pas de données fiables
+            continue
 
         try:
-            avail = float(r.get("puissance_disponible_mw") or 0)
+            avail = float(r.get("available_capacity_mw") or 0)
         except (ValueError, TypeError):
             avail = 0.0
 
-        outages.append({
-            "unit":      unit,
-            "begin":     begin,
-            "end":       end,
-            "available": avail,
-        })
+        outages.append({"unit": unit_name, "begin": begin, "end": end, "available": avail})
 
     return outages, units_info
 
