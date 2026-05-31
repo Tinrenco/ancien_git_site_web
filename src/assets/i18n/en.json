@@ -128,7 +128,7 @@
       "ABOUT_S3_P1": "A pair of students retrieved raw data from official sources <strong>ENTSO-E</strong> and <strong>RTE</strong>. This data was then cleaned, formatted and published on EDF's Open Data platform.",
       "ABOUT_S3_P2": "The data visible on this site comes directly from <a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">EDF Open Data</a>, accessed via an API key made available by the EDF team as part of this partnership.",
       "ABOUT_S4_TITLE": "Technical source",
-      "ABOUT_S4_P1": "Unit unavailability data is accessible via: <a href=\"https://data.rte-france.com/catalog/-/api/generation/Unavailability-Additional-Information/v4.1\" target=\"_blank\" class=\"modal-link\">RTE Data API</a>. It is updated at the beginning of each hour.",
+      "ABOUT_S4_P1": "Unit unavailability data is accessible via: <a href=\"https://opendata.edf.fr/datasets/indisponibilites-des-moyens-de-production-edf-sa\" target=\"_blank\" class=\"modal-link\">unavailability of EDF's production facilities SA</a>. It is updated at the beginning of each hour.",
       "ABOUT_S4_P2": "Official EDF publications (REMIT regulation): <a href=\"https://doaat.edf.fr/indisponibilites/list\" target=\"_blank\" class=\"modal-link\">EDF REMIT</a>.",
       "ABOUT_NOTE": "The information provided is for informational purposes only. This site cannot replace EDF's official publications.",
       "CONTACT_TITLE": "Contact us",
