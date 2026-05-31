@@ -78,7 +78,8 @@
         <ul class="footer-links">
           <!-- Ouvre la modale "À propos du projet" -->
           <li><button class="footer-link-btn" (click)="showAbout = true">{{ 'APP.FOOTER_ABOUT_BTN' | translate }}</button></li>
-           <li><button class="footer-link-btn" (click)="showAbout = true">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</button></li>
+           <!-- Ouvre la modale "Mentions légales" -->
+           <li><button class="footer-link-btn" (click)="showLegal = true">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</button></li>
         </ul>
       </div>
 
@@ -203,6 +204,35 @@
     <!-- Note de bas de modale : avertissement sur la nature indicative des données -->
     <section class="modal-note">
       <p>{{ 'APP.ABOUT_NOTE' | translate }}</p>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     MODALE "MENTIONS LEGALES"
+     Affichée quand showLegal = true
+     Clic sur l'overlay ferme la modale
+     ============================================================ -->
+<div class="modal-overlay" *ngIf="showLegal" (click)="showLegal = false">
+
+  <!-- 
+    BOÎTE CENTRALE (Le contenu)
+    - $event.stopPropagation() : C'est une sécurité. Cela empêche le clic à l'intérieur de la boîte blanche de "remonter" jusqu'à l'overlay et de fermer la modale accidentellement quand on clique sur le texte.
+  -->
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <!-- Bouton "Croix" en haut à droite pour fermer la modale -->
+    <button class="modal-close" (click)="showLegal = false">&times;</button>
+    
+    <!-- Titre principal de la modale ("Mentions Légales") récupéré dans le dictionnaire via ngx-translate -->
+    <h2 class="modal-title">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</h2>
+
+
+    <!-- Section 3 : Responsabilité (Le grand paragraphe concernant EDF) -->
+    <section class="modal-section">
+      <h3>{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</h3>
+      <p [innerHTML]="'APP.FOOTER_LEGAL_TEXT' | translate"></p>
     </section>
 
   </div>

@@ -80,6 +80,7 @@ export class AppComponent {
   // showAbout   : affiche/cache la modale "À propos du projet".
   // showContact : affiche/cache la modale "Nous contacter".
   showAbout   = false;
+  showLegal   = false;
   showContact = false;
 
   // Indique si l'email de contact a été ouvert (pour afficher un message
