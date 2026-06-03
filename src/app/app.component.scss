@@ -33,30 +33,17 @@ $nav-height:  70px;                     // hauteur fixe de la barre desktop
 
 .main-nav {
   .primary-nav {
-    // Disposition horizontale : logo | liens centrés | sélecteur langue
+    // Disposition horizontale : liens centrés | sélecteur langue absolu à droite
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    position: relative;
     padding: 0 32px;
     height: $nav-height;
     background: $nav-bg;
 
-    // ── Logo EDF ──────────────────────────────────────────
-    .logo-container {
-      width: 140px;
-      display: flex;
-      align-items: center;
-
-      .logo {
-        height: 36px;
-        transition: opacity 0.2s;
-        &:hover { opacity: 0.85; } // légère transparence au survol
-      }
-    }
-
-    // ── Liens de navigation (zone centrale) ───────────────
+    // ── Liens de navigation (vrais centrés sur toute la largeur) ──
     .center-nav {
-      flex: 1;           // occupe tout l'espace disponible entre logo et langue
       display: flex;
       justify-content: center;
       height: 100%;
@@ -102,11 +89,13 @@ $nav-height:  70px;                     // hauteur fixe de la barre desktop
       }
     }
 
-    // ── Groupe sélecteur de langue (aligné à droite) ──────
+    // ── Sélecteur de langue — absolu à droite pour ne pas décaler les liens ──
     .nav-group {
-      width: 120px;
+      position: absolute;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      justify-content: flex-end;
       align-items: center;
     }
   }

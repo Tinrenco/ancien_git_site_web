@@ -113,7 +113,7 @@
     <span class="footer-copy">{{ 'APP.FOOTER_BOTTOM' | translate }}</span>
     <!-- Liens légaux séparés par un pipe -->
     <div class="footer-legal">
-      <button class="footer-legal-btn" (click)="showAbout = true">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</button>
+      <button class="footer-legal-btn" (click)="showLegal = true">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</button>
       <span class="footer-sep">|</span>
       <button class="footer-legal-btn" (click)="showContact = true">{{ 'APP.FOOTER_LEGAL_CONTACT' | translate }}</button>
     </div>
@@ -203,7 +203,7 @@
 
     <!-- Note de bas de modale : avertissement sur la nature indicative des données -->
     <section class="modal-note">
-      <p>{{ 'APP.ABOUT_NOTE' | translate }}</p>
+      <p [innerHTML]="'APP.ABOUT_NOTE' | translate"></p>
     </section>
 
   </div>
@@ -229,9 +229,8 @@
     <h2 class="modal-title">{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</h2>
 
 
-    <!-- Section 3 : Responsabilité (Le grand paragraphe concernant EDF) -->
+    <!-- Section : Responsabilité (Le grand paragraphe concernant EDF) -->
     <section class="modal-section">
-      <h3>{{ 'APP.FOOTER_LEGAL_ABOUT' | translate }}</h3>
       <p [innerHTML]="'APP.FOOTER_LEGAL_TEXT' | translate"></p>
     </section>
 
