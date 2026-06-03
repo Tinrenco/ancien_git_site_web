@@ -490,6 +490,33 @@ $nav-height:  70px;                     // hauteur fixe de la barre desktop
   }
 }
 
+// Bloc disclaimer EDF (obligatoire) : fond bleu très clair avec bordure gauche bleue
+.modal-disclaimer {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+  padding: 14px 16px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+
+  h3 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1d4ed8;
+    margin: 0 0 10px;
+  }
+
+  p {
+    color: #1e3a5f;
+    line-height: 1.7;
+    margin: 0 0 8px;
+    font-size: 0.9rem;
+
+    &:last-child { margin-bottom: 0; }
+  }
+}
+
 // Note de bas de modale : fond gris clair avec bordure gauche
 .modal-note {
   background: #f8fafc;

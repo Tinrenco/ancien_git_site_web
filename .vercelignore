@@ -1,0 +1,9 @@
+node_modules
+dist
+.angular
+__pycache__
+export_ods.csv
+export_ods.csv.zip
+indisponibilites_nucleaire_final.csv
+convert.py
+docs

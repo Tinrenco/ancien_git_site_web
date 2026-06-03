@@ -142,7 +142,10 @@
       "CONTACT_MSG_PH": "Describe your request...",
       "CONTACT_SEND": "Send message",
       "CONTACT_SUCCESS": "Message sent! We will get back to you as soon as possible.",
-      "CONTACT_CLOSE": "Close"
+      "CONTACT_CLOSE": "Close",
+      "ABOUT_S5_TITLE": "Disclaimer — EDF Open Data",
+      "ABOUT_S5_P1": "This website, <strong>French Nuclear Fleet Dashboard</strong>, was designed by its publisher, <strong>the students of Project P17 CentraleSupélec (class of 2028)</strong>, using datasets from the EDF group's open data portal (<a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">opendata.edf.fr</a>), freely accessible under the terms of the applicable licence.",
+      "ABOUT_S5_P2": "The students of Project P17 CentraleSupélec (class of 2028) are solely responsible for the selection, processing, re-use and exploitation of this data, as well as for the content, analyses and results derived therefrom, independently of EDF."
     },
     "CENTRALE": {
       "CLOSE": "Close",

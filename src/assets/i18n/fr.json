@@ -142,7 +142,10 @@
       "CONTACT_MSG_PH": "Décrivez votre demande...",
       "CONTACT_SEND": "Envoyer le message",
       "CONTACT_SUCCESS": "Message envoyé ! Nous vous répondrons dans les meilleurs délais.",
-      "CONTACT_CLOSE": "Fermer"
+      "CONTACT_CLOSE": "Fermer",
+      "ABOUT_S5_TITLE": "Avertissement — Données EDF Open Data",
+      "ABOUT_S5_P1": "Le présent site <strong>Tableau de bord du parc nucléaire français</strong> a été conçu par son éditeur, <strong>les étudiants du Projet P17 CentraleSupélec (promotion 2028)</strong>, à partir de jeux de données issus du portail open data du groupe EDF (<a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">opendata.edf.fr</a>), librement accessibles conformément aux conditions de la licence applicable.",
+      "ABOUT_S5_P2": "Les étudiants du Projet P17 CentraleSupélec (promotion 2028) sont seuls responsables de la sélection, du traitement, de la réutilisation et de l'exploitation de ces données, ainsi que des contenus, analyses et résultats qui en sont issus, indépendamment d'EDF."
     },
     "CENTRALE": {
       "CLOSE": "Fermer",

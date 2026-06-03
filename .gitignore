@@ -26,3 +26,4 @@ api_config.json
 # OS
 .DS_Store
 Thumbs.db
+.vercel
