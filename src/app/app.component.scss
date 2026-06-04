@@ -1,215 +1,643 @@
+// ============================================================
+// VARIABLES GLOBALES — NAVBAR
+// ============================================================
+
+// Palette de couleurs de la barre de navigation
+$nav-bg:      #0d2856;                  // fond sombre (bleu marine type EDF/RTE)
+$nav-text:    rgba(255, 255, 255, 0.82); // texte des liens (blanc légèrement transparent)
+$nav-hover:   #ffffff;                  // couleur au survol (blanc pur)
+$nav-active:  #F1471C;                  // orange EDF : soulignement de la page active
+$nav-height:  70px;                     // hauteur fixe de la barre desktop
+
+
+// ============================================================
+// CONTENEUR PRINCIPAL DE LA NAVBAR
+// ============================================================
+
+// Fond et z-index communs aux deux versions (desktop et mobile)
 .nav-container {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: $nav-bg;
   position: relative;
-  z-index: 1000;
+  z-index: 1000; // passe au-dessus du contenu de la page
 }
-// Par défaut, on cache la navbar mobile
+
+// La nav mobile est masquée par défaut (visible uniquement sous 768px)
 .mobile-nav {
   display: none;
 }
 
+
+// ============================================================
+// NAVBAR DESKTOP
+// ============================================================
+
 .main-nav {
   .primary-nav {
+    // Disposition horizontale : liens centrés | sélecteur langue absolu à droite
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 24px;
-    background: white;
-    border-bottom: 1px solid rgba(18, 53, 109, 0.1); // Chathams Blue avec opacité
+    justify-content: center;
+    position: relative;
+    padding: 0 32px;
+    height: $nav-height;
+    background: $nav-bg;
 
-    // Style du conteneur logo
-    .logo-container {
-      width: 160px;
-      
-      .logo {
-        height: 40px;
-        transition: transform 0.2s ease;
-        
-        &:hover {
-          transform: scale(1.02);
-        }
-      }
-    }
-
-    // Navigation centrale
+    // ── Liens de navigation (vrais centrés sur toute la largeur) ──
     .center-nav {
-      flex: 1;
       display: flex;
       justify-content: center;
-      gap: 16px;
+      height: 100%;
     }
 
+    // ── Style de chaque lien de navigation ────────────────
     .nav-link {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      color: #12356D; // Chathams Blue
-      font-weight: 500;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      transition: all 0.2s ease;
+      padding: 0 20px;
+      height: 100%;
+      color: $nav-text;
+      font-weight: 400;
+      font-size: 0.93rem;
       text-decoration: none;
-      position: relative;
+      position: relative;  // nécessaire pour le pseudo-élément ::after (soulignement actif)
+      white-space: nowrap;
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
 
-      .nav-icon {
-        width: 20px;
-        height: 20px;
-        transition: transform 0.2s ease;
-        stroke: #12356D; // Chathams Blue pour l'icône
-      }
-
-      span {
-        transition: transform 0.2s ease;
-      }
-
+      // Survol : fond très légèrement plus clair + texte blanc
       &:hover {
-        background: rgba(18, 53, 109, 0.05); // Chathams Blue avec opacité faible
-        color: #F1471C; // Pomegranate
-
-        .nav-icon {
-          transform: scale(1.1);
-          stroke: #F1471C; // Pomegranate pour l'icône au hover
-        }
-
-        span {
-          transform: translateX(2px);
-        }
+        color: $nav-hover;
+        background: rgba(255, 255, 255, 0.05);
       }
 
+      // Lien actif (route courante) : texte blanc + barre orange en bas
       &.active {
-        background: #12356D; // Chathams Blue
-        color: white;
-        box-shadow: 0 2px 4px rgba(18, 53, 109, 0.2);
+        color: $nav-hover;
+        font-weight: 600;
 
-        .nav-icon {
-          stroke: white;
-        }
-
-        &:hover {
-          background: #F1471C; // Pomegranate au hover quand actif
+        // Barre orange sous le lien actif (indicator de page courante)
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: $nav-active;
+          border-radius: 2px 2px 0 0;
         }
       }
     }
 
-    // Groupe navigation droite
+    // ── Sélecteur de langue — absolu à droite pour ne pas décaler les liens ──
     .nav-group {
-      width: 160px;
+      position: absolute;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
     }
   }
 }
 
+
+// ============================================================
+// NAVBAR MOBILE (breakpoint ≤ 768px)
+// ============================================================
+
 @media (max-width: 768px) {
-  .desktop-nav {
-    display: none; // Cache la navbar desktop
-  }
-  
-  .mobile-nav {
-    display: block; // Affiche la navbar mobile
-  }
+  // Inverse la visibilité : desktop masquée, mobile affichée
+  .desktop-nav { display: none; }
+  .mobile-nav  { display: block; }
+
   .main-nav {
     .primary-nav {
+      // Empilage vertical : logo centré puis liens + langue sur une ligne
       flex-direction: column;
       align-items: stretch;
-      gap: 16px;
-      padding: 12px;
+      height: auto;
+      padding: 10px 16px;
+      gap: 0;
 
+      // Logo centré sur toute la largeur
       .logo-container {
         width: 100%;
-        display: flex;
         justify-content: center;
-        
-        .logo {
-          height: 32px;
-        }
+        padding: 6px 0;
+        .logo { height: 30px; }
       }
 
+      // Wrapper : liens à gauche + sélecteur de langue à droite
       .nav-bottom-wrapper {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        gap: 12px;
+        gap: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08); // séparateur subtil sous le logo
+        padding-top: 4px;
       }
 
+      // Liens défilables horizontalement si trop étroits
       .center-nav {
-        justify-content: center;
-        gap: 8px;
-        padding: 0;
+        justify-content: flex-start;
+        gap: 0;
         flex: 1;
-        overflow-x: auto;
-
-        // Cache la barre de défilement
-        &::-webkit-scrollbar {
-          display: none;
-        }
+        overflow-x: auto;  // scroll horizontal si les liens dépassent
+        height: 44px;
+        // Masque la scrollbar sur tous les navigateurs
+        &::-webkit-scrollbar { display: none; }
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
 
+      // Liens plus compacts sur mobile
       .nav-link {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        white-space: nowrap;
+        padding: 0 14px;
+        height: 44px;
+        font-size: 0.85rem;
 
-        span {
-          display: none;
-        }
-
-        .nav-icon {
-          margin: 0;
-          width: 24px;
-          height: 24px;
-        }
+        &.active::after { height: 2px; } // barre active plus fine sur mobile
       }
 
+      // Sélecteur de langue plus compact
       .nav-group {
         width: auto;
-        
         .language-selector {
           padding: 2px;
-          
           .lang-btn {
             padding: 4px 8px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
           }
         }
       }
     }
   }
 }
+
+
+// ============================================================
+// SÉLECTEUR DE LANGUE (FR / EN)
+// ============================================================
+
 .language-selector {
   display: flex;
-  gap: 4px;
-  padding: 4px;
-  background: rgba(18, 53, 109, 0.05);
+  gap: 2px;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.08); // fond en "pilule" translucide
   border-radius: 6px;
 
   .lang-btn {
-    padding: 6px 12px;
+    padding: 5px 11px;
     border: none;
     border-radius: 4px;
     background: none;
-    color: #12356D;
+    color: rgba(255, 255, 255, 0.65);
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 
-    &:hover {
-      color: #F1471C;
-    }
+    &:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
 
+    // Langue sélectionnée : fond légèrement plus clair + texte blanc
     &.active {
-      background: #12356D;
-      color: white;
-
-      &:hover {
-        background: #F1471C;
-      }
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
     }
   }
+}
+
+
+// ============================================================
+// FOOTER PRINCIPAL
+// ============================================================
+
+// Conteneur global du footer : fond très sombre, texte atténué
+.app-footer {
+  background: #0d2856;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06); // séparateur discret avec le contenu
+}
+
+// Corps principal du footer : logo | colonnes de liens | bouton contact
+.footer-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  padding: 48px 64px 40px;
+  max-width: 1280px;
+  margin: 0 auto; // centré horizontalement sur les grands écrans
+
+  // Tablette : retour à la ligne des blocs
+  @media (max-width: 1024px) { flex-wrap: wrap; padding: 40px 32px 32px; gap: 36px; }
+  // Mobile : empilement vertical
+  @media (max-width: 640px)  { flex-direction: column; padding: 32px 20px 24px; gap: 28px; }
+}
+
+// Bloc marque : largeur fixe de 200px, passe pleine largeur sur tablette
+.footer-brand {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  @media (max-width: 1024px) { flex: 0 0 100%; }
+}
+
+// Logo EDF blanchi par filtre CSS (logo original est coloré)
+.footer-logo {
+  width: 72px;
+  filter: brightness(0) invert(1); // transforme en blanc pur
+  opacity: 0.85;
+}
+
+// Texte descriptif sous le logo
+.footer-brand-desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 210px;
+}
+
+// Conteneur des deux colonnes de liens
+.footer-cols {
+  display: flex;
+  gap: 48px;
+  flex: 1; // occupe tout l'espace restant entre la marque et le bouton contact
+
+  @media (max-width: 640px) { flex-direction: column; gap: 24px; }
+}
+
+// Chaque colonne de liens (croît également)
+.footer-col {
+  flex: 1;
+  min-width: 130px;
+}
+
+// Titre de colonne : petites capitales très atténuées
+.footer-heading {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 0 14px;
+}
+
+// Liste de liens sans puces
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+// Style partagé entre les liens <a> et les boutons-liens du footer
+.footer-link,
+.footer-link-btn {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 0.86rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: inherit; // hérite de la police globale (les <button> ne le font pas par défaut)
+
+  &:hover { color: #fff; }
+}
+
+// Bloc droit : contient le bouton "Nous contacter"
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;    // bouton aligné à droite sur desktop
+  justify-content: flex-start;
+  flex-shrink: 0;
+
+  // Sur tablette : passe en pleine largeur avec alignement à gauche
+  @media (max-width: 1024px) { flex: 0 0 100%; align-items: flex-start; }
+}
+
+// Bouton "Nous contacter" (rouge EDF)
+.footer-contact-btn {
+  background: #F1471C;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+
+  // Légère élévation au survol
+  &:hover { background: #d63910; transform: translateY(-1px); }
+}
+
+// Barre du bas : copyright | liens légaux
+.footer-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 13px 64px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08); // séparateur subtil
+
+  @media (max-width: 1024px) { padding: 13px 32px; }
+  // Mobile : copyright et liens empilés verticalement
+  @media (max-width: 640px)  { padding: 13px 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+// Texte de copyright (très atténué)
+.footer-copy {
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 0.74rem;
+  letter-spacing: 0.3px;
+}
+
+// Groupe des liens légaux (À propos | Contact)
+.footer-legal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+// Boutons-liens légaux (style discret, sans bordure)
+.footer-legal-btn {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.74rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s;
+
+  &:hover { color: rgba(255, 255, 255, 0.8); }
+}
+
+// Séparateur pipe "|" entre les liens légaux
+.footer-sep {
+  color: rgba(255, 255, 255, 0.18);
+  font-size: 0.7rem;
+  user-select: none; // non sélectionnable au copier-coller
+}
+
+
+// ============================================================
+// MODALES (À propos & Contact)
+// ============================================================
+
+// Fond semi-transparent qui couvre tout l'écran derrière la modale
+.modal-overlay {
+  position: fixed;
+  inset: 0;                        // couvre tout le viewport
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 2000;                   // au-dessus de tout (navbar incluse)
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(3px);      // flou du contenu derrière la modale
+}
+
+// Boîte blanche de la modale (scrollable si le contenu dépasse)
+.modal-box {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 88vh;      // n'excède jamais 88% de la hauteur de l'écran
+  overflow-y: auto;      // scroll interne si le contenu est trop long
+  padding: 40px;
+  position: relative;    // nécessaire pour positionner le bouton × en absolu
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: 768px) { padding: 24px 20px; }
+}
+
+// Bouton de fermeture "×" positionné en haut à droite
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover { color: #334155; }
+}
+
+// Titre principal de la modale
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #12356D;
+  margin: 0 0 6px;
+}
+
+// Sous-titre gris sous le titre (utilisé dans la modale contact)
+.modal-subtitle {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin: 0 0 24px;
+}
+
+// Section générique de la modale (bloc titre + paragraphes)
+.modal-section {
+  margin-bottom: 22px;
+
+  // Titre de section : petites capitales grises
+  h3 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: #475569;
+    line-height: 1.7;
+    margin: 0 0 8px;
+    font-size: 0.93rem;
+  }
+}
+
+// Note de bas de modale : fond gris clair avec bordure gauche
+.modal-note {
+  background: #f8fafc;
+  border-left: 3px solid #e2e8f0;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+
+  p { color: #94a3b8; font-size: 0.85rem; margin: 0; }
+}
+
+// Liens internes à la modale (orange EDF)
+.modal-link {
+  color: #F1471C;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover { text-decoration: underline; }
+}
+
+
+// ============================================================
+// GRILLE ÉQUIPE (modale À propos)
+// ============================================================
+
+// Grille 2 colonnes → 1 colonne sur très petit écran
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+// Carte d'un membre : avatar rond + nom/rôle
+.team-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+// Avatar circulaire avec initiales sur fond bleu marine
+.team-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #12356D;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;       // ne rétrécit pas si l'espace est contraint
+  letter-spacing: 0.5px;
+}
+
+// Bloc nom + rôle empilés verticalement
+.team-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.team-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.team-role {
+  font-size: 0.76rem;
+  color: #94a3b8;
+}
+
+
+// ============================================================
+// FORMULAIRE DE CONTACT (modale Contact)
+// ============================================================
+
+// Ligne avec deux champs côte à côte (Nom + Email)
+.form-row {
+  display: flex;
+  gap: 16px;
+
+  @media (max-width: 540px) { flex-direction: column; } // empilement sur mobile
+}
+
+// Groupe label + champ de saisie
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+  }
+}
+
+// Style commun aux <input> et <textarea>
+.form-input {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.93rem;
+  color: #334155;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box; // le padding est inclus dans la largeur
+
+  // Focus : bordure bleue marine + halo léger
+  &:focus {
+    border-color: #12356D;
+    box-shadow: 0 0 0 3px rgba(18, 53, 109, 0.1);
+  }
+
+  &::placeholder { color: #cbd5e1; }
+}
+
+// Zone de texte redimensionnable verticalement
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit; // hérite de la police globale (pas le défaut des textarea)
+}
+
+// Bouton d'envoi pleine largeur (rouge EDF, grisé si désactivé)
+.form-submit {
+  background: #F1471C;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+
+  &:hover:not(:disabled) { background: #d63910; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; } // désactivé si champs requis vides
+}
+
+// Écran de confirmation après envoi réussi
+.contact-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  text-align: center;
+
+  p { color: #475569; font-size: 0.95rem; }
 }

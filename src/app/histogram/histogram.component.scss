@@ -137,6 +137,156 @@ input[type="date"].form-control {
     padding: 16px;
   }
 }
+.date-range-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-range-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+
+  .form-control {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+  }
+}
+
+.date-range-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.date-range-sep {
+  color: #94a3b8;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.total-mode-banner {
+  background: linear-gradient(135deg, #12356D, #1a4590);
+  color: #fff;
+  border-radius: 8px 8px 0 0;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* ─── Tranche checkboxes ─────────────────────────────────────────────── */
+.tranche-list {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 2px solid #e8eaff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &--disabled {
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
+.tranche-placeholder {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.tranche-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  cursor: pointer;
+  padding: 3px 0;
+  user-select: none;
+
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    accent-color: #1348d0;
+    flex-shrink: 0;
+  }
+}
+
+.tranche-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.compare-badge {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1348d0;
+  background: #e8eaff;
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+/* ─── Toolbar export ─────────────────────────────────────────────────── */
+.chart-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: white;
+  border: 1.5px solid #1348d0;
+  border-radius: 8px;
+  color: #1348d0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #1348d0;
+    color: white;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
 .chart-container {
   position: relative;
   background: white;
@@ -162,4 +312,18 @@ input[type="date"].form-control {
   align-items: center;
   z-index: 1000;
   border-radius: 8px;
+}
+.resolution-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 4px;
+  padding: 7px 12px;
+  background: #eff6ff;
+  border-left: 3px solid #12356D;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.82rem;
+  color: #334155;
+
+  svg { flex-shrink: 0; color: #12356D; }
 }

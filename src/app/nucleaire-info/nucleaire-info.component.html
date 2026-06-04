@@ -1,0 +1,232 @@
+<div class="nucleaire-container">
+
+  <!-- HERO -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-badge">{{ 'NUCLEAIRE_INFO.HERO.BADGE' | translate }}</div>
+      <h1 class="hero-title">{{ 'NUCLEAIRE_INFO.HERO.TITLE' | translate }}</h1>
+      <p class="hero-subtitle">{{ 'NUCLEAIRE_INFO.HERO.SUBTITLE' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1 : La fission nucléaire -->
+  <section class="info-section section--white">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>{{ 'NUCLEAIRE_INFO.FISSION.TITLE' | translate }}</h2>
+      </div>
+      <div class="two-col-layout">
+        <div class="text-content">
+          <p class="lead" [innerHTML]="'NUCLEAIRE_INFO.FISSION.LEAD' | translate"></p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.FISSION.TEXT' | translate"></p>
+          <div class="info-box">
+            <span class="info-box-icon">&#x1F4A1;</span>
+            <div [innerHTML]="'NUCLEAIRE_INFO.FISSION.INFO_BOX' | translate"></div>
+          </div>
+        </div>
+        <div class="visual-content">
+          <div class="diagram-wrapper">
+            <svg viewBox="0 0 340 260" class="diagram-svg" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#F1471C"/>
+                </marker>
+                <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#12356D"/>
+                </marker>
+              </defs>
+              <circle cx="125" cy="130" r="42" fill="#12356D" fill-opacity="0.08" stroke="#12356D" stroke-width="2"/>
+              <circle cx="125" cy="130" r="26" fill="#12356D" fill-opacity="0.25"/>
+              <text x="125" y="125" text-anchor="middle" fill="#12356D" font-size="11" font-weight="bold">U-235</text>
+              <text x="125" y="140" text-anchor="middle" fill="#12356D" font-size="9">{{ 'NUCLEAIRE_INFO.FISSION.SVG_ATOM' | translate }}</text>
+              <circle cx="38" cy="130" r="9" fill="#F1471C"/>
+              <text x="38" y="148" text-anchor="middle" fill="#F1471C" font-size="8">{{ 'NUCLEAIRE_INFO.FISSION.SVG_NEUTRON' | translate }}</text>
+              <line x1="49" y1="130" x2="82" y2="130" stroke="#F1471C" stroke-width="2" marker-end="url(#arr-red)"/>
+              <circle cx="172" cy="130" r="13" fill="#fbbf24" fill-opacity="0.9"/>
+              <text x="172" y="134" text-anchor="middle" fill="white" font-size="9" font-weight="bold">&#x26A1;</text>
+              <circle cx="250" cy="82" r="20" fill="#22c55e" fill-opacity="0.75"/>
+              <text x="250" y="79" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Kr-92</text>
+              <text x="250" y="92" text-anchor="middle" fill="white" font-size="7">{{ 'NUCLEAIRE_INFO.FISSION.SVG_FRAGMENT' | translate }}</text>
+              <line x1="163" y1="120" x2="233" y2="90" stroke="#12356D" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+              <circle cx="250" cy="178" r="22" fill="#22c55e" fill-opacity="0.75"/>
+              <text x="250" y="175" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Ba-141</text>
+              <text x="250" y="187" text-anchor="middle" fill="white" font-size="7">fragment</text>
+              <line x1="163" y1="140" x2="233" y2="168" stroke="#12356D" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+              <circle cx="305" cy="55" r="7" fill="#F1471C" fill-opacity="0.85"/>
+              <circle cx="315" cy="88" r="7" fill="#F1471C" fill-opacity="0.85"/>
+              <circle cx="308" cy="200" r="7" fill="#F1471C" fill-opacity="0.85"/>
+              <line x1="265" y1="74" x2="298" y2="58" stroke="#F1471C" stroke-width="1.2" marker-end="url(#arr-red)"/>
+              <line x1="268" y1="86" x2="307" y2="86" stroke="#F1471C" stroke-width="1.2" marker-end="url(#arr-red)"/>
+              <line x1="266" y1="188" x2="300" y2="198" stroke="#F1471C" stroke-width="1.2" marker-end="url(#arr-red)"/>
+              <text x="322" y="53" text-anchor="middle" fill="#F1471C" font-size="7">{{ 'NUCLEAIRE_INFO.FISSION.SVG_NEW_NEUTRONS' | translate }}</text>
+              <text x="170" y="240" text-anchor="middle" fill="#64748b" font-size="9">{{ 'NUCLEAIRE_INFO.FISSION.SVG_HEAT' | translate }}</text>
+            </svg>
+            <p class="diagram-caption">{{ 'NUCLEAIRE_INFO.FISSION.DIAGRAM_CAPTION' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 : Fonctionnement centrale -->
+  <section class="info-section section--light">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>{{ 'NUCLEAIRE_INFO.FONCTIONNEMENT.TITLE' | translate }}</h2>
+        <p class="section-subtitle" [innerHTML]="'NUCLEAIRE_INFO.FONCTIONNEMENT.SUBTITLE' | translate"></p>
+      </div>
+
+      <div class="steps-container">
+        <ng-container *ngFor="let step of steps; let last = last">
+          <div class="step-card">
+            <div class="step-number">{{ step.number }}</div>
+            <h3>{{ step.titleKey | translate }}</h3>
+            <p [innerHTML]="step.descKey | translate"></p>
+          </div>
+          <div class="step-arrow" *ngIf="!last">&#8594;</div>
+        </ng-container>
+      </div>
+
+      <div class="cooling-note">
+        <div [innerHTML]="'NUCLEAIRE_INFO.FONCTIONNEMENT.COOLING' | translate"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 : Les 3 circuits -->
+  <section class="info-section section--white">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>{{ 'NUCLEAIRE_INFO.CIRCUITS.TITLE' | translate }}</h2>
+        <p class="section-subtitle" [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.SUBTITLE' | translate"></p>
+      </div>
+      <div class="circuits-grid">
+        <div class="circuit-card circuit--primary">
+          <div class="circuit-badge">{{ 'NUCLEAIRE_INFO.CIRCUITS.C1_BADGE' | translate }}</div>
+          <h3>{{ 'NUCLEAIRE_INFO.CIRCUITS.C1_TITLE' | translate }}</h3>
+          <p class="circuit-status status--warning">{{ 'NUCLEAIRE_INFO.CIRCUITS.C1_STATUS' | translate }}</p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.C1_DESC' | translate"></p>
+        </div>
+        <div class="circuit-card circuit--secondary">
+          <div class="circuit-badge">{{ 'NUCLEAIRE_INFO.CIRCUITS.C2_BADGE' | translate }}</div>
+          <h3>{{ 'NUCLEAIRE_INFO.CIRCUITS.C2_TITLE' | translate }}</h3>
+          <p class="circuit-status status--ok">{{ 'NUCLEAIRE_INFO.CIRCUITS.C2_STATUS' | translate }}</p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.C2_DESC' | translate"></p>
+        </div>
+        <div class="circuit-card circuit--tertiary">
+          <div class="circuit-badge">{{ 'NUCLEAIRE_INFO.CIRCUITS.C3_BADGE' | translate }}</div>
+          <h3>{{ 'NUCLEAIRE_INFO.CIRCUITS.C3_TITLE' | translate }}</h3>
+          <p class="circuit-status status--ok">{{ 'NUCLEAIRE_INFO.CIRCUITS.C3_STATUS' | translate }}</p>
+          <p [innerHTML]="'NUCLEAIRE_INFO.CIRCUITS.C3_DESC' | translate"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 : De la centrale à chez vous -->
+  <section class="info-section section--light">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>{{ 'NUCLEAIRE_INFO.RESEAU.TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'NUCLEAIRE_INFO.RESEAU.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="network-chain">
+        <div class="network-node">
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18M6 21V7l6-4 6 4v14M9 21v-4h6v4"/>
+            </svg>
+          </div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE1_LABEL' | translate }}</div>
+          <div class="network-voltage">~20 kV</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE1_ACTOR' | translate }}</div>
+        </div>
+        <div class="network-connector">
+          <div class="connector-line"></div>
+          <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN1' | translate }}</div>
+        </div>
+        <div class="network-node">
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/>
+            </svg>
+          </div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE2_LABEL' | translate }}</div>
+          <div class="network-voltage">400 kV</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE2_ACTOR' | translate }}</div>
+        </div>
+        <div class="network-connector">
+          <div class="connector-line"></div>
+          <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN2' | translate }}</div>
+        </div>
+        <div class="network-node">
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
+          </div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE3_LABEL' | translate }}</div>
+          <div class="network-voltage">63 / 20 kV</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE3_ACTOR' | translate }}</div>
+        </div>
+        <div class="network-connector">
+          <div class="connector-line"></div>
+          <div class="connector-label">{{ 'NUCLEAIRE_INFO.RESEAU.CONN3' | translate }}</div>
+        </div>
+        <div class="network-node network-node--end">
+          <div class="network-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <div class="network-label">{{ 'NUCLEAIRE_INFO.RESEAU.NODE4_LABEL' | translate }}</div>
+          <div class="network-voltage">230 V</div>
+          <div class="network-actor">{{ 'NUCLEAIRE_INFO.RESEAU.NODE4_ACTOR' | translate }}</div>
+        </div>
+      </div>
+
+      <div class="info-box info-box--centered">
+        <div [innerHTML]="'NUCLEAIRE_INFO.RESEAU.INFO_BOX' | translate"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 : Chiffres clés -->
+  <section class="info-section section--light">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>{{ 'NUCLEAIRE_INFO.CHIFFRES.TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'NUCLEAIRE_INFO.CHIFFRES.SUBTITLE' | translate }}</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">59</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT1_LABEL' | translate }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">18</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT2_LABEL' | translate }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">~70%</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT3_LABEL' | translate }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">63 GW</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT4_LABEL' | translate }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">N°1</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT5_LABEL' | translate }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">~50 g</div>
+          <div class="stat-label">{{ 'NUCLEAIRE_INFO.CHIFFRES.STAT6_LABEL' | translate }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

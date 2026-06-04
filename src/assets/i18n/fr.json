@@ -1,33 +1,70 @@
 {
-  "TITLE":"Disponibilité du parc nucléaire d'EDF SA (Présent, passé et prévisionnel)",
+  "TITLE":"Disponibilité du parc nucléaire français (Présent, passé et prévisionnel)",
     "NAV": {
       "HOME": "Accueil",
       "MAP": "Carte",
-      "DATA": "Données"
+      "DATA": "Données",
+      "NUCLEAIRE": "Le Nucléaire"
     },
     "MAP": {
       "DATE_LABEL": "Date",
       "TIME_LABEL": "Heure",
       "LOADING_MESSAGE": "Chargement des données...",
-      "HOUR_LABEL": "Heure"
+      "HOUR_LABEL": "Heure",
+      "HISTORICAL_NOTE": "Données historiques — résolution journalière (midi)"
     },
     "HISTOGRAM": {
-      "CENTRALE_LABEL": "Centrale",
-      "CENTRALE_PLACEHOLDER": "Sélectionner une centrale",
-      "TRANCHE_LABEL": "Tranche",
-      "TRANCHE_PLACEHOLDER": "Sélectionner une tranche",
+      "CENTRALE_LABEL": "Site nucléaire",
+      "CENTRALE_PLACEHOLDER": "Sélectionner un site nucléaire",
+      "TRANCHE_LABEL": "Réacteur",
+      "TRANCHE_PLACEHOLDER": "Sélectionner un réacteur",
       "DATE_CENTRAL_LABEL": "Date centrale",
       "LOADING_MESSAGE": "Chargement des données...",
       "CHART_TITLE": "Evolution temporelle de la disponibilité de la tranche",
       "CHART_SUBTITLE": "Cliquez et glissez pour zoomer",
       "CHART_SUBTITLE_TOUCH": "Pincez pour zoomer",
-      "Y_AXIS_TITLE": "Puissance Disponible (MW)"
+      "Y_AXIS_TITLE": "Puissance Disponible (MW)",
+      "PERIODE_LABEL": "Période",
+      "DATE_FROM": "Du",
+      "DATE_TO": "Au",
+      "FULL_PERIOD": "Toute la période",
+      "TOTAL_MODE_TITLE": "Production nucléaire totale — France",
+      "TOTAL_MODE_SUBTITLE": "Sélectionnez une centrale et une tranche pour afficher les données détaillées",
+      "TRANCHES_SELECTED": "tranches sélectionnées",
+      "EXPORT_CSV": "Exporter CSV",
+      "NOTE_HOURLY": "Résolution horaire — plage ≤ 31 jours : idéal pour suivre l'évolution en temps réel.",
+      "NOTE_DAILY": "Résolution journalière — plage > 31 jours : vue d'ensemble de l'évolution long terme.",
+      "NOMINAL_LABEL": "Puissance nominale",
+      "TOTAL_CHART_TITLE": "Disponibilité nucléaire totale — France",
+      "TOTAL_CHART_SUBTITLE": "Puissance disponible cumulée de toutes les tranches (MW)",
+      "TOTAL_SERIES_NAME": "Puissance totale (MW)",
+      "CENTRALE_CHART_TITLE": "Production totale — {{centrale}}",
+      "CENTRALE_CHART_SUBTITLE": "Puissance disponible cumulée de toutes les tranches du site (MW)",
+      "CENTRALE_SERIES_NAME": "Puissance totale {{centrale}} (MW)",
+      "EXPORT_CSV": "Exporter en CSV",
+      "COMPARE_TITLE": "Comparaison des tranches sélectionnées",
+      "TRANCHES_SELECTED": "tranches sélectionnées"
+    },
+    "EDF": {
+      "SEARCH_PLACEHOLDER": "Rechercher les données",
+      "RECORDS": "enregistrements",
+      "FILTER_DATETIME": "Date et Heure (fuseau horaire Europe/Paris)",
+      "FILTER_HOUR": "Heure (fuseau horaire Europe/Paris)",
+      "FILTER_CENTRALE": "Centrale",
+      "MAIN_TITLE": "Disponibilité du parc nucléaire français (Présent, passé et prévisionnel)",
+      "NAV_INFO": "Informations",
+      "NAV_TABLE": "Tableau",
+      "NAV_MAP": "Carte de la disponibilité du parc nucléaire français",
+      "NAV_EXPORT": "Export",
+      "NAV_API": "API",
+      "INFO_TITLE": "Informations sur le fonctionnement de cette carte :",
+      "INFO_TEXT": "Cette carte affiche la disponibilité du parc nucléaire à une \"Date/Heure\" précise. Par défaut, elle propose une vision à la \"date du jour/Heure actuelle\" (fuseau horaire Europe/Paris). Pour visualiser la disponibilité du Parc Nucléaire passé ou prévisionnelle, sélectionner un couple \"Date/Heure\" dans les filtres à votre disposition sur la gauche. Les tranches dont la puissance disponible est égale à 0 MW sont affichées en orange. Sinon elles sont affichées en vert. Le positionnement géographique des tranches nucléaires est adapté pour offrir une meilleure lisibilité de la carte de France."
     },
     "INFORMATION": {
       "TITLE": "Informations sur les données",
       "ABSTRACT": {
         "TITLE": "Résumé",
-        "CONTENT": "Ces données présentent l'état de disponibilité du parc nucléaire d'EDF SA présent, passé et prévisionnel sur une année glissante. Vous y retrouverez, centrale par centrale, et pour chacune des tranches, leur puissance disponible en MW. Ces données sont actualisées au début de chaque heure."
+        "CONTENT": "Ces données présentent l'état de disponibilité du parc nucléaire français présent, passé et prévisionnel sur une année glissante. Vous y retrouverez, centrale par centrale, et pour chacune des tranches, leur puissance disponible en MW. Ces données sont actualisées au début de chaque heure."
       },
       "DESCRIPTION": {
         "TITLE": "Description détaillée",
@@ -41,16 +78,26 @@
         "TIMEZONE": "Le fuseau horaire de référence utilisé est Europe/Paris."
       },
       "LIABILITY": {
-        "TITLE": "Responsabilité d'EDF",
-        "CONTENT": "Pour rappel, en application de la clause 3.2 des conditions générales d'utilisation du portail opendata.edf.fr, les informations fournies le sont à titre informatif et indicatif...",
+        "TITLE": "Responsabilité et nature du site",
+        "CONTENT": "Ce tableau de bord est le résultat d'un projet académique (Projet P17 - CentraleSupélec) et n'est pas une plateforme officielle de l'entreprise EDF. Bien qu'il exploite les données issues de l'OpenData EDF, les informations fournies sur ce site le sont à titre strictement informatif et indicatif. En aucun cas, la responsabilité d'EDF ne saurait être engagée quant à l'exactitude des visualisations ou à l'utilisation qui pourrait en être faite.",
         "DISCLAIMER": "En conséquence, l'Utilisateur reconnaît utiliser ces informations sous sa responsabilité exclusive..."
       }
     },
     "HOME": {
+      "HERO_TITLE": "Tableau de bord du parc nucléaire français",
+      "HERO_SUBTITLE": "Disponibilité en temps réel des centrales françaises (France Métropolitaine)",
+      "STAT_POWER": "Puissance disponible",
+      "STAT_REACTORS": "Réacteurs en fonctionnement",
+      "STAT_DATE": "Dernière donnée disponible",
+      "MAP_TITLE": "Carte interactive du parc nucléaire",
+      "MAP_DESC": "Visualisez la disponibilité de chaque centrale nucléaire française à une date et une heure précises — données présentes, passées et prévisionnelles sur une année glissante.",
+      "MAP_TIP1": "Sélectionnez une date et ajustez le curseur horaire",
+      "MAP_TIP2": "Cliquez sur une centrale pour afficher ses tranches",
+      "MAP_TIP3": "Les centrales à 0 MW disponible sont affichées en orange",
       "CARDS": {
         "MAP": {
           "TITLE": "Carte Interactive",
-          "DESCRIPTION": "Visualisez la localisation et la disponibilité des centrales nucléaires EDF en France",
+          "DESCRIPTION": "Visualisez la localisation et la disponibilité des centrales nucléaires françaises",
           "ACTION": "Explorer la carte"
         },
         "DATA": {
@@ -59,6 +106,47 @@
           "ACTION": "Voir les données"
         }
       }
+    },
+    "SEARCH": {
+      "BUTTON": "Rechercher",
+      "PLACEHOLDER": "Rechercher une centrale... (ex : Dampierre, Tricastin, Flamanville)"
+    },
+    "APP": {
+      "FOOTER_ABOUT_BTN": "À propos du projet",
+      "FOOTER_CONTACT_BTN": "Nous contacter",
+      "FOOTER_BOTTOM": "Projet Web CentraleSupélec — 2026",
+      "FOOTER_BRAND_DESC": "Tableau de bord académique sur la disponibilité du parc nucléaire français — Projet CentraleSupélec.",
+      "FOOTER_COL1_TITLE": "À propos",
+      "FOOTER_COL2_TITLE": "Ressources",
+      "FOOTER_LEGAL_ABOUT": "Mentions légales",
+      "FOOTER_LEGAL_TEXT": "Le présent site <strong>Tableau de bord du parc nucléaire français</strong> a été conçu par son éditeur <strong>Valentin LAVIGNE, Bechir BECHIR, El-Hadj Amadou OUMAR et Corentin PRIZZON</strong> à partir de jeux de données issus du portail open data du groupe EDF (<a href='https://opendata.edf.fr' target='_blank'>https://opendata.edf.fr</a>), librement accessibles conformément aux conditions de la licence applicable.<br><br>Valentin LAVIGNE, Bechir BECHIR, El-Hadj Amadou OUMAR et Corentin PRIZZON sont seuls responsables de la sélection, du traitement, de la réutilisation et de l'exploitation de ces données, ainsi que des contenus, analyses et résultats qui en sont issus, indépendamment d'EDF.",
+      "FOOTER_LEGAL_CONTACT": "Contact",
+      "ABOUT_TITLE": "À propos du projet",
+      "ABOUT_S1_TITLE": "Le projet",
+      "ABOUT_S1_P1": "Dans le cadre du pôle projet <strong>« Nouveaux concepts énergétiques »</strong> de <strong>CentraleSupélec (promotion 2028)</strong>, 4 étudiants ont repris et continué le développement d'un site initié par le groupe précédent.",
+      "ABOUT_S1_P2": "L'objectif : rendre les données de disponibilité du parc nucléaire français accessibles et lisibles pour tous, à travers une interface web moderne et interactive.",
+      "ABOUT_S2_TITLE": "L'équipe",
+      "ABOUT_TEAM_ROLE": "CentraleSupélec · Promo 2028",
+      "ABOUT_S3_TITLE": "Collecte et traitement des données",
+      "ABOUT_S3_P1": "Un binôme d'étudiants s'est chargé de récupérer les données brutes auprès des sources officielles <strong>RTE</strong>. Ces données ont ensuite été nettoyées, formatées puis publiées sur la plateforme Open Data d'EDF.",
+      "ABOUT_S3_P2": "Les données visibles sur ce site proviennent directement de l'<a href=\"https://opendata.edf.fr\" target=\"_blank\" class=\"modal-link\">Open Data EDF</a>, interrogé via une clé API.",
+      "ABOUT_S4_TITLE": "Source technique",
+      "ABOUT_S4_P1": "Les données d'indisponibilités par tranche sont accessibles via : <a href=\"https://opendata.edf.fr/datasets/indisponibilites-des-moyens-de-production-edf-sa\" target=\"_blank\" class=\"modal-link\">indisponibilités des moyens de production de EDF SA</a>. Elles sont actualisées au début de chaque heure.",
+      "ABOUT_S4_P2": "Publications officielles EDF (règlement REMIT) : <a href=\"https://doaat.edf.fr/indisponibilites/list\" target=\"_blank\" class=\"modal-link\">EDF REMIT</a>.",
+      "ABOUT_NOTE": "Ce site est un projet académique indépendant. Valentin LAVIGNE, Bechir BECHIR, El-Hadj Amadou OUMAR et Corentin PRIZZON sont seuls responsables de son contenu, indépendamment d'EDF. Consultez les <strong>Mentions légales</strong> pour plus d'informations.",
+      "CONTACT_TITLE": "Nous contacter",
+      "CONTACT_SUBTITLE": "Une question ou un problème ? L'équipe de développement vous répondra.",
+      "CONTACT_NAME": "Nom complet",
+      "CONTACT_EMAIL": "Email",
+      "CONTACT_SUBJECT": "Sujet",
+      "CONTACT_MESSAGE": "Message",
+      "CONTACT_NAME_PH": "Votre nom",
+      "CONTACT_EMAIL_PH": "votre@email.fr",
+      "CONTACT_SUBJECT_PH": "Ex : Problème d'affichage, suggestion...",
+      "CONTACT_MSG_PH": "Décrivez votre demande...",
+      "CONTACT_SEND": "Envoyer le message",
+      "CONTACT_SUCCESS": "Message envoyé ! Nous vous répondrons dans les meilleurs délais.",
+      "CONTACT_CLOSE": "Fermer"
     },
     "CENTRALE": {
       "CLOSE": "Fermer",
@@ -71,5 +159,83 @@
       "PAGE_NOT_FOUND": "Page introuvable",
       "PAGE_NOT_FOUND_DESC": "La page que vous recherchez n'existe pas ou a été déplacée.",
       "BACK_HOME": "Retour à l'accueil"
+    },
+    "NUCLEAIRE_INFO": {
+      "HERO": {
+        "BADGE": "Guide pédagogique",
+        "TITLE": "Comment fonctionne le nucléaire ?",
+        "SUBTITLE": "Du combustible uranium à votre prise électrique, tout comprendre en quelques minutes."
+      },
+      "FISSION": {
+        "TITLE": "La fission nucléaire : l'étincelle de tout",
+        "LEAD": "Une centrale nucléaire fonctionne comme une <strong>bouilloire géante</strong>. Mais au lieu d'un brûleur à gaz, elle utilise la <strong>chaleur libérée par la fission de l'uranium</strong>.",
+        "TEXT": "La fission, c'est la division d'un atome lourd (uranium-235) en deux atomes plus petits, provoquée par l'impact d'un neutron. Cette réaction libère <strong>une énergie colossale</strong> sous forme de chaleur, ainsi que 2 à 3 nouveaux neutrons qui vont à leur tour provoquer d'autres fissions : c'est la <strong>réaction en chaîne</strong>.",
+        "INFO_BOX": "<strong>En chiffre :</strong> 1 kg d'uranium fissionné libère autant d'énergie que la combustion de <strong>2 700 tonnes de charbon</strong>.",
+        "DIAGRAM_CAPTION": "Schéma simplifié de la fission de l'uranium-235",
+        "SVG_ATOM": "atome lourd",
+        "SVG_NEUTRON": "neutron",
+        "SVG_FRAGMENT": "fragment",
+        "SVG_NEW_NEUTRONS": "nouveaux neutrons",
+        "SVG_HEAT": "→ énergie libérée sous forme de chaleur intense"
+      },
+      "FONCTIONNEMENT": {
+        "TITLE": "Le fonctionnement d'une centrale nucléaire",
+        "SUBTITLE": "Les centrales françaises sont des <strong>réacteurs à eau pressurisée (REP)</strong>. Voici comment elles convertissent la chaleur en électricité.",
+        "STEP1_TITLE": "Combustible uranium",
+        "STEP1_DESC": "Des assemblages de crayons en uranium enrichi forment le <strong>cœur du réacteur</strong>.",
+        "STEP2_TITLE": "Réacteur",
+        "STEP2_DESC": "La fission chauffe l'eau du <strong>circuit primaire</strong> à ~320°C sous 155 bars. L'eau reste liquide.",
+        "STEP3_TITLE": "Générateur de vapeur",
+        "STEP3_DESC": "La chaleur est transmise à un <strong>circuit secondaire</strong> (non radioactif) qui se transforme en vapeur.",
+        "STEP4_TITLE": "Turbine",
+        "STEP4_DESC": "La vapeur fait tourner une <strong>turbine</strong> à grande vitesse — chaleur → énergie mécanique.",
+        "STEP5_TITLE": "Alternateur",
+        "STEP5_DESC": "La turbine entraîne un <strong>alternateur</strong> — énergie mécanique → électricité.",
+        "STEP6_TITLE": "Transformateur",
+        "STEP6_DESC": "La tension est élevée à <strong>400 000 V</strong> pour un transport sur de longues distances avec peu de pertes.",
+        "COOLING": "<strong>Et les tours de refroidissement ?</strong> La vapeur qui a fait tourner la turbine est refroidie dans un condenseur. La vapeur blanche visible au-dessus des tours n'est pas de la fumée : c'est de la <strong>vapeur d'eau purifiée, totalement inoffensive</strong>."
+      },
+      "CIRCUITS": {
+        "TITLE": "Les 3 circuits d'une centrale REP",
+        "SUBTITLE": "Trois boucles d'eau <strong>séparées et hermétiques</strong> garantissent qu'aucune radioactivité ne quitte le réacteur.",
+        "C1_BADGE": "Circuit 1",
+        "C1_TITLE": "Circuit primaire",
+        "C1_STATUS": "Radioactif",
+        "C1_DESC": "Eau sous pression en contact direct avec le cœur du réacteur. Enfermé dans une enceinte de confinement en béton armé de 1,2 m d'épaisseur. <strong>Ne sort jamais</strong> du bâtiment réacteur.",
+        "C2_BADGE": "Circuit 2",
+        "C2_TITLE": "Circuit secondaire",
+        "C2_STATUS": "Non radioactif",
+        "C2_DESC": "Reçoit la chaleur via un échangeur. Se vaporise et actionne la turbine. L'eau est ensuite refroidie et <strong>recyclée en boucle fermée</strong>.",
+        "C3_BADGE": "Circuit 3",
+        "C3_TITLE": "Circuit de refroidissement",
+        "C3_STATUS": "Non radioactif",
+        "C3_DESC": "Refroidit la vapeur du circuit 2 pour la recondenser. Peut utiliser de l'eau de fleuve, de mer, ou des <strong>tours de refroidissement</strong>."
+      },
+      "RESEAU": {
+        "TITLE": "De la centrale à votre prise",
+        "SUBTITLE": "L'électricité produite parcourt des milliers de kilomètres et subit plusieurs transformations de tension avant d'arriver chez vous.",
+        "NODE1_LABEL": "Centrale",
+        "NODE1_ACTOR": "EDF",
+        "CONN1": "Transformateur\nélévateur",
+        "NODE2_LABEL": "Réseau THT",
+        "NODE2_ACTOR": "RTE",
+        "CONN2": "Poste source\nabaisseur",
+        "NODE3_LABEL": "Réseau HTA",
+        "NODE3_ACTOR": "Enedis",
+        "CONN3": "Transformateur\nde quartier",
+        "NODE4_LABEL": "Chez vous",
+        "NODE4_ACTOR": "Consommateur",
+        "INFO_BOX": "<strong>Pourquoi monter à 400 000 V ?</strong> Plus la tension est haute, plus les pertes dans les câbles sont faibles. Transporter de l'électricité à très haute tension permet de <strong>diviser les pertes par des milliers</strong> sur de longues distances — indispensable pour relier les centrales aux villes éloignées."
+      },
+      "CHIFFRES": {
+        "TITLE": "Le nucléaire en France en chiffres",
+        "SUBTITLE": "La France est le pays qui dépend le plus du nucléaire pour son électricité dans le monde.",
+        "STAT1_LABEL": "réacteurs en service",
+        "STAT2_LABEL": "centrales nucléaires",
+        "STAT3_LABEL": "de l'électricité française",
+        "STAT4_LABEL": "de puissance installée",
+        "STAT5_LABEL": "pays le plus nucléarisé au monde (en %)",
+        "STAT6_LABEL": "de CO₂/kWh (vs 820 g pour le charbon)"
+      }
     }
   }

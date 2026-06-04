@@ -246,7 +246,7 @@
   }
 }
 
-/* Responsive - inchangé */
+/* Responsive */
 @media (max-width: 768px) {
   .controls-container {
     flex-direction: column;
@@ -254,33 +254,61 @@
     padding: 0.75rem;
   }
 
-  // Vos styles existants pour mobile...
   .control-item {
-    width: 100%; // Assure que chaque item prend toute la largeur
+    width: 100%;
   }
 
   .time-picker {
-    margin-top: 1rem; // Ajoute un espace au-dessus du time picker
-  }
-  .content-container {
-    flex-direction: column;
-    gap: 0;
-    padding: 1rem 1rem 0 1rem;
+    margin-top: 1rem;
   }
 
-  .map-wrapper {
-    margin-right: 0;
-    
-    &.compact {
-      flex: 1;
-      min-height: 40vh;
+  /* La carte prend toute la hauteur disponible, même avec le panel ouvert */
+  .content-container {
+    flex-direction: row;
+    padding: 0;
+    height: calc(100vh - 120px);
+    position: relative;
+
+    &.with-histogram {
+      padding-right: 0;
     }
   }
 
+  .map-wrapper {
+    flex: 1;
+    margin-right: 0;
+    border-radius: 0;
+
+    &.compact {
+      flex: 1;
+    }
+  }
+
+  /* Bottom sheet : overlay fixé en bas, par-dessus la carte */
   .centrale-panel {
-    border-left: none;
-    border-top: 1px solid rgba(19, 72, 208, 0.1);
-    box-shadow: 0 -4px 20px rgba(19, 72, 208, 0.08);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex: none;
+    height: 52vh;
+    max-height: 52vh;
+    border-radius: 16px 16px 0 0;
+    border: none;
+    border-top: 3px solid #1348d0;
+    box-shadow: 0 -8px 32px rgba(19, 72, 208, 0.18);
+    z-index: 500;
+    overflow-y: auto;
+    animation: slideUp 0.3s forwards;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

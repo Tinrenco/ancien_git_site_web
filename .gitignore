@@ -1,0 +1,28 @@
+# Angular cache & build
+.angular/
+dist/
+tmp/
+
+# Dependencies
+node_modules/
+
+# Large data files (partagés via Drive, générés par convert.py)
+export_ods.csv
+indisponibilites_nucleaire_final.csv
+src/assets/donnees.json
+src/assets/donnees_daily.json
+
+# IDE
+.vscode/
+.idea/
+
+# Env
+.env
+.env.*
+
+# Credentials API EDF (ne jamais versionner)
+api_config.json
+
+# OS
+.DS_Store
+Thumbs.db

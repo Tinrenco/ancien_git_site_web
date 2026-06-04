@@ -1,11 +1,13 @@
 <div class="filters-container">
   <div class="row g-3">
+
+    <!-- Sélection de la centrale -->
     <div class="col-md-4">
       <label for="centrale-select" class="form-label">
         {{ 'HISTOGRAM.CENTRALE_LABEL' | translate }}
       </label>
-      <select class="form-select" 
-              [(ngModel)]="selectedCentrale" 
+      <select class="form-select"
+              [(ngModel)]="selectedCentrale"
               (ngModelChange)="onCentraleChange()"
               id="centrale-select">
         <option value="">{{ 'HISTOGRAM.CENTRALE_PLACEHOLDER' | translate }}</option>
@@ -15,46 +17,103 @@
       </select>
     </div>
 
+    <!-- Sélection des tranches (checkboxes multi-sélection) -->
     <div class="col-md-4">
-      <label for="tranche-select" class="form-label">
-        {{ 'HISTOGRAM.TRANCHE_LABEL' | translate }}
-      </label>
-      <select class="form-select" 
-              [(ngModel)]="tranche"
-              (ngModelChange)="onTrancheChange()"
-              id="tranche-select"
-              [disabled]="!selectedCentrale">
-        <option value="">{{ 'HISTOGRAM.TRANCHE_PLACEHOLDER' | translate }}</option>
-        <option *ngFor="let tranche of getTranches()" [value]="tranche">
-          {{ tranche }}
-        </option>
-      </select>
+      <label class="form-label">{{ 'HISTOGRAM.TRANCHE_LABEL' | translate }}</label>
+
+      <div class="tranche-list" [class.tranche-list--disabled]="!selectedCentrale">
+        <p *ngIf="!selectedCentrale" class="tranche-placeholder">
+          {{ 'HISTOGRAM.TRANCHE_PLACEHOLDER' | translate }}
+        </p>
+        <p *ngIf="selectedCentrale && getTranches().length === 0" class="tranche-placeholder">
+          {{ 'HISTOGRAM.LOADING_MESSAGE' | translate }}
+        </p>
+
+        <label *ngFor="let t of getTranches(); let i = index" class="tranche-checkbox-label">
+          <input type="checkbox"
+                 [value]="t"
+                 [checked]="selectedTranches.includes(t)"
+                 [disabled]="!selectedCentrale"
+                 (change)="onTrancheToggle(t, $event)">
+          <span class="tranche-color-dot" [style.background]="getTrancheColor(i)"></span>
+          <span>{{ t }}</span>
+        </label>
+      </div>
+
+      <p *ngIf="selectedTranches.length > 1" class="compare-badge">
+        {{ selectedTranches.length }} {{ 'HISTOGRAM.TRANCHES_SELECTED' | translate }}
+      </p>
     </div>
 
+    <!-- Période -->
     <div class="col-md-4">
-      <label for="date-limit" class="form-label">
-        {{ 'HISTOGRAM.DATE_CENTRAL_LABEL' | translate }}
-      </label>
-      <input type="date" 
-             class="form-control" 
-             id="date-limit"
-             [(ngModel)]="dateLimit"
-             (ngModelChange)="onDateChange()"
-             [min]="minDate"
-             [max]="maxDate">
+      <label class="form-label">{{ 'HISTOGRAM.PERIODE_LABEL' | translate }}</label>
+      <div class="date-range-wrapper">
+        <div class="date-range-inputs">
+          <div class="date-range-field">
+            <span class="date-range-label">{{ 'HISTOGRAM.DATE_FROM' | translate }}</span>
+            <input type="date"
+                   class="form-control"
+                   [(ngModel)]="dateFrom"
+                   (ngModelChange)="onDateChange()"
+                   [min]="minDate"
+                   [max]="dateTo || maxDate">
+          </div>
+          <span class="date-range-sep">→</span>
+          <div class="date-range-field">
+            <span class="date-range-label">{{ 'HISTOGRAM.DATE_TO' | translate }}</span>
+            <input type="date"
+                   class="form-control"
+                   [(ngModel)]="dateTo"
+                   (ngModelChange)="onDateChange()"
+                   [min]="dateFrom || minDate"
+                   [max]="maxDate">
+          </div>
+        </div>
+        <button class="btn btn-sm text-nowrap"
+                [class.btn-primary]="isFullPeriod"
+                [class.btn-outline-secondary]="!isFullPeriod"
+                (click)="resetToFullPeriod()">
+          {{ 'HISTOGRAM.FULL_PERIOD' | translate }}
+        </button>
+      </div>
     </div>
+
   </div>
 </div>
 
-<div class="chart-container mt-4" *ngIf="tranche">
+<div class="resolution-note" *ngIf="selectedTranches.length > 0 || isTotalMode">
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+  </svg>
+  <span *ngIf="isHourlyMode">{{ 'HISTOGRAM.NOTE_HOURLY' | translate }}</span>
+  <span *ngIf="!isHourlyMode">{{ 'HISTOGRAM.NOTE_DAILY' | translate }}</span>
+</div>
+
+<div class="chart-container mt-4" *ngIf="selectedTranches.length > 0 || isTotalMode">
+  <div class="chart-toolbar">
+    <button class="btn-export" (click)="exportCSV()" [disabled]="isChartLoading">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      {{ 'HISTOGRAM.EXPORT_CSV' | translate }}
+    </button>
+  </div>
+
   <div id="container" style="width: 100%; height: 400px; position: relative;">
-    <highcharts-chart 
-      *ngIf="!isChartLoading"  
+    <highcharts-chart
+      *ngIf="!isChartLoading"
       [Highcharts]="Highcharts"
       [options]="chartOptions"
+      [(update)]="updateChart"
+      [oneToOne]="true"
       style="width: 100%; height: 400px; display: block;"
     ></highcharts-chart>
-    
+
     <div *ngIf="isChartLoading" class="loading-overlay">
       <div class="loading-spinner">
         <div class="spinner"></div>
