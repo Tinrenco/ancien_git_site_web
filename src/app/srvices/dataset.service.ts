@@ -368,21 +368,26 @@ export class DatasetService {
   }
 
   /**
-   * Calcule la production totale France (somme de tous les réacteurs).
+   * Calcule la production totale agrégée sur la période.
+   * Si `centrale` est fourni, n'agrège que les réacteurs de ce site.
+   * Sinon, agrège tout le parc français.
    * Retourne aussi la puissance nominale totale pour la ligne de référence.
-   * Résolution horaire si la plage ≤ 31 jours, journalière sinon.
    */
   getTotalProductionSeries(
     dateFrom: string,
-    dateTo: string
+    dateTo: string,
+    centrale?: string
   ): Observable<{series: [number, number][]; totalNominal: number}> {
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
       map(([byUnit, units]) => {
-        const timestamps   = this.buildTimestamps(dateFrom, dateTo);
-        const totalNominal = (units as any[]).reduce((s, u) => s + (u.nominal ?? 0), 0);
+        const timestamps     = this.buildTimestamps(dateFrom, dateTo);
+        const filteredUnits  = centrale
+          ? (units as any[]).filter(u => u.centrale === centrale)
+          : (units as any[]);
+        const totalNominal   = filteredUnits.reduce((s, u) => s + (u.nominal ?? 0), 0);
         const series: [number, number][] = timestamps.map(ts => {
           let total = 0;
-          for (const unit of (units as any[])) {
+          for (const unit of filteredUnits) {
             const evs      = byUnit.get(unit.unit) ?? [];
             const covering = evs.filter(e => e.b <= ts && e.e >= ts);
             total += covering.length > 0 ? Math.min(...covering.map(e => e.a)) : unit.nominal;
