@@ -302,21 +302,27 @@ export class DatasetService {
 
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
       map(([byUnit, units]) =>
-        (units as any[]).map(unit => {
-          const evs      = byUnit.get(unit.unit) ?? [];
-          const covering = evs.filter(e => e.b <= ts && e.e >= ts);
-          const available = covering.length > 0
-            ? Math.min(...covering.map(e => e.a))
-            : unit.nominal;
-          return {
-            tranche:   unit.unit,
-            centrale:  unit.centrale,
-            puissance_disponible: available,
-            date_et_heure_fuseau_horaire_europe_paris: `${date}T${pad(hour)}:00:00`,
-            heure_fuseau_horaire_europe_paris: hour,
-            point_gps_modifie_pour_afficher_la_carte_opendata: unit.gps
-          };
-        })
+        (units as any[])
+          .filter(unit => {
+            if (unit.from && ts < new Date(unit.from).getTime()) return false;
+            if (unit.to   && ts > new Date(unit.to).getTime())   return false;
+            return true;
+          })
+          .map(unit => {
+            const evs      = byUnit.get(unit.unit) ?? [];
+            const covering = evs.filter(e => e.b <= ts && e.e >= ts);
+            const available = covering.length > 0
+              ? Math.min(...covering.map(e => e.a))
+              : unit.nominal;
+            return {
+              tranche:   unit.unit,
+              centrale:  unit.centrale,
+              puissance_disponible: available,
+              date_et_heure_fuseau_horaire_europe_paris: `${date}T${pad(hour)}:00:00`,
+              heure_fuseau_horaire_europe_paris: hour,
+              point_gps_modifie_pour_afficher_la_carte_opendata: unit.gps
+            };
+          })
       )
     );
   }
@@ -375,21 +381,40 @@ export class DatasetService {
   getTotalProductionSeries(
     dateFrom: string,
     dateTo: string
-  ): Observable<{series: [number, number][]; totalNominal: number}> {
+  ): Observable<{series: [number, number][]; nominalSeries: [number, number][]}> {
     return combineLatest([this.indexedEvents$, this.units$]).pipe(
       map(([byUnit, units]) => {
-        const timestamps   = this.buildTimestamps(dateFrom, dateTo);
-        const totalNominal = (units as any[]).reduce((s, u) => s + (u.nominal ?? 0), 0);
+        const timestamps = this.buildTimestamps(dateFrom, dateTo);
+        // Précalcul des timestamps from/to pour éviter new Date() dans la boucle interne
+        const unitsWithTs = (units as any[]).map(u => ({
+          ...u,
+          fromTs: u.from ? new Date(u.from).getTime() : null,
+          toTs:   u.to   ? new Date(u.to).getTime()   : null
+        }));
+
         const series: [number, number][] = timestamps.map(ts => {
           let total = 0;
-          for (const unit of (units as any[])) {
+          for (const unit of unitsWithTs) {
+            if (unit.fromTs !== null && ts < unit.fromTs) continue;
+            if (unit.toTs   !== null && ts > unit.toTs)   continue;
             const evs      = byUnit.get(unit.unit) ?? [];
             const covering = evs.filter(e => e.b <= ts && e.e >= ts);
             total += covering.length > 0 ? Math.min(...covering.map(e => e.a)) : unit.nominal;
           }
           return [ts, total] as [number, number];
         });
-        return { series, totalNominal };
+
+        const nominalSeries: [number, number][] = timestamps.map(ts => {
+          let nom = 0;
+          for (const unit of unitsWithTs) {
+            if (unit.fromTs !== null && ts < unit.fromTs) continue;
+            if (unit.toTs   !== null && ts > unit.toTs)   continue;
+            nom += unit.nominal;
+          }
+          return [ts, nom] as [number, number];
+        });
+
+        return { series, nominalSeries };
       })
     );
   }

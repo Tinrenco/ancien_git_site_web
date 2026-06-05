@@ -107,7 +107,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
   // Cache des données de la dernière requête, pour le re-rendu
   // sans re-requête (ex: changement de langue).
   private totalSeries:    [number, number][]  = [];
-  private totalNominal:   number = 0;
+  private nominalSeries:  [number, number][] = [];
   private tranchesData:   { tranche: string; series: [number, number][]; nominal: number }[] = [];
 
   // ─── Highcharts ──────────────────────────────────────────────────────────
@@ -266,9 +266,9 @@ export class HistogramComponent implements OnInit, OnDestroy {
     const from = this.dateFrom || this.minDate;
     const to   = this.dateTo   || this.maxDate;
     this.chartSub = this.datasetService.getTotalProductionSeries(from, to).subscribe({
-      next: ({ series, totalNominal }) => {
-        this.totalSeries  = series;
-        this.totalNominal = totalNominal;
+      next: ({ series, nominalSeries }) => {
+        this.totalSeries   = series;
+        this.nominalSeries = nominalSeries;
         this.afficherProductionTotale(series);
         setTimeout(() => { this.isChartLoading = false; }, 0);
       },
@@ -289,30 +289,17 @@ export class HistogramComponent implements OnInit, OnDestroy {
     const seriesName    = this.translate.instant('HISTOGRAM.TOTAL_SERIES_NAME');
     const nominalLabel  = this.translate.instant('HISTOGRAM.NOMINAL_LABEL');
 
-    const nominalPlotLine: Highcharts.YAxisPlotLinesOptions[] = this.totalNominal > 0 ? [{
-      value:     this.totalNominal,
-      color:     '#12356D',
-      dashStyle: 'Dash',
-      width:     1.5,
-      label: {
-        text:  `${nominalLabel}: ${Math.round(this.totalNominal).toLocaleString()} MW`,
-        align: 'right',
-        style: { color: '#12356D', fontSize: '11px' }
-      }
-    }] : [];
-
     this.chartOptions = {
       chart: { zooming: { type: 'x' }, backgroundColor: '#FFFFFF' },
       title:    { text: chartTitle,    style: { color: '#003366', fontWeight: 'bold' } },
       subtitle: { text: chartSubtitle, style: { color: '#003366' } },
       xAxis: { type: 'datetime', labels: { style: { color: '#003366' } } },
       yAxis: {
-        title:     { text: yAxisTitle, style: { color: '#003366' } },
-        labels:    { style: { color: '#003366' } },
-        min:       0,
-        plotLines: nominalPlotLine
+        title:  { text: yAxisTitle, style: { color: '#003366' } },
+        labels: { style: { color: '#003366' } },
+        min:    0
       },
-      legend: { enabled: false },
+      legend: { enabled: true, itemStyle: { color: '#003366' } },
       plotOptions: {
         area: {
           marker:    { radius: 2 },
@@ -325,7 +312,14 @@ export class HistogramComponent implements OnInit, OnDestroy {
           threshold: 0
         }
       },
-      series: [{ type: 'area', name: seriesName, data: series }],
+      series: [
+        { type: 'area', name: seriesName, data: series },
+        {
+          type: 'line', name: nominalLabel, data: this.nominalSeries,
+          color: '#12356D', dashStyle: 'Dash', lineWidth: 1.5,
+          marker: { enabled: false }, step: 'left'
+        }
+      ],
       tooltip: {
         xDateFormat:  '%e %B %Y %H:%M',
         shared:       true,
