@@ -265,7 +265,7 @@ export class HistogramComponent implements OnInit, OnDestroy {
 
     const from = this.dateFrom || this.minDate;
     const to   = this.dateTo   || this.maxDate;
-    this.chartSub = this.datasetService.getTotalProductionSeries(from, to).subscribe({
+    this.chartSub = this.datasetService.getTotalProductionSeries(from, to, this.selectedCentrale || undefined).subscribe({
       next: ({ series, nominalSeries }) => {
         this.totalSeries   = series;
         this.nominalSeries = nominalSeries;
@@ -283,10 +283,17 @@ export class HistogramComponent implements OnInit, OnDestroy {
    * via translate.instant() pour respecter la langue active.
    */
   private afficherProductionTotale(series: [number, number][]): void {
-    const chartTitle    = this.translate.instant('HISTOGRAM.TOTAL_CHART_TITLE');
-    const chartSubtitle = this.translate.instant('HISTOGRAM.TOTAL_CHART_SUBTITLE');
+    const isSite = !!this.selectedCentrale;
+    const chartTitle    = isSite
+      ? this.translate.instant('HISTOGRAM.CENTRALE_CHART_TITLE', { centrale: this.selectedCentrale })
+      : this.translate.instant('HISTOGRAM.TOTAL_CHART_TITLE');
+    const chartSubtitle = isSite
+      ? this.translate.instant('HISTOGRAM.CENTRALE_CHART_SUBTITLE')
+      : this.translate.instant('HISTOGRAM.TOTAL_CHART_SUBTITLE');
     const yAxisTitle    = this.translate.instant('HISTOGRAM.Y_AXIS_TITLE');
-    const seriesName    = this.translate.instant('HISTOGRAM.TOTAL_SERIES_NAME');
+    const seriesName    = isSite
+      ? this.translate.instant('HISTOGRAM.CENTRALE_SERIES_NAME', { centrale: this.selectedCentrale })
+      : this.translate.instant('HISTOGRAM.TOTAL_SERIES_NAME');
     const nominalLabel  = this.translate.instant('HISTOGRAM.NOMINAL_LABEL');
 
     this.chartOptions = {
@@ -538,10 +545,9 @@ export class HistogramComponent implements OnInit, OnDestroy {
     this.selectedCentraleData = null;
     if (this.selectedCentrale) {
       this.chargerTranchesPourCentrale(this.selectedCentrale);
-    } else {
-      // Plus de centrale sélectionnée → retour au graphique total France
-      this.chargerProductionTotale();
     }
+    // Toujours mettre à jour le graphique : total du site si centrale sélectionnée, total France sinon
+    this.chargerProductionTotale();
     this.updateUrlParams();
   }
 
@@ -631,7 +637,10 @@ export class HistogramComponent implements OnInit, OnDestroy {
       for (const [ts, mw] of this.totalSeries) {
         lines.push(`${new Date(ts).toISOString().split('T')[0]},${mw}`);
       }
-      this.downloadCSV(lines.join('\n'), 'disponibilite_totale_france.csv');
+      const filename = this.selectedCentrale
+        ? `disponibilite_totale_${this.selectedCentrale.toLowerCase()}.csv`
+        : 'disponibilite_totale_france.csv';
+      this.downloadCSV(lines.join('\n'), filename);
 
     } else if (this.tranchesData.length === 1) {
       // Mode 1 tranche : une ligne par timestamp
