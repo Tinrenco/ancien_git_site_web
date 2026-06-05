@@ -85,7 +85,7 @@
       "HERO_SUBTITLE": "Disponibilité en temps réel des centrales françaises (France Métropolitaine)",
       "STAT_POWER": "Puissance disponible",
       "STAT_REACTORS": "Réacteurs en fonctionnement",
-      "STAT_DATE": "Dernière donnée disponible",
+      "STAT_DATE": "Données à jour au",
       "MAP_TITLE": "Carte interactive du parc nucléaire",
       "MAP_DESC": "Visualisez la disponibilité de chaque centrale nucléaire française à une date et une heure précises — données présentes, passées et prévisionnelles sur une année glissante.",
       "MAP_TIP1": "Sélectionnez une date et ajustez le curseur horaire",

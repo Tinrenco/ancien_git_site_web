@@ -403,10 +403,12 @@ export class DatasetService {
   getEventDateRange(): Observable<{min: string; max: string}> {
     return this.events$.pipe(
       map(evs => {
-        const today = new Date().toISOString().split('T')[0];
-        if (!evs.length) return { min: '2014-01-01', max: today };
+        const maxDate = new Date();
+        maxDate.setMonth(maxDate.getMonth() + 1);
+        const max = maxDate.toISOString().split('T')[0];
+        if (!evs.length) return { min: '2014-01-01', max };
         const min = evs.map(e => e.b).reduce((a, b) => a < b ? a : b).substring(0, 10);
-        return { min, max: today };
+        return { min, max };
       })
     );
   }

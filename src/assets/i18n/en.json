@@ -85,7 +85,7 @@
       "HERO_SUBTITLE": "Real-time availability of French nuclear plants (Metropolitan France)",
       "STAT_POWER": "Available power",
       "STAT_REACTORS": "Reactors in operation",
-      "STAT_DATE": "Latest data available",
+      "STAT_DATE": "Data current as of",
       "MAP_TITLE": "Interactive nuclear fleet map",
       "MAP_DESC": "Visualize the availability of each French nuclear power plant at a specific date and time — present, past and forecast data over a rolling year.",
       "MAP_TIP1": "Select a date and adjust the hour slider",
