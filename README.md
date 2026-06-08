@@ -74,11 +74,17 @@ npm install
 
 Les fichiers de données JSON sont volumineux et ne sont **pas versionnés sur Git** (voir `.gitignore`). Chaque développeur doit les générer une fois en local.
 
-### Étape 1 — Récupérer le fichier source CSV
+### Étape 1 — Configurer la clé API EDF Open Data
 
-Télécharger le fichier `export_ods.csv` depuis le Google Drive partagé de l'équipe et le placer à la **racine du projet** (au même niveau que `convert.py`).
+`convert.py` récupère les données directement depuis l'**API EDF Open Data**. Il faut donc disposer d'une clé d'API, fournie via l'une de ces deux méthodes :
 
-> Ce fichier contient les données brutes d'indisponibilité nucléaire exportées depuis l'API EDF/RTE.
+- **Variable d'environnement** : définir `EDF_API_TOKEN`
+- **Fichier local** `api_config.json` à la racine du projet (non versionné) :
+  ```json
+  { "token": "votre_token_base64_ici" }
+  ```
+
+> Sans clé API disponible, le script bascule automatiquement sur un fichier CSV local (`donnees_edf.csv`) en fallback.
 
 ### Étape 2 — Générer les fichiers JSON
 
@@ -86,7 +92,7 @@ Télécharger le fichier `export_ods.csv` depuis le Google Drive partagé de l'�
 python convert.py
 ```
 
-Ce script Python lit `export_ods.csv` et produit quatre fichiers dans `src/assets/` :
+Ce script Python interroge l'API EDF Open Data et produit quatre fichiers dans `src/assets/` :
 
 | Fichier généré | Contenu | Utilisé par |
 |---|---|---|
@@ -112,8 +118,8 @@ Ouvrir [http://localhost:4200/home](http://localhost:4200/home) dans le navigate
 ```
 ancien_git_site_web/
 │
-├── convert.py                   ← Script Python : CSV → JSON (données de disponibilité)
-├── export_ods.csv               ← Données brutes (non versionné, à récupérer sur Drive)
+├── convert.py                   ← Script Python : API EDF Open Data → JSON (données de disponibilité)
+├── api_config.json              ← Clé API EDF (non versionné, à créer localement)
 │
 ├── public/
 │   ├── image-centrale.jpg       ← Photo de fond de la page d'accueil
@@ -155,10 +161,10 @@ ancien_git_site_web/
 ### Pipeline de traitement (`convert.py`)
 
 ```
-export_ods.csv  →  convert.py  →  donnees.json        (horaire, 2 mois — carte)
-(données EDF/RTE)              →  donnees_daily.json  (journalier, 8 mois — listes)
-                               →  events.json         (événements bruts depuis 2014 — graphique)
-                               →  units.json          (réacteurs + GPS + nominale — référence)
+API EDF Open Data  →  convert.py  →  donnees.json        (horaire, 2 mois — carte)
+(clé api_config.json)           →  donnees_daily.json  (journalier, 8 mois — listes)
+                                →  events.json         (événements bruts depuis 2014 — graphique)
+                                →  units.json          (réacteurs + GPS + nominale — référence)
 ```
 
 ### Modèle de données
