@@ -390,7 +390,7 @@ def main():
     write_json(main_recs, output_main)
     print(f"  OK — {len(main_recs):,} enregistrements")
 
-    # 4. events.json — événements bruts pour calcul côté navigateur
+    # 4. :.json — événements bruts pour calcul côté navigateur
     events_export = [
         {'u': o['unit'],
          'b': o['begin'].strftime('%Y-%m-%dT%H:%M:%S'),
