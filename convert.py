@@ -363,7 +363,7 @@ def main():
                 outages, units_info = load_outages(INPUT_FILE)
             except FileNotFoundError:
                 print(f"  Fichier CSV introuvable : {INPUT_FILE}")
-                returno
+                return
     else:
         print(f"Aucun token API — chargement depuis {INPUT_FILE} ...")
         print("  (Pour utiliser l'API : créer api_config.json avec {'token': '...'})")
